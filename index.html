@@ -392,9 +392,45 @@ loadMain();
 
 }
 
-<script src="cards.js"></script>  
+<script src="cards.js"></script>
+
+<script>
+
+// ---------- TRUTH OR DARE ----------
+
+function showTruth(){
+
+const list = cards.truth[lang] || cards.truth.en
+
+const challenge = list[Math.floor(Math.random()*list.length)]
+
+showChallenge(challenge)
+
+}
+
+function showDare(){
+
+const list = cards.dare[lang] || cards.dare.en
+
+const challenge = list[Math.floor(Math.random()*list.length)]
+
+showChallenge(challenge)
+
+}
+
+function showChallenge(text){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML = `
+<h2>${text}</h2>
+
+<button onclick="nextPlayer()">${t.next}</button>
+`
+
+}
 
 </script>
 
 </body>
-</html>
+</html>  
