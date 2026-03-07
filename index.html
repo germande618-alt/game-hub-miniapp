@@ -7,7 +7,7 @@
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
 background:#1e1e1e;
 color:white;
@@ -31,52 +31,151 @@ cursor:pointer;
 
 <body>
 
-<h1>Game Hub</h1>
-
-<button onclick="openSection('couple')">
-❤️ Couple Games
-</button>
-
-<button onclick="openSection('party')">
-🎉 Party Games
-</button>
-
-<button onclick="openSection('online')">
-🌐 Online Games
-</button>
-
-<div id="content"></div>
+<div id="app"></div>
 
 <script>
 
-function openSection(section){
+// ---------- ПЕРЕВОДЫ ----------
 
-const content = document.getElementById("content")
+const translations = {
 
-if(section === "couple"){
-content.innerHTML = `
-<h2>Couple Games</h2>
-<button>Truth or Dare</button>
-<button>Couple Questions</button>
-`
+en:{
+title:"Game Hub",
+couple:"❤️ Couple Games",
+party:"🎉 Party Games",
+online:"🌐 Online Games",
+choose:"Choose language",
+settings:"⚙ Language"
+},
+
+ru:{
+title:"Игровой центр",
+couple:"❤️ Игры для пар",
+party:"🎉 Игры для вечеринок",
+online:"🌐 Онлайн игры",
+choose:"Выберите язык",
+settings:"⚙ Язык"
+},
+
+es:{
+title:"Centro de Juegos",
+couple:"❤️ Juegos para Parejas",
+party:"🎉 Juegos para Fiesta",
+online:"🌐 Juegos Online",
+choose:"Elige idioma",
+settings:"⚙ Idioma"
+},
+
+fr:{
+title:"Centre de Jeux",
+couple:"❤️ Jeux pour Couples",
+party:"🎉 Jeux de Fête",
+online:"🌐 Jeux en Ligne",
+choose:"Choisir la langue",
+settings:"⚙ Langue"
+},
+
+de:{
+title:"Spiele Hub",
+couple:"❤️ Spiele für Paare",
+party:"🎉 Partyspiele",
+online:"🌐 Online Spiele",
+choose:"Sprache wählen",
+settings:"⚙ Sprache"
 }
 
-if(section === "party"){
-content.innerHTML = `
-<h2>Party Games</h2>
-<button>Never Have I Ever</button>
-<button>Who is most likely to</button>
-`
 }
 
-if(section === "online"){
-content.innerHTML = `
-<h2>Online Games</h2>
-<button>Mafia</button>
-<button>Drawing Game</button>
-`
+// ---------- ЯЗЫК ПОЛЬЗОВАТЕЛЯ ----------
+
+let lang = localStorage.getItem("lang")
+
+// ---------- АВТОЯЗЫК TELEGRAM ----------
+
+function detectTelegramLanguage(){
+
+if(window.Telegram && Telegram.WebApp){
+
+let tgLang = Telegram.WebApp.initDataUnsafe.user.language_code
+
+if(translations[tgLang]){
+lang = tgLang
 }
 
+}
+
+}
+
+// ---------- ВЫБОР ЯЗЫКА ----------
+
+function showLanguageSelect(){
+
+document.getElementById("app").innerHTML = `
+<h2>${translations.en.choose}</h2>
+
+<button onclick="setLang('en')">🇬🇧 English</button>
+<button onclick="setLang('ru')">🇷🇺 Русский</button>
+<button onclick="setLang('es')">🇪🇸 Español</button>
+<button onclick="setLang('fr')">🇫🇷 Français</button>
+<button onclick="setLang('de')">🇩🇪 Deutsch</button>
+`
+
+}
+
+// ---------- УСТАНОВКА ЯЗЫКА ----------
+
+function setLang(selected){
+
+localStorage.setItem("lang",selected)
+lang = selected
+
+loadMain()
+
+}
+
+// ---------- ГЛАВНЫЙ ЭКРАН ----------
+
+function loadMain(){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML = `
+<h1>${t.title}</h1>
+
+<button>${t.couple}</button>
+<button>${t.party}</button>
+<button>${t.online}</button>
+
+<br>
+
+<button onclick="changeLanguage()">${t.settings}</button>
+`
+
+}
+
+// ---------- СМЕНА ЯЗЫКА ----------
+
+function changeLanguage(){
+
+localStorage.removeItem("lang")
+showLanguageSelect()
+
+}
+
+// ---------- СТАРТ ПРИЛОЖЕНИЯ ----------
+
+if(!lang){
+
+detectTelegramLanguage()
+
+if(lang){
+loadMain()
+}else{
+showLanguageSelect()
+}
+
+}else{
+loadMain()
 }
 
 </script>
