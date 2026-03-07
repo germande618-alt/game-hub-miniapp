@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Game Hub</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+background:#1e1e1e;
+color:white;
+}
+
+button{
+display:block;
+margin:10px auto;
+padding:15px;
+font-size:18px;
+border-radius:10px;
+border:none;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Game Hub</h1>
+
+<button onclick="openSection('couple')">
+❤️ Couple Games
+</button>
+
+<button onclick="openSection('party')">
+🎉 Party Games
+</button>
+
+<button onclick="openSection('online')">
+🌐 Online Games
+</button>
+
+<div id="content"></div>
+
+<script>
+
+function openSection(section){
+
+const content = document.getElementById("content")
+
+if(section === "couple"){
+content.innerHTML = `
+<h2>Couple Games</h2>
+<button>Truth or Dare</button>
+<button>Couple Questions</button>
+`
+}
+
+if(section === "party"){
+content.innerHTML = `
+<h2>Party Games</h2>
+<button>Never Have I Ever</button>
+<button>Who is most likely to</button>
+`
+}
+
+if(section === "online"){
+content.innerHTML = `
+<h2>Online Games</h2>
+<button>Mafia</button>
+<button>Drawing Game</button>
+`
+}
+
+}
+
+</script>
+
+</body>
+</html>
