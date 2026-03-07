@@ -95,6 +95,72 @@ dareBtn:"Действие",
 next:"Следующий"
 }
 
+  es:{
+title:"Centro de Juegos",
+couple:"❤️ Juegos para Parejas",
+party:"🎉 Juegos para Fiesta",
+online:"🌐 Juegos Online",
+choose:"Elige idioma",
+settings:"⚙ Cambiar idioma",
+truth:"Verdad o Reto",
+questions:"Preguntas de Pareja",
+never:"Nunca he",
+likely:"Quién es más probable",
+mafia:"Mafia",
+draw:"Dibujar y adivinar",
+back:"⬅ Atrás",
+addPlayer:"Agregar jugador",
+startGame:"Comenzar juego",
+playerName:"Nombre del jugador",
+truthBtn:"Verdad",
+dareBtn:"Reto",
+next:"Siguiente"
+}
+
+  fr:{
+title:"Centre de Jeux",
+couple:"❤️ Jeux pour Couples",
+party:"🎉 Jeux de Fête",
+online:"🌐 Jeux en Ligne",
+choose:"Choisir la langue",
+settings:"⚙ Changer la langue",
+truth:"Vérité ou Action",
+questions:"Questions pour Couples",
+never:"Je n'ai jamais",
+likely:"Qui est le plus susceptible",
+mafia:"Mafia",
+draw:"Dessiner et deviner",
+back:"⬅ Retour",
+addPlayer:"Ajouter joueur",
+startGame:"Commencer le jeu",
+playerName:"Nom du joueur",
+truthBtn:"Vérité",
+dareBtn:"Action",
+next:"Suivant"
+}
+
+  de:{
+title:"Spiele Hub",
+couple:"❤️ Spiele für Paare",
+party:"🎉 Partyspiele",
+online:"🌐 Online Spiele",
+choose:"Sprache wählen",
+settings:"⚙ Sprache ändern",
+truth:"Wahrheit oder Pflicht",
+questions:"Paarfragen",
+never:"Ich habe noch nie",
+likely:"Wer ist am ehesten",
+mafia:"Mafia",
+draw:"Zeichnen und raten",
+back:"⬅ Zurück",
+addPlayer:"Spieler hinzufügen",
+startGame:"Spiel starten",
+playerName:"Spielername",
+truthBtn:"Wahrheit",
+dareBtn:"Pflicht",
+next:"Weiter"
+}
+  
 };
 
 let lang = localStorage.getItem("lang");
@@ -106,7 +172,10 @@ document.getElementById("app").innerHTML = `
 
 <button onclick="setLang('en')">🇬🇧 English</button>
 <button onclick="setLang('ru')">🇷🇺 Русский</button>
-`;
+<button onclick="setLang('es')">🇪🇸 Español</button>
+<button onclick="setLang('fr')">🇫🇷 Français</button>
+<button onclick="setLang('de')">🇩🇪 Deutsch</button>
+`
 
 }
 
