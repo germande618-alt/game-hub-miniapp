@@ -11,22 +11,29 @@ font-family:Arial;
 text-align:center;
 background:#1e1e1e;
 color:white;
+margin:0;
+padding:20px;
 }
 
 button{
 display:block;
-margin:10px auto;
-padding:15px;
+margin:12px auto;
+padding:16px;
 font-size:18px;
-border-radius:10px;
+border-radius:12px;
 border:none;
 background:#3b82f6;
 color:white;
 cursor:pointer;
+width:240px;
 }
 
 button:hover{
 background:#2563eb;
+}
+
+h1{
+margin-top:10px;
 }
 
 </style>
@@ -39,8 +46,6 @@ background:#2563eb;
 
 <script>
 
-// ---------- ПЕРЕВОДЫ ----------
-
 const translations = {
 
 en:{
@@ -49,7 +54,14 @@ couple:"❤️ Couple Games",
 party:"🎉 Party Games",
 online:"🌐 Online Games",
 choose:"Choose language",
-settings:"⚙ Change language"
+settings:"⚙ Change language",
+truth:"Truth or Dare",
+questions:"Couple Questions",
+never:"Never Have I Ever",
+likely:"Who is most likely to",
+mafia:"Mafia",
+draw:"Drawing Game",
+back:"⬅ Back"
 },
 
 ru:{
@@ -58,7 +70,14 @@ couple:"❤️ Игры для пар",
 party:"🎉 Игры для вечеринок",
 online:"🌐 Онлайн игры",
 choose:"Выберите язык",
-settings:"⚙ Сменить язык"
+settings:"⚙ Сменить язык",
+truth:"Правда или действие",
+questions:"Вопросы для пар",
+never:"Я никогда не",
+likely:"Кто скорее всего",
+mafia:"Мафия",
+draw:"Рисуй и угадывай",
+back:"⬅ Назад"
 },
 
 es:{
@@ -67,7 +86,14 @@ couple:"❤️ Juegos para Parejas",
 party:"🎉 Juegos para Fiesta",
 online:"🌐 Juegos Online",
 choose:"Elige idioma",
-settings:"⚙ Cambiar idioma"
+settings:"⚙ Cambiar idioma",
+truth:"Verdad o Reto",
+questions:"Preguntas de Pareja",
+never:"Nunca he",
+likely:"Quién es más probable",
+mafia:"Mafia",
+draw:"Dibujar y adivinar",
+back:"⬅ Atrás"
 },
 
 fr:{
@@ -76,7 +102,14 @@ couple:"❤️ Jeux pour Couples",
 party:"🎉 Jeux de Fête",
 online:"🌐 Jeux en Ligne",
 choose:"Choisir la langue",
-settings:"⚙ Changer la langue"
+settings:"⚙ Changer la langue",
+truth:"Vérité ou Action",
+questions:"Questions pour Couples",
+never:"Je n'ai jamais",
+likely:"Qui est le plus susceptible",
+mafia:"Mafia",
+draw:"Dessiner et deviner",
+back:"⬅ Retour"
 },
 
 de:{
@@ -85,16 +118,19 @@ couple:"❤️ Spiele für Paare",
 party:"🎉 Partyspiele",
 online:"🌐 Online Spiele",
 choose:"Sprache wählen",
-settings:"⚙ Sprache ändern"
+settings:"⚙ Sprache ändern",
+truth:"Wahrheit oder Pflicht",
+questions:"Paarfragen",
+never:"Ich habe noch nie",
+likely:"Wer ist am ehesten",
+mafia:"Mafia",
+draw:"Zeichnen und raten",
+back:"⬅ Zurück"
 }
 
 }
-
-// ---------- ЯЗЫК ----------
 
 let lang = localStorage.getItem("lang")
-
-// ---------- ОПРЕДЕЛЕНИЕ ЯЗЫКА TELEGRAM ----------
 
 function detectTelegramLanguage(){
 
@@ -111,8 +147,6 @@ localStorage.setItem("lang",tgLang)
 
 }
 
-// ---------- ВЫБОР ЯЗЫКА ----------
-
 function showLanguageSelect(){
 
 document.getElementById("app").innerHTML = `
@@ -127,8 +161,6 @@ document.getElementById("app").innerHTML = `
 
 }
 
-// ---------- УСТАНОВКА ЯЗЫКА ----------
-
 function setLang(selected){
 
 lang = selected
@@ -137,8 +169,6 @@ localStorage.setItem("lang",selected)
 loadMain()
 
 }
-
-// ---------- ГЛАВНОЕ МЕНЮ ----------
 
 function loadMain(){
 
@@ -154,53 +184,66 @@ document.getElementById("app").innerHTML = `
 <br>
 
 <button onclick="changeLanguage()">${t.settings}</button>
-
-<div id="content"></div>
 `
 
 }
-
-// ---------- РАЗДЕЛЫ ----------
 
 function openSection(section){
 
-const content = document.getElementById("content")
+const t = translations[lang]
 
 if(section==="couple"){
-content.innerHTML = `
-<h2>Couple Games</h2>
-<button>Truth or Dare</button>
-<button>Couple Questions</button>
+
+document.getElementById("app").innerHTML = `
+<h1>${t.couple}</h1>
+
+<button>${t.truth}</button>
+<button>${t.questions}</button>
+
+<br>
+
+<button onclick="loadMain()">${t.back}</button>
 `
+
 }
 
 if(section==="party"){
-content.innerHTML = `
-<h2>Party Games</h2>
-<button>Never Have I Ever</button>
-<button>Who is most likely to</button>
+
+document.getElementById("app").innerHTML = `
+<h1>${t.party}</h1>
+
+<button>${t.never}</button>
+<button>${t.likely}</button>
+
+<br>
+
+<button onclick="loadMain()">${t.back}</button>
 `
+
 }
 
 if(section==="online"){
-content.innerHTML = `
-<h2>Online Games</h2>
-<button>Mafia</button>
-<button>Drawing Game</button>
+
+document.getElementById("app").innerHTML = `
+<h1>${t.online}</h1>
+
+<button>${t.mafia}</button>
+<button>${t.draw}</button>
+
+<br>
+
+<button onclick="loadMain()">${t.back}</button>
 `
-}
 
 }
 
-// ---------- СМЕНА ЯЗЫКА ----------
+}
 
 function changeLanguage(){
 
 showLanguageSelect()
 
 }
-
-// ---------- СТАРТ ----------
 
 if(!lang){
 
@@ -213,9 +256,7 @@ loadMain()
 }
 
 }else{
-
 loadMain()
-
 }
 
 </script>
