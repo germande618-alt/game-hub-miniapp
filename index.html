@@ -170,8 +170,34 @@ showLanguageSelect()
 }
 
 function openCouple(){
-showPlayers()
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML=`
+
+<h2>❤️ ${t.couple}</h2>
+
+<button onclick="startTruthDare()">Правда или действие</button>
+
+<button onclick="startCoupleQuestions()">Вопросы для пар</button>
+
+<button onclick="loadMain()">⬅ ${t.back}</button>
+
+`
+
 }
+
+function startTruthDare(){
+
+showPlayers()
+
+}
+
+function startCoupleQuestions(){
+
+showPlayers()
+
+}  
 
 function openParty(){
 showPlayers()
