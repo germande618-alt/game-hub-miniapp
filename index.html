@@ -7,7 +7,7 @@
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
 background:#1e1e1e;
 color:white;
@@ -25,11 +25,25 @@ border:none;
 background:#3b82f6;
 color:white;
 cursor:pointer;
-width:220px;
+width:230px;
 }
 
 button:hover{
 background:#2563eb;
+}
+
+input{
+padding:12px;
+margin:8px;
+font-size:16px;
+border-radius:8px;
+border:none;
+width:200px;
+}
+
+.player{
+margin:5px;
+font-size:18px;
 }
 
 </style>
@@ -44,58 +58,69 @@ background:#2563eb;
 
 let lang = localStorage.getItem("lang")
 
+let players = []
+let currentPlayer = 0
+
 const translations = {
 
 ru:{
 title:"Игровой центр",
-couple:" Игры для пар",
-party:" Игры для вечеринок",
-online:" Онлайн игры",
+couple:"Игры для пар",
+party:"Игры для вечеринок",
 choose:"Выберите язык",
-settings:"⚙ Сменить язык",
+settings:"Сменить язык",
+addPlayer:"Добавить игрока",
+start:"Начать игру",
+playerName:"Имя игрока",
 truth:"Правда",
 dare:"Действие",
 next:"Следующий",
-back:"⬅ Назад"
+back:"Назад"
 },
 
 en:{
 title:"Game Hub",
-couple:" Couple Games",
-party:" Party Games",
-online:" Online Games",
+couple:"Couple Games",
+party:"Party Games",
 choose:"Choose language",
-settings:"⚙ Change language",
+settings:"Change language",
+addPlayer:"Add player",
+start:"Start game",
+playerName:"Player name",
 truth:"Truth",
 dare:"Dare",
 next:"Next",
-back:"⬅ Back"
+back:"Back"
 },
 
 es:{
 title:"Centro de juegos",
-couple:" Juegos para parejas",
-party:" Juegos de fiesta",
-online:" Juegos online",
-choose:"Elige idioma",
-settings:"⚙ Cambiar idioma",
+couple:"Juegos para parejas",
+party:"Juegos de fiesta",
+choose:"Elegir idioma",
+settings:"Cambiar idioma",
+addPlayer:"Agregar jugador",
+start:"Comenzar",
+playerName:"Nombre",
 truth:"Verdad",
 dare:"Reto",
 next:"Siguiente",
-back:"⬅ Volver"
+back:"Atrás"
 },
 
 fr:{
 title:"Centre de jeux",
-couple:" Jeux pour couples",
-party:" Jeux de soirée",
-online:" Jeux en ligne",
+couple:"Jeux pour couples",
+party:"Jeux de soirée",
 choose:"Choisir la langue",
-settings:"⚙ Changer de langue",
+settings:"Changer langue",
+addPlayer:"Ajouter joueur",
+start:"Commencer",
+playerName:"Nom du joueur",
 truth:"Vérité",
 dare:"Action",
 next:"Suivant",
-back:"⬅ Retour"
+back:"Retour"
 }
 
 }
@@ -118,9 +143,7 @@ document.getElementById("app").innerHTML=`
 function setLang(l){
 
 lang=l
-
 localStorage.setItem("lang",l)
-
 loadMain()
 
 }
@@ -135,47 +158,116 @@ document.getElementById("app").innerHTML=`
 
 <button onclick="openCouple()">❤️ ${t.couple}</button>
 <button onclick="openParty()">🎉 ${t.party}</button>
-<button onclick="changeLanguage()">${t.settings}</button>
+
+<button onclick="changeLanguage()">⚙ ${t.settings}</button>
 
 `
 
 }
 
 function changeLanguage(){
-
 showLanguageSelect()
-
 }
 
 function openCouple(){
+showPlayers()
+}
+
+function openParty(){
+showPlayers()
+}
+
+function showPlayers(){
+
+players=[]
+currentPlayer=0
 
 const t = translations[lang]
 
 document.getElementById("app").innerHTML=`
 
-<h2>${t.couple}</h2>
+<h2>${t.playerName}</h2>
 
-<button onclick="showTruth()">${t.truth}</button>
-<button onclick="showDare()">${t.dare}</button>
-<button onclick="loadMain()">${t.back}</button>
+<input id="playerInput" placeholder="${t.playerName}">
+
+<button onclick="addPlayer()">${t.addPlayer}</button>
+
+<div id="playersList"></div>
+
+<button onclick="startGame()">${t.start}</button>
+
+<button onclick="loadMain()">⬅ ${t.back}</button>
 
 `
 
 }
 
-function openParty(){
+function addPlayer(){
+
+const input = document.getElementById("playerInput")
+const name = input.value.trim()
+
+if(name==="") return
+
+players.push(name)
+
+input.value=""
+
+updatePlayers()
+
+}
+
+function updatePlayers(){
+
+const list = document.getElementById("playersList")
+
+list.innerHTML=""
+
+players.forEach(p=>{
+list.innerHTML+=`<div class="player">${p}</div>`
+})
+
+}
+
+function startGame(){
+
+if(players.length===0) return
+
+currentPlayer=0
+
+showTurn()
+
+}
+
+function showTurn(){
 
 const t = translations[lang]
 
+const player = players[currentPlayer]
+
 document.getElementById("app").innerHTML=`
 
-<h2>${t.party}</h2>
+<h2>${player}</h2>
 
 <button onclick="showTruth()">${t.truth}</button>
+
 <button onclick="showDare()">${t.dare}</button>
-<button onclick="loadMain()">${t.back}</button>
+
+<button onclick="loadMain()">⬅ ${t.back}</button>
 
 `
+
+}
+
+function nextPlayer(){
+
+currentPlayer++
+
+if(currentPlayer>=players.length){
+currentPlayer=0
+}
+
+showTurn()
 
 }
 
@@ -207,8 +299,9 @@ document.getElementById("app").innerHTML=`
 
 <h2>${text}</h2>
 
-<button onclick="loadMain()">${t.back}</button>
-<button onclick="showTruth()">${t.next}</button>
+<button onclick="nextPlayer()">${t.next}</button>
+
+<button onclick="showTurn()">⬅ ${t.back}</button>
 
 `
 
