@@ -197,7 +197,7 @@ if(section==="couple"){
 document.getElementById("app").innerHTML = `
 <h1>${t.couple}</h1>
 
-<button>${t.truth}</button>
+<button onclick="startTruthDare()">${t.truth}</button>
 <button>${t.questions}</button>
 
 <br>
@@ -258,7 +258,116 @@ loadMain()
 }else{
 loadMain()
 }
+// ---------- TRUTH OR DARE GAME ----------
 
+let players = []
+let currentPlayer = 0
+
+function startTruthDare(){
+
+document.getElementById("app").innerHTML = `
+<h1>Truth or Dare</h1>
+
+<input id="playerName" placeholder="Player name">
+
+<button onclick="addPlayer()">Add Player</button>
+
+<div id="playerList"></div>
+
+<button onclick="startGame()">Start Game</button>
+
+<button onclick="loadMain()">⬅ Back</button>
+`
+
+}
+
+function addPlayer(){
+
+let name = document.getElementById("playerName").value
+
+if(name){
+players.push(name)
+document.getElementById("playerName").value=""
+updatePlayerList()
+}
+
+}
+
+function updatePlayerList(){
+
+document.getElementById("playerList").innerHTML =
+players.map(p => `<p>${p}</p>`).join("")
+
+}
+
+function startGame(){
+
+showTurn()
+
+}
+
+function showTurn(){
+
+let player = players[currentPlayer]
+
+document.getElementById("app").innerHTML = `
+<h1>${player}'s Turn</h1>
+
+<button onclick="showTruth()">Truth</button>
+<button onclick="showDare()">Dare</button>
+`
+
+}
+
+const truths = [
+"What is your biggest secret?",
+"What is your biggest fear?",
+"What is your most embarrassing moment?"
+]
+
+const dares = [
+"Dance for 10 seconds",
+"Sing a song",
+"Do 5 pushups"
+]
+
+function showTruth(){
+
+let challenge = truths[Math.floor(Math.random()*truths.length)]
+
+showChallenge(challenge)
+
+}
+
+function showDare(){
+
+let challenge = dares[Math.floor(Math.random()*dares.length)]
+
+showChallenge(challenge)
+
+}
+
+function showChallenge(text){
+
+document.getElementById("app").innerHTML = `
+<h2>${text}</h2>
+
+<button onclick="nextPlayer()">Next</button>
+`
+
+}
+
+function nextPlayer(){
+
+currentPlayer++
+
+if(currentPlayer >= players.length){
+currentPlayer = 0
+}
+
+showTurn()
+
+}
 </script>
 
 </body>
