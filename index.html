@@ -334,17 +334,21 @@ const dares = [
 
 function showTruth(){
 
-let challenge = truths[Math.floor(Math.random()*truths.length)];
+const list = cards.truth[lang] || cards.truth.en
 
-showChallenge(challenge);
+const challenge = list[Math.floor(Math.random()*list.length)]
+
+showChallenge(challenge)
 
 }
 
 function showDare(){
 
-let challenge = dares[Math.floor(Math.random()*dares.length)];
+const list = cards.dare[lang] || cards.dare.en
 
-showChallenge(challenge);
+const challenge = list[Math.floor(Math.random()*list.length)]
+
+showChallenge(challenge)
 
 }
 
@@ -387,6 +391,8 @@ showLanguageSelect();
 loadMain();
 
 }
+
+<script src="cards.js"></script>  
 
 </script>
 
