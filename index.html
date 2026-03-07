@@ -1,3 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Game Hub</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#1e1e1e;
+color:white;
+margin:0;
+padding:20px;
+}
+
+button{
+display:block;
+margin:12px auto;
+padding:16px;
+font-size:18px;
+border-radius:12px;
+border:none;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+width:240px;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+h1{
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="app"></div>
+
 <script>
 
 const translations = {
@@ -8,20 +54,14 @@ couple:"❤️ Couple Games",
 party:"🎉 Party Games",
 online:"🌐 Online Games",
 choose:"Choose language",
-settings:"⚙ Change language",
+settings:"⚙️ Change language",
 truth:"Truth or Dare",
 questions:"Couple Questions",
 never:"Never Have I Ever",
 likely:"Who is most likely to",
 mafia:"Mafia",
 draw:"Drawing Game",
-back:"⬅ Back",
-addPlayer:"Add Player",
-startGame:"Start Game",
-playerName:"Player name",
-truthBtn:"Truth",
-dareBtn:"Dare",
-next:"Next"
+back:"⬅️ Back"
 },
 
 ru:{
@@ -30,20 +70,14 @@ couple:"❤️ Игры для пар",
 party:"🎉 Игры для вечеринок",
 online:"🌐 Онлайн игры",
 choose:"Выберите язык",
-settings:"⚙ Сменить язык",
+settings:"⚙️ Сменить язык",
 truth:"Правда или действие",
 questions:"Вопросы для пар",
 never:"Я никогда не",
 likely:"Кто скорее всего",
 mafia:"Мафия",
 draw:"Рисуй и угадывай",
-back:"⬅ Назад",
-addPlayer:"Добавить игрока",
-startGame:"Начать игру",
-playerName:"Имя игрока",
-truthBtn:"Правда",
-dareBtn:"Действие",
-next:"Следующий"
+back:"⬅️ Назад"
 },
 
 es:{
@@ -52,20 +86,14 @@ couple:"❤️ Juegos para Parejas",
 party:"🎉 Juegos para Fiesta",
 online:"🌐 Juegos Online",
 choose:"Elige idioma",
-settings:"⚙ Cambiar idioma",
+settings:"⚙️ Cambiar idioma",
 truth:"Verdad o Reto",
 questions:"Preguntas de Pareja",
 never:"Nunca he",
 likely:"Quién es más probable",
 mafia:"Mafia",
 draw:"Dibujar y adivinar",
-back:"⬅ Atrás",
-addPlayer:"Agregar jugador",
-startGame:"Comenzar juego",
-playerName:"Nombre del jugador",
-truthBtn:"Verdad",
-dareBtn:"Reto",
-next:"Siguiente"
+back:"⬅️ Atrás"
 },
 
 fr:{
@@ -74,20 +102,14 @@ couple:"❤️ Jeux pour Couples",
 party:"🎉 Jeux de Fête",
 online:"🌐 Jeux en Ligne",
 choose:"Choisir la langue",
-settings:"⚙ Changer la langue",
+settings:"⚙️ Changer la langue",
 truth:"Vérité ou Action",
 questions:"Questions pour Couples",
 never:"Je n'ai jamais",
 likely:"Qui est le plus susceptible",
 mafia:"Mafia",
 draw:"Dessiner et deviner",
-back:"⬅ Retour",
-addPlayer:"Ajouter joueur",
-startGame:"Commencer le jeu",
-playerName:"Nom du joueur",
-truthBtn:"Vérité",
-dareBtn:"Action",
-next:"Suivant"
+back:"⬅️ Retour"
 },
 
 de:{
@@ -96,20 +118,14 @@ couple:"❤️ Spiele für Paare",
 party:"🎉 Partyspiele",
 online:"🌐 Online Spiele",
 choose:"Sprache wählen",
-settings:"⚙ Sprache ändern",
+settings:"⚙️ Sprache ändern",
 truth:"Wahrheit oder Pflicht",
 questions:"Paarfragen",
 never:"Ich habe noch nie",
 likely:"Wer ist am ehesten",
 mafia:"Mafia",
 draw:"Zeichnen und raten",
-back:"⬅ Zurück",
-addPlayer:"Spieler hinzufügen",
-startGame:"Spiel starten",
-playerName:"Spielername",
-truthBtn:"Wahrheit",
-dareBtn:"Pflicht",
-next:"Weiter"
+back:"⬅️ Zurück"
 }
 
 }
@@ -223,45 +239,63 @@ document.getElementById("app").innerHTML = `
 
 }
 
+function changeLanguage(){
+
+showLanguageSelect()
+
+}
+
+if(!lang){
+  detectTelegramLanguage()
+
+if(!lang){
+showLanguageSelect()
+}else{
+loadMain()
+}
+
+}else{
+loadMain()
+}
 // ---------- TRUTH OR DARE GAME ----------
 
-let players=[]
-let currentPlayer=0
+let players = []
+let currentPlayer = 0
 
 function startTruthDare(){
 
-const t = translations[lang]
+document.getElementById("app").innerHTML = `
+<h1>Truth or Dare</h1>
 
-document.getElementById("app").innerHTML=`
-<h1>${t.truth}</h1>
+<input id="playerName" placeholder="Player name">
 
-<input id="playerName" placeholder="${t.playerName}">
-
-<button onclick="addPlayer()">${t.addPlayer}</button>
+<button onclick="addPlayer()">Add Player</button>
 
 <div id="playerList"></div>
 
-<button onclick="startGame()">${t.startGame}</button>
+<button onclick="startGame()">Start Game</button>
 
-<button onclick="openSection('couple')">${t.back}</button>
+<button onclick="loadMain()">⬅️ Back</button>
 `
 
 }
 
 function addPlayer(){
 
-let name=document.getElementById("playerName").value
+let name = document.getElementById("playerName").value
 
 if(name){
-
 players.push(name)
-
 document.getElementById("playerName").value=""
-
-document.getElementById("playerList").innerHTML =
-players.map(p=>`<p>${p}</p>`).join("")
+updatePlayerList()
+}
 
 }
+
+function updatePlayerList(){
+
+document.getElementById("playerList").innerHTML =
+players.map(p => <p>${p}</p>).join("")
 
 }
 
@@ -273,26 +307,24 @@ showTurn()
 
 function showTurn(){
 
-const t = translations[lang]
-
 let player = players[currentPlayer]
 
-document.getElementById("app").innerHTML=`
-<h1>${player}</h1>
+document.getElementById("app").innerHTML = `
+<h1>${player}'s Turn</h1>
 
-<button onclick="showTruth()">${t.truthBtn}</button>
-<button onclick="showDare()">${t.dareBtn}</button>
+<button onclick="showTruth()">Truth</button>
+<button onclick="showDare()">Dare</button>
 `
 
 }
 
-const truths=[
+const truths = [
 "What is your biggest secret?",
 "What is your biggest fear?",
-"What was your most embarrassing moment?"
+"What is your most embarrassing moment?"
 ]
 
-const dares=[
+const dares = [
 "Dance for 10 seconds",
 "Sing a song",
 "Do 5 pushups"
@@ -316,12 +348,10 @@ showChallenge(challenge)
 
 function showChallenge(text){
 
-const t = translations[lang]
-
-document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML = `
 <h2>${text}</h2>
 
-<button onclick="nextPlayer()">${t.next}</button>
+<button onclick="nextPlayer()">Next</button>
 `
 
 }
@@ -330,32 +360,14 @@ function nextPlayer(){
 
 currentPlayer++
 
-if(currentPlayer>=players.length){
-currentPlayer=0
+if(currentPlayer >= players.length){
+currentPlayer = 0
 }
 
 showTurn()
 
 }
-
-function changeLanguage(){
-
-showLanguageSelect()
-
-}
-
-if(!lang){
-
-detectTelegramLanguage()
-
-if(!lang){
-showLanguageSelect()
-}else{
-loadMain()
-}
-
-}else{
-loadMain()
-}
-
 </script>
+
+</body>
+</html>
