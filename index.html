@@ -1,49 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Game Hub</title>
-
-<style>
-
-body{
-font-family:Arial;
-text-align:center;
-background:#1e1e1e;
-color:white;
-margin:0;
-padding:20px;
-}
-
-button{
-display:block;
-margin:12px auto;
-padding:16px;
-font-size:18px;
-border-radius:12px;
-border:none;
-background:#3b82f6;
-color:white;
-cursor:pointer;
-width:240px;
-}
-
-button:hover{
-background:#2563eb;
-}
-
-h1{
-margin-top:10px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div id="app"></div>
-
 <script>
 
 const translations = {
@@ -61,7 +15,13 @@ never:"Never Have I Ever",
 likely:"Who is most likely to",
 mafia:"Mafia",
 draw:"Drawing Game",
-back:"⬅ Back"
+back:"⬅ Back",
+addPlayer:"Add Player",
+startGame:"Start Game",
+playerName:"Player name",
+truthBtn:"Truth",
+dareBtn:"Dare",
+next:"Next"
 },
 
 ru:{
@@ -77,7 +37,13 @@ never:"Я никогда не",
 likely:"Кто скорее всего",
 mafia:"Мафия",
 draw:"Рисуй и угадывай",
-back:"⬅ Назад"
+back:"⬅ Назад",
+addPlayer:"Добавить игрока",
+startGame:"Начать игру",
+playerName:"Имя игрока",
+truthBtn:"Правда",
+dareBtn:"Действие",
+next:"Следующий"
 },
 
 es:{
@@ -93,7 +59,13 @@ never:"Nunca he",
 likely:"Quién es más probable",
 mafia:"Mafia",
 draw:"Dibujar y adivinar",
-back:"⬅ Atrás"
+back:"⬅ Atrás",
+addPlayer:"Agregar jugador",
+startGame:"Comenzar juego",
+playerName:"Nombre del jugador",
+truthBtn:"Verdad",
+dareBtn:"Reto",
+next:"Siguiente"
 },
 
 fr:{
@@ -109,7 +81,13 @@ never:"Je n'ai jamais",
 likely:"Qui est le plus susceptible",
 mafia:"Mafia",
 draw:"Dessiner et deviner",
-back:"⬅ Retour"
+back:"⬅ Retour",
+addPlayer:"Ajouter joueur",
+startGame:"Commencer le jeu",
+playerName:"Nom du joueur",
+truthBtn:"Vérité",
+dareBtn:"Action",
+next:"Suivant"
 },
 
 de:{
@@ -125,7 +103,13 @@ never:"Ich habe noch nie",
 likely:"Wer ist am ehesten",
 mafia:"Mafia",
 draw:"Zeichnen und raten",
-back:"⬅ Zurück"
+back:"⬅ Zurück",
+addPlayer:"Spieler hinzufügen",
+startGame:"Spiel starten",
+playerName:"Spielername",
+truthBtn:"Wahrheit",
+dareBtn:"Pflicht",
+next:"Weiter"
 }
 
 }
@@ -239,64 +223,45 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function changeLanguage(){
-
-showLanguageSelect()
-
-}
-
-if(!lang){
-
-detectTelegramLanguage()
-
-if(!lang){
-showLanguageSelect()
-}else{
-loadMain()
-}
-
-}else{
-loadMain()
-}
 // ---------- TRUTH OR DARE GAME ----------
 
-let players = []
-let currentPlayer = 0
+let players=[]
+let currentPlayer=0
 
 function startTruthDare(){
 
-document.getElementById("app").innerHTML = `
-<h1>Truth or Dare</h1>
+const t = translations[lang]
 
-<input id="playerName" placeholder="Player name">
+document.getElementById("app").innerHTML=`
+<h1>${t.truth}</h1>
 
-<button onclick="addPlayer()">Add Player</button>
+<input id="playerName" placeholder="${t.playerName}">
+
+<button onclick="addPlayer()">${t.addPlayer}</button>
 
 <div id="playerList"></div>
 
-<button onclick="startGame()">Start Game</button>
+<button onclick="startGame()">${t.startGame}</button>
 
-<button onclick="loadMain()">⬅ Back</button>
+<button onclick="openSection('couple')">${t.back}</button>
 `
 
 }
 
 function addPlayer(){
 
-let name = document.getElementById("playerName").value
+let name=document.getElementById("playerName").value
 
 if(name){
+
 players.push(name)
+
 document.getElementById("playerName").value=""
-updatePlayerList()
-}
-
-}
-
-function updatePlayerList(){
 
 document.getElementById("playerList").innerHTML =
-players.map(p => `<p>${p}</p>`).join("")
+players.map(p=>`<p>${p}</p>`).join("")
+
+}
 
 }
 
@@ -308,24 +273,26 @@ showTurn()
 
 function showTurn(){
 
+const t = translations[lang]
+
 let player = players[currentPlayer]
 
-document.getElementById("app").innerHTML = `
-<h1>${player}'s Turn</h1>
+document.getElementById("app").innerHTML=`
+<h1>${player}</h1>
 
-<button onclick="showTruth()">Truth</button>
-<button onclick="showDare()">Dare</button>
+<button onclick="showTruth()">${t.truthBtn}</button>
+<button onclick="showDare()">${t.dareBtn}</button>
 `
 
 }
 
-const truths = [
+const truths=[
 "What is your biggest secret?",
 "What is your biggest fear?",
-"What is your most embarrassing moment?"
+"What was your most embarrassing moment?"
 ]
 
-const dares = [
+const dares=[
 "Dance for 10 seconds",
 "Sing a song",
 "Do 5 pushups"
@@ -349,10 +316,12 @@ showChallenge(challenge)
 
 function showChallenge(text){
 
-document.getElementById("app").innerHTML = `
+const t = translations[lang]
+
+document.getElementById("app").innerHTML=`
 <h2>${text}</h2>
 
-<button onclick="nextPlayer()">Next</button>
+<button onclick="nextPlayer()">${t.next}</button>
 `
 
 }
@@ -361,14 +330,32 @@ function nextPlayer(){
 
 currentPlayer++
 
-if(currentPlayer >= players.length){
-currentPlayer = 0
+if(currentPlayer>=players.length){
+currentPlayer=0
 }
 
 showTurn()
 
 }
-</script>
 
-</body>
-</html>
+function changeLanguage(){
+
+showLanguageSelect()
+
+}
+
+if(!lang){
+
+detectTelegramLanguage()
+
+if(!lang){
+showLanguageSelect()
+}else{
+loadMain()
+}
+
+}else{
+loadMain()
+}
+
+</script>
