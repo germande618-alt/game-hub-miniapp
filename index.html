@@ -25,6 +25,10 @@ color:white;
 cursor:pointer;
 }
 
+button:hover{
+background:#2563eb;
+}
+
 </style>
 
 </head>
@@ -45,7 +49,7 @@ couple:"❤️ Couple Games",
 party:"🎉 Party Games",
 online:"🌐 Online Games",
 choose:"Choose language",
-settings:"⚙ Language"
+settings:"⚙ Change language"
 },
 
 ru:{
@@ -54,7 +58,7 @@ couple:"❤️ Игры для пар",
 party:"🎉 Игры для вечеринок",
 online:"🌐 Онлайн игры",
 choose:"Выберите язык",
-settings:"⚙ Язык"
+settings:"⚙ Сменить язык"
 },
 
 es:{
@@ -63,7 +67,7 @@ couple:"❤️ Juegos para Parejas",
 party:"🎉 Juegos para Fiesta",
 online:"🌐 Juegos Online",
 choose:"Elige idioma",
-settings:"⚙ Idioma"
+settings:"⚙ Cambiar idioma"
 },
 
 fr:{
@@ -72,7 +76,7 @@ couple:"❤️ Jeux pour Couples",
 party:"🎉 Jeux de Fête",
 online:"🌐 Jeux en Ligne",
 choose:"Choisir la langue",
-settings:"⚙ Langue"
+settings:"⚙ Changer la langue"
 },
 
 de:{
@@ -81,16 +85,16 @@ couple:"❤️ Spiele für Paare",
 party:"🎉 Partyspiele",
 online:"🌐 Online Spiele",
 choose:"Sprache wählen",
-settings:"⚙ Sprache"
+settings:"⚙ Sprache ändern"
 }
 
 }
 
-// ---------- ЯЗЫК ПОЛЬЗОВАТЕЛЯ ----------
+// ---------- ЯЗЫК ----------
 
 let lang = localStorage.getItem("lang")
 
-// ---------- АВТОЯЗЫК TELEGRAM ----------
+// ---------- ОПРЕДЕЛЕНИЕ ЯЗЫКА TELEGRAM ----------
 
 function detectTelegramLanguage(){
 
@@ -100,6 +104,7 @@ let tgLang = Telegram.WebApp.initDataUnsafe.user.language_code
 
 if(translations[tgLang]){
 lang = tgLang
+localStorage.setItem("lang",tgLang)
 }
 
 }
@@ -126,14 +131,14 @@ document.getElementById("app").innerHTML = `
 
 function setLang(selected){
 
-localStorage.setItem("lang",selected)
 lang = selected
+localStorage.setItem("lang",selected)
 
 loadMain()
 
 }
 
-// ---------- ГЛАВНЫЙ ЭКРАН ----------
+// ---------- ГЛАВНОЕ МЕНЮ ----------
 
 function loadMain(){
 
@@ -142,14 +147,48 @@ const t = translations[lang]
 document.getElementById("app").innerHTML = `
 <h1>${t.title}</h1>
 
-<button>${t.couple}</button>
-<button>${t.party}</button>
-<button>${t.online}</button>
+<button onclick="openSection('couple')">${t.couple}</button>
+<button onclick="openSection('party')">${t.party}</button>
+<button onclick="openSection('online')">${t.online}</button>
 
 <br>
 
 <button onclick="changeLanguage()">${t.settings}</button>
+
+<div id="content"></div>
 `
+
+}
+
+// ---------- РАЗДЕЛЫ ----------
+
+function openSection(section){
+
+const content = document.getElementById("content")
+
+if(section==="couple"){
+content.innerHTML = `
+<h2>Couple Games</h2>
+<button>Truth or Dare</button>
+<button>Couple Questions</button>
+`
+}
+
+if(section==="party"){
+content.innerHTML = `
+<h2>Party Games</h2>
+<button>Never Have I Ever</button>
+<button>Who is most likely to</button>
+`
+}
+
+if(section==="online"){
+content.innerHTML = `
+<h2>Online Games</h2>
+<button>Mafia</button>
+<button>Drawing Game</button>
+`
+}
 
 }
 
@@ -157,25 +196,26 @@ document.getElementById("app").innerHTML = `
 
 function changeLanguage(){
 
-localStorage.removeItem("lang")
 showLanguageSelect()
 
 }
 
-// ---------- СТАРТ ПРИЛОЖЕНИЯ ----------
+// ---------- СТАРТ ----------
 
 if(!lang){
 
 detectTelegramLanguage()
 
-if(lang){
-loadMain()
-}else{
+if(!lang){
 showLanguageSelect()
+}else{
+loadMain()
 }
 
 }else{
+
 loadMain()
+
 }
 
 </script>
