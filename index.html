@@ -396,8 +396,6 @@ loadMain();
 
 <script>
 
-// ---------- TRUTH OR DARE ----------
-
 function showTruth(){
 
 const list = cards.truth[lang] || cards.truth.en
@@ -418,19 +416,7 @@ showChallenge(challenge)
 
 }
 
-function showChallenge(text){
-
-const t = translations[lang]
-
-document.getElementById("app").innerHTML = `
-<h2>${text}</h2>
-
-<button onclick="nextPlayer()">${t.next}</button>
-`
-
-}
-
 </script>
 
 </body>
-</html>  
+</html>
