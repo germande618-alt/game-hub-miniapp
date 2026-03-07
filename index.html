@@ -32,7 +32,10 @@ button:hover{
 background:#2563eb;
 }
 
-h1{
+input{
+padding:10px;
+border-radius:8px;
+border:none;
 margin-top:10px;
 }
 
@@ -61,11 +64,10 @@ never:"Never Have I Ever",
 likely:"Who is most likely to",
 mafia:"Mafia",
 draw:"Drawing Game",
-back:"⬅ Back"
-  addPlayer:"Add Player",
+back:"⬅ Back",
+addPlayer:"Add Player",
 startGame:"Start Game",
 playerName:"Player name",
-players:"Players",
 truthBtn:"Truth",
 dareBtn:"Dare",
 next:"Next"
@@ -84,103 +86,18 @@ never:"Я никогда не",
 likely:"Кто скорее всего",
 mafia:"Мафия",
 draw:"Рисуй и угадывай",
-back:"⬅ Назад"
-  addPlayer:"Добавить игрока",
+back:"⬅ Назад",
+addPlayer:"Добавить игрока",
 startGame:"Начать игру",
 playerName:"Имя игрока",
-players:"Игроки",
 truthBtn:"Правда",
 dareBtn:"Действие",
 next:"Следующий"
-},
-
-es:{
-title:"Centro de Juegos",
-couple:"❤️ Juegos para Parejas",
-party:"🎉 Juegos para Fiesta",
-online:"🌐 Juegos Online",
-choose:"Elige idioma",
-settings:"⚙ Cambiar idioma",
-truth:"Verdad o Reto",
-questions:"Preguntas de Pareja",
-never:"Nunca he",
-likely:"Quién es más probable",
-mafia:"Mafia",
-draw:"Dibujar y adivinar",
-back:"⬅ Atrás"
-  addPlayer:"Agregar jugador",
-startGame:"Comenzar juego",
-playerName:"Nombre del jugador",
-players:"Jugadores",
-truthBtn:"Verdad",
-dareBtn:"Reto",
-next:"Siguiente"
-},
-
-fr:{
-title:"Centre de Jeux",
-couple:"❤️ Jeux pour Couples",
-party:"🎉 Jeux de Fête",
-online:"🌐 Jeux en Ligne",
-choose:"Choisir la langue",
-settings:"⚙ Changer la langue",
-truth:"Vérité ou Action",
-questions:"Questions pour Couples",
-never:"Je n'ai jamais",
-likely:"Qui est le plus susceptible",
-mafia:"Mafia",
-draw:"Dessiner et deviner",
-back:"⬅ Retour"
-  addPlayer:"Ajouter joueur",
-startGame:"Commencer le jeu",
-playerName:"Nom du joueur",
-players:"Joueurs",
-truthBtn:"Vérité",
-dareBtn:"Action",
-next:"Suivant"
-},
-
-de:{
-title:"Spiele Hub",
-couple:"❤️ Spiele für Paare",
-party:"🎉 Partyspiele",
-online:"🌐 Online Spiele",
-choose:"Sprache wählen",
-settings:"⚙ Sprache ändern",
-truth:"Wahrheit oder Pflicht",
-questions:"Paarfragen",
-never:"Ich habe noch nie",
-likely:"Wer ist am ehesten",
-mafia:"Mafia",
-draw:"Zeichnen und raten",
-back:"⬅ Zurück"
-  addPlayer:"Spieler hinzufügen",
-startGame:"Spiel starten",
-playerName:"Spielername",
-players:"Spieler",
-truthBtn:"Wahrheit",
-dareBtn:"Pflicht",
-next:"Weiter"
 }
 
-}
+};
 
-let lang = localStorage.getItem("lang")
-
-function detectTelegramLanguage(){
-
-if(window.Telegram && Telegram.WebApp){
-
-let tgLang = Telegram.WebApp.initDataUnsafe.user.language_code
-
-if(translations[tgLang]){
-lang = tgLang
-localStorage.setItem("lang",tgLang)
-}
-
-}
-
-}
+let lang = localStorage.getItem("lang");
 
 function showLanguageSelect(){
 
@@ -189,25 +106,22 @@ document.getElementById("app").innerHTML = `
 
 <button onclick="setLang('en')">🇬🇧 English</button>
 <button onclick="setLang('ru')">🇷🇺 Русский</button>
-<button onclick="setLang('es')">🇪🇸 Español</button>
-<button onclick="setLang('fr')">🇫🇷 Français</button>
-<button onclick="setLang('de')">🇩🇪 Deutsch</button>
-`
+`;
 
 }
 
 function setLang(selected){
 
-lang = selected
-localStorage.setItem("lang",selected)
+lang = selected;
+localStorage.setItem("lang",selected);
 
-loadMain()
+loadMain();
 
 }
 
 function loadMain(){
 
-const t = translations[lang]
+const t = translations[lang];
 
 document.getElementById("app").innerHTML = `
 <h1>${t.title}</h1>
@@ -219,13 +133,13 @@ document.getElementById("app").innerHTML = `
 <br>
 
 <button onclick="changeLanguage()">${t.settings}</button>
-`
+`;
 
 }
 
 function openSection(section){
 
-const t = translations[lang]
+const t = translations[lang];
 
 if(section==="couple"){
 
@@ -238,7 +152,7 @@ document.getElementById("app").innerHTML = `
 <br>
 
 <button onclick="loadMain()">${t.back}</button>
-`
+`;
 
 }
 
@@ -253,7 +167,7 @@ document.getElementById("app").innerHTML = `
 <br>
 
 <button onclick="loadMain()">${t.back}</button>
-`
+`;
 
 }
 
@@ -268,141 +182,143 @@ document.getElementById("app").innerHTML = `
 <br>
 
 <button onclick="loadMain()">${t.back}</button>
-`
+`;
 
 }
 
 }
 
-function changeLanguage(){
+// ---------- GAME ----------
 
-showLanguageSelect()
-
-}
-
-if(!lang){
-
-detectTelegramLanguage()
-
-if(!lang){
-showLanguageSelect()
-}else{
-loadMain()
-}
-
-}else{
-loadMain()
-}
-// ---------- TRUTH OR DARE ----------
-
-let players = []
-let currentPlayer = 0
+let players = [];
+let currentPlayer = 0;
 
 function startTruthDare(){
 
+const t = translations[lang];
+
 document.getElementById("app").innerHTML = `
-<h1>Truth or Dare</h1>
+<h1>${t.truth}</h1>
 
-<input id="playerName" placeholder="Player name">
+<input id="playerName" placeholder="${t.playerName}">
 
-<button onclick="addPlayer()">Add Player</button>
+<button onclick="addPlayer()">${t.addPlayer}</button>
 
 <div id="playerList"></div>
 
-<button onclick="startGame()">Start Game</button>
+<button onclick="startGame()">${t.startGame}</button>
 
-<button onclick="loadMain()">⬅ Back</button>
-`
+<button onclick="openSection('couple')">${t.back}</button>
+`;
 
 }
 
 function addPlayer(){
 
-let name = document.getElementById("playerName").value
+let name = document.getElementById("playerName").value;
 
 if(name){
-players.push(name)
-document.getElementById("playerName").value = ""
-updatePlayerList()
-}
 
-}
+players.push(name);
 
-function updatePlayerList(){
+document.getElementById("playerName").value="";
 
 document.getElementById("playerList").innerHTML =
-players.map(p => `<p>${p}</p>`).join("")
+players.map(p => `<p>${p}</p>`).join("");
+
+}
 
 }
 
 function startGame(){
 
-showTurn()
+showTurn();
 
 }
 
 function showTurn(){
 
-let player = players[currentPlayer]
+const t = translations[lang];
+
+let player = players[currentPlayer];
 
 document.getElementById("app").innerHTML = `
-<h1>${player}'s Turn</h1>
+<h1>${player}</h1>
 
-<button onclick="showTruth()">Truth</button>
-<button onclick="showDare()">Dare</button>
-`
+<button onclick="showTruth()">${t.truthBtn}</button>
+<button onclick="showDare()">${t.dareBtn}</button>
+`;
 
 }
 
 const truths = [
-"What is your biggest secret?",
-"Who do you like the most here?",
+"Tell your biggest secret",
+"What is your biggest fear?",
 "What was your most embarrassing moment?"
-]
+];
 
 const dares = [
 "Dance for 10 seconds",
 "Sing a song",
 "Do 5 pushups"
-]
+];
 
 function showTruth(){
 
-let challenge = truths[Math.floor(Math.random()*truths.length)]
+let challenge = truths[Math.floor(Math.random()*truths.length)];
 
-showChallenge(challenge)
+showChallenge(challenge);
 
 }
 
 function showDare(){
 
-let challenge = dares[Math.floor(Math.random()*dares.length)]
+let challenge = dares[Math.floor(Math.random()*dares.length)];
 
-showChallenge(challenge)
+showChallenge(challenge);
 
 }
 
 function showChallenge(text){
 
+const t = translations[lang];
+
 document.getElementById("app").innerHTML = `
 <h2>${text}</h2>
 
-<button onclick="nextPlayer()">Next</button>
-`
+<button onclick="nextPlayer()">${t.next}</button>
+`;
 
 }
 
 function nextPlayer(){
 
-currentPlayer++
+currentPlayer++;
 
 if(currentPlayer >= players.length){
-currentPlayer = 0
+currentPlayer = 0;
 }
 
-showTurn()
+showTurn();
 
 }
+
+function changeLanguage(){
+
+showLanguageSelect();
+
+}
+
+if(!lang){
+
+showLanguageSelect();
+
+}else{
+
+loadMain();
+
+}
+
 </script>
 
 </body>
