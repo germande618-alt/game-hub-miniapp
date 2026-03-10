@@ -163,6 +163,8 @@ document.getElementById("app").innerHTML=`
 
 ${playersHTML}
 
+<div id="pointer">▲</div>
+
 <div id="bottle">🍾➡</div>
 
 <div id="bottleResult"></div>
