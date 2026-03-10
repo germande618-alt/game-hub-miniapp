@@ -70,31 +70,37 @@ function spinBottle(){
 
 const bottle = document.getElementById("bottle")
 
-const playerIndex = Math.floor(Math.random()*players.length)
+const randomRotation = 720 + Math.random()*360
 
-const anglePerPlayer = 360 / players.length
-
-const targetAngle = anglePerPlayer * playerIndex
-
-const randomSpins = 360 * 5
-
-bottleRotation += randomSpins + targetAngle
+bottleRotation += randomRotation
 
 bottle.style.transform = `translate(-50%,-50%) rotate(${bottleRotation}deg)`
 
 setTimeout(()=>{
 
+highlightClosestPlayer()
+
+},3000)
+
+}
+
+function highlightClosestPlayer(){
+
+const angle = bottleRotation % 360
+
+const sector = 360 / players.length
+
+const index = Math.round(angle / sector) % players.length
+
 document.querySelectorAll(".circlePlayer").forEach(p=>{
 p.classList.remove("activePlayer")
 })
 
-const selected = document.querySelector(".player-"+playerIndex)
+const selected = document.querySelector(".player-"+index)
 
 if(selected){
 selected.classList.add("activePlayer")
 }
-
-},3000)
 
 }
 
