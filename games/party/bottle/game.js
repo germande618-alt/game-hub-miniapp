@@ -78,12 +78,37 @@ const t = translations[lang]
 
 document.getElementById("app").innerHTML=`
 
-<h2>${player}</h2>
+<div class="bottleArea">
 
-<button onclick="spinBottle()">${t.next}</button>
+<img id="bottle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bottle_icon.svg/512px-Bottle_icon.svg.png">
+
+</div>
+
+<h2 id="bottlePlayer"></h2>
+
+<button onclick="spinBottleAnimation()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
 `
+
+spinBottleAnimation(player)
+
+}
+
+function spinBottleAnimation(player){
+
+const bottle = document.getElementById("bottle")
+const playerText = document.getElementById("bottlePlayer")
+
+const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+
+bottle.style.transform = `rotate(${randomRotation}deg)`
+
+setTimeout(()=>{
+
+playerText.innerText = player
+
+},2000)
 
 }
