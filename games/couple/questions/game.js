@@ -77,9 +77,9 @@ const t=translations[lang]
 
 document.getElementById("app").innerHTML=`
 
-<h2>${player}</h2>
+<div class="playerName">${player}</div>
 
-<p>${question}</p>
+<div class="questionCard">${question}</div>
 
 <button onclick="nextQuestionPlayer()">${t.next}</button>
 
