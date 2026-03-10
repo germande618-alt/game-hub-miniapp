@@ -7,10 +7,6 @@ showPlayersBottle()
 
 }
 
-function showPlayersBottle(){
-
-const t = translations[lang]
-
 document.getElementById("app").innerHTML=`
 
 <h2>${t.playerName}</h2>
@@ -21,9 +17,17 @@ document.getElementById("app").innerHTML=`
 
 <div id="playersList"></div>
 
+<div class="bottleArea">
+
+<img id="bottle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bottle_icon.svg/512px-Bottle_icon.svg.png">
+
+</div>
+
 <button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
+
+`
 
 `
 
@@ -58,11 +62,20 @@ list.innerHTML+=`<div class="player">${p}</div>`
 
 function spinBottle(){
 
-if(players.length===0) return
+if(players.length === 0) return
 
-const randomPlayer = players[Math.floor(Math.random()*players.length)]
+const index = Math.floor(Math.random()*players.length)
+const player = players[index]
 
-showBottleResult(randomPlayer)
+const bottle = document.getElementById("bottle")
+
+const randomRotation = 360*5 + (index*(360/players.length))
+
+bottle.style.transform = `rotate(${randomRotation}deg)`
+
+setTimeout(()=>{
+showBottleResult(player)
+},2000)
 
 }
 
