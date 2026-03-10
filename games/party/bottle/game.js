@@ -68,7 +68,7 @@ function spinBottle(){
 
 const bottle = document.getElementById("bottle")
 
-const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+const randomRotation = 360*5 + Math.floor(Math.random()*360)
 
 bottle.style.transform = `rotate(${randomRotation}deg)`
 
@@ -78,21 +78,25 @@ function showBottleGame(){
 
 const t = translations[lang]
 
-let playersHTML = ""
+let playersHTML=""
 
-players.forEach(p=>{
-playersHTML += `<div class="bottlePlayer">${p}</div>`
+players.forEach((p,i)=>{
+
+const angle = (360/players.length)*i
+
+playersHTML += `
+<div class="circlePlayer" style="transform: rotate(${angle}deg) translate(140px) rotate(-${angle}deg)">
+${p}
+</div>
+`
+
 })
 
 document.getElementById("app").innerHTML=`
 
-<div class="bottlePlayers">
+<div class="bottleCircle">
 
 ${playersHTML}
-
-</div>
-
-<div class="bottleCenter">
 
 <div id="bottle">🍾</div>
 
