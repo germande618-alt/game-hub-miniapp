@@ -30,22 +30,27 @@ transform:scale(1.25)
 
 }
 
-.bottlePointer{
+.bottleCenter{
 position:absolute;
-top:-20px;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+}
+
+#pointer{
+position:absolute;
+top:-50px;
 left:50%;
 transform:translateX(-50%);
-font-size:28px;
-color:#ff4d4d;
-pointer-events:none;
+font-size:24px;
+color:red;
+transition: transform 3s cubic-bezier(.25,.8,.25,1);
 }
 
-#bottleResult{
-margin-top:20px;
-font-size:26px;
-font-weight:bold;
-}
-
+#bottle{
+font-size:60px;
+}  
+  
 .activePlayer{
 background:#4a8cff;
 color:white;
