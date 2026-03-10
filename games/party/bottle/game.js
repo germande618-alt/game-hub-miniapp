@@ -157,24 +157,25 @@ ${p}
 
 })
 
-document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML = `
 
 <div class="bottleCircle">
 
 ${playersHTML}
 
+<div class="bottleCenter">
+
 <div id="pointer">▲</div>
 
-<div id="bottle">🍾➡</div>
+<div id="bottle">🍾</div>
 
-<div id="bottleResult"></div>
+</div>
 
 </div>
 
 <button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
-
 `
 
 }
