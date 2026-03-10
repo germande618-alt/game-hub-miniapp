@@ -88,6 +88,7 @@ let currentPlayer = 0
 const translations = {
 
 ru:{
+never:"Я никогда не",
 title:"Игровой центр",
 couple:"Игры для пар",
 party:"Игры для вечеринок",
@@ -105,6 +106,7 @@ coupleQuestions:"Вопросы для пар"
 },
 
 en:{
+never:"Never Have I Ever",
 title:"Game Hub",
 couple:"Couple Games",
 party:"Party Games",
@@ -124,6 +126,7 @@ coupleQuestions:"Couple Questions"
 },
 
 es:{
+never:"Yo nunca",
 title:"Centro de juegos",
 couple:"Juegos para parejas",
 party:"Juegos de fiesta",
@@ -141,6 +144,7 @@ coupleQuestions:"Preguntas para parejas"
 },
 
 fr:{
+never:"Je n'ai jamais",
 title:"Centre de jeux",
 couple:"Jeux pour couples",
 party:"Jeux de soirée",
@@ -241,7 +245,7 @@ document.getElementById("app").innerHTML=`
 
 <h1>🎉 ${t.party}</h1>
 
-<button onclick="startNever()">Never Have I Ever</button>
+<button onclick="startNever()">${t.never}</button>
 
 <button onclick="loadMain()">⬅ ${t.back}</button>
 
