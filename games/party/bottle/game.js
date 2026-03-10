@@ -64,13 +64,17 @@ showBottleGame()
 
 }
 
+let bottleRotation = 0
+
 function spinBottle(){
 
 const bottle = document.getElementById("bottle")
 
-const randomRotation = 360*5 + Math.floor(Math.random()*360)
+const randomRotation = 720 + Math.floor(Math.random()*720)
 
-bottle.style.transform = `rotate(${randomRotation}deg)`
+bottleRotation += randomRotation
+
+bottle.style.transform = `translate(-50%,-50%) rotate(${bottleRotation}deg)`
 
 }
 
