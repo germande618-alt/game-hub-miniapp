@@ -1,27 +1,21 @@
 function startLikely(){
 
-players=[]
-currentPlayer=0
-
-showPlayersLikely()
+showLikelyCard()
 
 }
 
-function showPlayersLikely(){
+function showLikelyCard(){
+
+const list = likelyCards[lang] || likelyCards.en
+const card = list[Math.floor(Math.random()*list.length)]
 
 const t = translations[lang]
 
 document.getElementById("app").innerHTML=`
 
-<h2>${t.playerName}</h2>
+<div class="questionCard">${card}</div>
 
-<input id="playerInput" placeholder="${t.playerName}">
-
-<button onclick="addPlayerLikely()">${t.addPlayer}</button>
-
-<div id="playersList"></div>
-
-<button onclick="startLikelyGame()">${t.start}</button>
+<button onclick="showLikelyCard()">${t.next}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
