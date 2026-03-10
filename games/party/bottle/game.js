@@ -58,41 +58,51 @@ list.innerHTML+=`<div class="player">${p}</div>`
 
 function startBottleGame(){
 
-if(players.length===0) return
+if(players.length === 0) return
 
-spinBottle()
+showBottleGame()
 
 }
 
 function spinBottle(){
 
-const player = players[Math.floor(Math.random()*players.length)]
+const bottle = document.getElementById("bottle")
 
-showBottleResult(player)
+const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+
+bottle.style.transform = `rotate(${randomRotation}deg)`
 
 }
 
-function showBottleResult(player){
+function showBottleGame(){
 
 const t = translations[lang]
 
+let playersHTML = ""
+
+players.forEach(p=>{
+playersHTML += `<div class="bottlePlayer">${p}</div>`
+})
+
 document.getElementById("app").innerHTML=`
 
-<div class="bottleArea">
+<div class="bottlePlayers">
 
-<img id="bottle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bottle_icon.svg/512px-Bottle_icon.svg.png">
+${playersHTML}
 
 </div>
 
-<h2 id="bottlePlayer"></h2>
+<div class="bottleCenter">
 
-<button onclick="spinBottleAnimation()">${t.start}</button>
+<div id="bottle">🍾</div>
+
+</div>
+
+<button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
 `
-
-spinBottleAnimation(player)
 
 }
 
