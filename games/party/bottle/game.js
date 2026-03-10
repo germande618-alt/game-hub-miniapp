@@ -77,10 +77,46 @@ bottleRotation += randomRotation
 bottle.style.transform = `translate(-50%,-50%) rotate(${bottleRotation}deg)`
 
 setTimeout(()=>{
-
-highlightClosestPlayer()
-
+findClosestPlayer()
 },3000)
+
+}
+
+function findClosestPlayer(){
+
+const bottle = document.getElementById("bottle")
+
+const bottleRect = bottle.getBoundingClientRect()
+
+const bottleX = bottleRect.left + bottleRect.width/2
+const bottleY = bottleRect.top
+
+let closestPlayer = null
+let minDistance = Infinity
+
+document.querySelectorAll(".circlePlayer").forEach(player=>{
+
+const rect = player.getBoundingClientRect()
+
+const x = rect.left + rect.width/2
+const y = rect.top + rect.height/2
+
+const distance = Math.hypot(x-bottleX,y-bottleY)
+
+if(distance < minDistance){
+minDistance = distance
+closestPlayer = player
+}
+
+})
+
+document.querySelectorAll(".circlePlayer").forEach(p=>{
+p.classList.remove("activePlayer")
+})
+
+if(closestPlayer){
+closestPlayer.classList.add("activePlayer")
+}
 
 }
 
