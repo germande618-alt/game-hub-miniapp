@@ -88,6 +88,7 @@ let currentPlayer = 0
 const translations = {
 
 ru:{
+likely:"Кто скорее всего",
 never:"Я никогда не",
 title:"Игровой центр",
 couple:"Игры для пар",
@@ -106,6 +107,7 @@ coupleQuestions:"Вопросы для пар"
 },
 
 en:{
+likely:"Who is most likely",
 never:"Never Have I Ever",
 title:"Game Hub",
 couple:"Couple Games",
@@ -126,6 +128,7 @@ coupleQuestions:"Couple Questions"
 },
 
 es:{
+likely:"Quién es más probable",
 never:"Yo nunca",
 title:"Centro de juegos",
 couple:"Juegos para parejas",
@@ -144,6 +147,7 @@ coupleQuestions:"Preguntas para parejas"
 },
 
 fr:{
+likely:"Qui est le plus susceptible",
 never:"Je n'ai jamais",
 title:"Centre de jeux",
 couple:"Jeux pour couples",
@@ -246,6 +250,8 @@ document.getElementById("app").innerHTML=`
 <h1>🎉 ${t.party}</h1>
 
 <button onclick="startNever()">${t.never}</button>
+
+<button onclick="startLikely()">${t.likely}</button>
 
 <button onclick="loadMain()">⬅ ${t.back}</button>
 
@@ -397,6 +403,8 @@ loadMain()
 <script src="games/couple/questions/game.js"></script>
 <script src="games/party/never/cards.js"></script>
 <script src="games/party/never/game.js"></script>
+<script src="games/party/likely/cards.js"></script>
+<script src="games/party/likely/game.js"></script>
 
 </body>
 </html>
