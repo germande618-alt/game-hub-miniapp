@@ -234,7 +234,19 @@ showPlayers()
 }  
 
 function openParty(){
-showPlayers()
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML=`
+
+<h1>🎉 ${t.party}</h1>
+
+<button onclick="startNever()">Never Have I Ever</button>
+
+<button onclick="loadMain()">⬅ ${t.back}</button>
+
+`
+
 }
 
 function showPlayers(){
@@ -379,6 +391,8 @@ loadMain()
 <script src="games/couple/truthdare/game.js"></script>
 <script src="games/couple/questions/cards.js"></script>
 <script src="games/couple/questions/game.js"></script>
+<script src="games/party/never/cards.js"></script>
+<script src="games/party/never/game.js"></script>
 
 </body>
 </html>
