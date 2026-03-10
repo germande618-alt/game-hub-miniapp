@@ -68,6 +68,8 @@ showNeverCard()
 
 function showNeverCard(){
 
+const player = players[currentPlayer]
+
 const list = neverCards[lang] || neverCards.en
 const card = list[Math.floor(Math.random()*list.length)]
 
@@ -75,12 +77,26 @@ const t = translations[lang]
 
 document.getElementById("app").innerHTML=`
 
+<div class="playerName">${player}</div>
+
 <div class="questionCard">${card}</div>
 
-<button onclick="showNeverCard()">${t.next}</button>
+<button onclick="nextNeverPlayer()">${t.next}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
 `
+
+}
+
+function nextNeverPlayer(){
+
+currentPlayer++
+
+if(currentPlayer >= players.length){
+currentPlayer = 0
+}
+
+showNeverCard()
 
 }
