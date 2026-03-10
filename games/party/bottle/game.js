@@ -108,6 +108,14 @@ minDistance = distance
 closestPlayer = player
 }
 
+})
+
+/* очищаем старую подсветку */
+
+document.querySelectorAll(".circlePlayer").forEach(p=>{
+p.classList.remove("activePlayer")
+})
+
 const result = document.getElementById("bottleResult")
 
 if(closestPlayer){
@@ -118,16 +126,6 @@ if(result){
 result.innerText = "👉 " + closestPlayer.innerText
 }
 
-}
-
-})
-
-document.querySelectorAll(".circlePlayer").forEach(p=>{
-p.classList.remove("activePlayer")
-})
-
-if(closestPlayer){
-closestPlayer.classList.add("activePlayer")
 }
 
 }
