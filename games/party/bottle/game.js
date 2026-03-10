@@ -152,6 +152,8 @@ selected.classList.add("activePlayer")
 
 }
 
+let rotation = 0
+
 function showBottleGame(){
 
 const t = translations[lang]
@@ -164,7 +166,7 @@ const angle = (360/players.length)*i
 
 playersHTML += `
 <div class="circlePlayer player-${i}" 
-style="transform: translate(-50%,-50%) rotate(${angle}deg) translate(140px) rotate(-${angle}deg)">
+style="transform: rotate(${angle}deg) translate(150px) rotate(-${angle}deg)">
 ${p}
 </div>
 `
@@ -179,34 +181,67 @@ ${playersHTML}
 
 <div class="bottleCenter">
 
-<div id="pointer">▲</div>
+<div id="bottleWrapper">
 
+<div id="pointer">▲</div>
 <div id="bottle">🍾</div>
 
 </div>
 
 </div>
 
+</div>
+
+<div id="bottleResult"></div>
+
 <button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
+
 `
 
 }
 
-function spinBottleAnimation(player){
+function spinBottle(){
 
-const bottle = document.getElementById("bottle")
-const playerText = document.getElementById("bottlePlayer")
+const wrapper = document.getElementById("bottleWrapper")
 
-const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+const randomRotation = 720 + Math.random()*360
 
-bottle.style.transform = `rotate(${randomRotation}deg)`
+rotation += randomRotation
+
+wrapper.style.transform = `rotate(${rotation}deg)`
 
 setTimeout(()=>{
+highlightClosestPlayer()
+},3000)
 
-playerText.innerText = player
+}
 
-},2000)
+function highlightClosestPlayer(){
+
+const angle = rotation % 360
+
+const sector = 360 / players.length
+
+const index = Math.round(angle / sector) % players.length
+
+document.querySelectorAll(".circlePlayer").forEach(p=>{
+p.classList.remove("activePlayer")
+})
+
+const selected = document.querySelector(".player-"+index)
+
+const result = document.getElementById("bottleResult")
+
+if(selected){
+
+selected.classList.add("activePlayer")
+
+if(result){
+result.innerText = "👉 " + selected.innerText
+}
+
+}
 
 }
