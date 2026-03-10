@@ -68,6 +68,12 @@ let bottleRotation = 0
 
 function spinBottle(){
 
+const result = document.getElementById("bottleResult")
+
+if(result){
+result.innerText = ""
+}
+
 const bottle = document.getElementById("bottle")
 
 const randomRotation = 720 + Math.random()*360
