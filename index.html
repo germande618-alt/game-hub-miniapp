@@ -12,6 +12,9 @@ position:relative;
 width:320px;
 height:320px;
 margin:40px auto;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .circlePlayer{
@@ -23,6 +26,7 @@ background:#2a2a2a;
 padding:8px 12px;
 border-radius:10px;
 font-size:16px;
+white-space:nowrap;
 }
 
 #bottle{
@@ -31,7 +35,7 @@ left:50%;
 top:50%;
 transform:translate(-50%,-50%);
 font-size:70px;
-transition: transform 2s ease-out;
+transition: transform 3s cubic-bezier(.25,.8,.25,1);
 }
 
 .playerName{
