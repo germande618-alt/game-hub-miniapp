@@ -108,6 +108,17 @@ minDistance = distance
 closestPlayer = player
 }
 
+const result = document.getElementById("bottleResult")
+
+if(closestPlayer){
+
+closestPlayer.classList.add("activePlayer")
+
+if(result){
+result.innerText = "👉 " + closestPlayer.innerText
+}
+
+}
 
 })
 
