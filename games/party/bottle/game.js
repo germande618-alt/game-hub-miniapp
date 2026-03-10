@@ -27,11 +27,6 @@ document.getElementById("app").innerHTML=`
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
-`
-
-`
-
-}
 
 function addPlayerBottle(){
 
