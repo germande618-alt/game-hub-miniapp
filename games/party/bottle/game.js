@@ -90,46 +90,28 @@ findClosestPlayer()
 
 function findClosestPlayer(){
 
-const bottle = document.getElementById("bottle")
+const angle = bottleRotation % 360
 
-const bottleRect = bottle.getBoundingClientRect()
+const sector = 360 / players.length
 
-const bottleX = bottleRect.left + bottleRect.width/2
-const bottleY = bottleRect.top
+let index = Math.round(angle / sector)
 
-let closestPlayer = null
-let minDistance = Infinity
-
-document.querySelectorAll(".circlePlayer").forEach(player=>{
-
-const rect = player.getBoundingClientRect()
-
-const x = rect.left + rect.width/2
-const y = rect.top + rect.height/2
-
-const distance = Math.hypot(x-bottleX,y-bottleY)
-
-if(distance < minDistance){
-minDistance = distance
-closestPlayer = player
-}
-
-})
-
-/* очищаем старую подсветку */
+index = (players.length - index) % players.length
 
 document.querySelectorAll(".circlePlayer").forEach(p=>{
 p.classList.remove("activePlayer")
 })
 
+const selected = document.querySelector(".player-"+index)
+
 const result = document.getElementById("bottleResult")
 
-if(closestPlayer){
+if(selected){
 
-closestPlayer.classList.add("activePlayer")
+selected.classList.add("activePlayer")
 
 if(result){
-result.innerText = "👉 " + closestPlayer.innerText
+result.innerText = "👉 " + selected.innerText
 }
 
 }
@@ -181,9 +163,7 @@ document.getElementById("app").innerHTML=`
 
 ${playersHTML}
 
-<div class="bottlePointer">▲</div>
-
-<div id="bottle">🍾</div>
+<div id="bottle">🍾➡</div>
 
 <div id="bottleResult"></div>
 
