@@ -165,7 +165,11 @@ document.getElementById("app").innerHTML=`
 
 ${playersHTML}
 
+<div class="bottlePointer">▲</div>
+
 <div id="bottle">🍾</div>
+
+<div id="bottleResult"></div>
 
 </div>
 
