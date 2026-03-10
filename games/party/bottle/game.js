@@ -64,27 +64,41 @@ showBottleGame()
 
 }
 
-let bottleRotation = 0
+let pointerRotation = 0
 
 function spinBottle(){
 
-const result = document.getElementById("bottleResult")
-
-if(result){
-result.innerText = ""
-}
-
-const bottle = document.getElementById("bottle")
+const pointer = document.getElementById("pointer")
 
 const randomRotation = 720 + Math.random()*360
 
-bottleRotation += randomRotation
+pointerRotation += randomRotation
 
-bottle.style.transform = `translate(-50%,-50%) rotate(${bottleRotation}deg)`
+pointer.style.transform = `translateX(-50%) rotate(${pointerRotation}deg)`
 
 setTimeout(()=>{
-findClosestPlayer()
+detectPlayer()
 },3000)
+
+}
+
+function detectPlayer(){
+
+const angle = pointerRotation % 360
+
+const sector = 360 / players.length
+
+const index = Math.floor(angle / sector)
+
+document.querySelectorAll(".circlePlayer").forEach(p=>{
+p.classList.remove("activePlayer")
+})
+
+const selected = document.querySelector(".player-"+index)
+
+if(selected){
+selected.classList.add("activePlayer")
+}
 
 }
 
