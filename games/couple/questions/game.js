@@ -1,24 +1,102 @@
 function startCoupleQuestions(){
 
-const list = coupleQuestions[lang] || coupleQuestions.en
-const card = list[Math.floor(Math.random()*list.length)]
+players=[]
+currentPlayer=0
 
-showCoupleQuestion(card)
+showPlayersQuestions()
 
 }
 
-function showCoupleQuestion(text){
+function showPlayersQuestions(){
 
 const t = translations[lang]
 
-document.getElementById("app").innerHTML = `
+document.getElementById("app").innerHTML=`
 
-<h2>${text}</h2>
+<h2>${t.playerName}</h2>
 
-<button onclick="startCoupleQuestions()">${t.next}</button>
+<input id="playerInput" placeholder="${t.playerName}">
 
-<button onclick="openCouple()">${t.back}</button>
+<button onclick="addPlayerQuestions()">${t.addPlayer}</button>
+
+<div id="playersList"></div>
+
+<button onclick="startQuestionsGame()">${t.start}</button>
+
+<button onclick="openCouple()">⬅ ${t.back}</button>
 
 `
+
+}
+
+function addPlayerQuestions(){
+
+const input=document.getElementById("playerInput")
+const name=input.value.trim()
+
+if(name==="") return
+
+players.push(name)
+
+input.value=""
+
+updatePlayersQuestions()
+
+}
+
+function updatePlayersQuestions(){
+
+const list=document.getElementById("playersList")
+
+list.innerHTML=""
+
+players.forEach(p=>{
+list.innerHTML+=`<div class="player">${p}</div>`
+})
+
+}
+
+function startQuestionsGame(){
+
+if(players.length===0) return
+
+currentPlayer=0
+
+showQuestionTurn()
+
+}
+
+function showQuestionTurn(){
+
+const player=players[currentPlayer]
+const list=coupleQuestions[lang] || coupleQuestions.en
+
+const question=list[Math.floor(Math.random()*list.length)]
+
+const t=translations[lang]
+
+document.getElementById("app").innerHTML=`
+
+<h2>${player}</h2>
+
+<p>${question}</p>
+
+<button onclick="nextQuestionPlayer()">${t.next}</button>
+
+<button onclick="openCouple()">⬅ ${t.back}</button>
+
+`
+
+}
+
+function nextQuestionPlayer(){
+
+currentPlayer++
+
+if(currentPlayer>=players.length){
+currentPlayer=0
+}
+
+showQuestionTurn()
 
 }
