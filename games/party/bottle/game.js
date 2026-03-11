@@ -1,27 +1,27 @@
-let players = []
-
 function startBottle(){
 
-players = []
-showBottlePlayers()
+players=[]
+currentPlayer=0
+
+showPlayersBottle()
 
 }
 
-function showBottlePlayers(){
+function showPlayersBottle(){
 
 const t = translations[lang]
 
-document.getElementById("app").innerHTML = `
+document.getElementById("app").innerHTML=`
 
 <h2>${t.playerName}</h2>
 
 <input id="playerInput" placeholder="${t.playerName}">
 
-<button onclick="addBottlePlayer()">${t.addPlayer}</button>
+<button onclick="addPlayerBottle()">${t.addPlayer}</button>
 
 <div id="playersList"></div>
 
-<button onclick="showBottleGame()">${t.start}</button>
+<button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
 
@@ -29,64 +29,55 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function addBottlePlayer(){
+function addPlayerBottle(){
 
-const input = document.getElementById("playerInput")
-const name = input.value.trim()
+const input=document.getElementById("playerInput")
+const name=input.value.trim()
 
-if(name === "") return
+if(name==="") return
 
 players.push(name)
 
 input.value=""
 
-updateBottlePlayers()
+updatePlayersBottle()
 
 }
 
-function updateBottlePlayers(){
+function updatePlayersBottle(){
 
-const list = document.getElementById("playersList")
+const list=document.getElementById("playersList")
 
 list.innerHTML=""
 
 players.forEach(p=>{
-list.innerHTML += `<div class="player">${p}</div>`
+list.innerHTML+=`<div class="player">${p}</div>`
 })
-
-}
-
-function showBottleGame(){
-
-document.getElementById("app").innerHTML = `
-
-<div class="bottleSimple">
-
-<div id="bottle">🍾</div>
-
-<div id="bottleResult"></div>
-
-<button onclick="spinBottle()">Крутить</button>
-
-</div>
-
-`
 
 }
 
 function spinBottle(){
 
-const bottle = document.getElementById("bottle")
-const result = document.getElementById("bottleResult")
+if(players.length===0) return
 
-const player = players[Math.floor(Math.random()*players.length)]
+const randomPlayer = players[Math.floor(Math.random()*players.length)]
 
-const rotation = 720 + Math.random()*360
+showBottleResult(randomPlayer)
 
-bottle.style.transform = `rotate(${rotation}deg)`
+}
 
-setTimeout(()=>{
-result.innerText = "👉 " + player
-},1500)
+function showBottleResult(player){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML=`
+
+<div class="questionCard">${player}</div>
+
+<button onclick="spinBottle()">${t.next}</button>
+
+<button onclick="openParty()">⬅ ${t.back}</button>
+
+`
 
 }
