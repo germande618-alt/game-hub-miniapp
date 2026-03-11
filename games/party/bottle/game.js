@@ -67,19 +67,10 @@ showBottleGame()
 function spinBottle(){
 
 const bottle = document.getElementById("bottle")
-const result = document.getElementById("bottleResult")
 
-const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+const randomRotation = 360*5 + Math.floor(Math.random()*360)
 
 bottle.style.transform = `rotate(${randomRotation}deg)`
-
-const player = players[Math.floor(Math.random()*players.length)]
-
-setTimeout(()=>{
-
-result.innerText = "👉 " + player
-
-},2000)
 
 }
 
