@@ -137,6 +137,9 @@ let currentPlayer = 0
 const translations = {
 
 ru:{
+online:"Онлайн игры",
+createRoom:"Создать комнату",
+joinRoom:"Войти по коду",
 bottle:"Бутылочка",
 likely:"Кто скорее всего",
 never:"Я никогда не",
@@ -157,6 +160,9 @@ coupleQuestions:"Вопросы для пар"
 },
 
 en:{
+online:"Online games",
+createRoom:"Create room",
+joinRoom:"Join by code",
 bottle:"Spin the Bottle",
 likely:"Who is most likely",
 never:"Never Have I Ever",
@@ -179,6 +185,9 @@ coupleQuestions:"Couple Questions"
 },
 
 es:{
+online:"Juegos en línea",
+createRoom:"Crear sala",
+joinRoom:"Unirse con código",
 bottle:"Gira la botella",
 likely:"Quién es más probable",
 never:"Yo nunca",
@@ -199,6 +208,9 @@ coupleQuestions:"Preguntas para parejas"
 },
 
 fr:{
+online:"Jeux en ligne",
+createRoom:"Créer une salle",
+joinRoom:"Rejoindre avec code",
 bottle:"Bouteille",
 likely:"Qui est le plus susceptible",
 never:"Je n'ai jamais",
@@ -255,6 +267,7 @@ document.getElementById("app").innerHTML=`
 <button onclick="openParty()">🎉 ${t.party}</button>
 
 <button onclick="changeLanguage()">⚙ ${t.settings}</button>
+<button onclick="openOnline()">${t.online}</button>
 
 `
 
