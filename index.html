@@ -271,11 +271,13 @@ function loadMain(){
 
 const t = translations[lang]
 
-document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML = `
+
+<div class="mainScreen">
+
+<div class="mainMenu">
 
 <h1>${t.title}</h1>
-
-<div class="menuButtons">
 
 <button onclick="openCouple()">❤️ ${t.couple}</button>
 
@@ -288,6 +290,8 @@ document.getElementById("app").innerHTML=`
 <div class="bottomMenu">
 
 <button onclick="changeLanguage()">⚙ ${t.settings}</button>
+
+</div>
 
 </div>
 
