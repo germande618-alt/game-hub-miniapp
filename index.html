@@ -7,6 +7,18 @@
 
 <style>
 
+.menuButtons{
+margin-top:20px;
+}
+
+.bottomMenu{
+position:fixed;
+bottom:20px;
+left:0;
+width:100%;
+text-align:center;
+}
+
 .activePlayer{
 background:#4a8cff;
 color:white;
@@ -263,11 +275,21 @@ document.getElementById("app").innerHTML=`
 
 <h1>${t.title}</h1>
 
+<div class="menuButtons">
+
 <button onclick="openCouple()">❤️ ${t.couple}</button>
+
 <button onclick="openParty()">🎉 ${t.party}</button>
-<button onclick="openOnline()">${t.online}</button>
+
+<button onclick="openOnline()">🌐 ${t.online}</button>
+
+</div>
+
+<div class="bottomMenu">
+
 <button onclick="changeLanguage()">⚙ ${t.settings}</button>
 
+</div>
 
 `
 
