@@ -58,17 +58,19 @@ list.innerHTML+=`<div class="player">${p}</div>`
 
 function startBottleGame(){
 
-if(players.length===0) return
+if(players.length === 0) return
 
-spinBottle()
+showBottleGame()
 
 }
 
 function spinBottle(){
 
-const player = players[Math.floor(Math.random()*players.length)]
+const bottle = document.getElementById("bottle")
 
-showBottleResult(player)
+const randomRotation = 360 * 5 + Math.floor(Math.random()*360)
+
+bottle.style.transform = `rotate(${randomRotation}deg)`
 
 }
 
