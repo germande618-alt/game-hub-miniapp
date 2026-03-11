@@ -89,13 +89,13 @@ players.forEach((p,i)=>{
 const angle = (360/players.length)*i
 
 playersHTML += `
-<div class="circlePlayer" style="transform: rotate(${angle}deg) translate(140px) rotate(-${angle}deg)">
+<div class="circlePlayer player-${i}" 
+style="transform: translate(-50%,-50%) rotate(${angle}deg) translate(140px) rotate(-${angle}deg)">
 ${p}
 </div>
 `
 
 })
-
 document.getElementById("app").innerHTML=`
 
 <div class="bottleCircle">
