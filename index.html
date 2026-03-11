@@ -7,68 +7,21 @@
 
 <style>
 
-#bottleWrapper{
-position:relative;
-width:80px;
-height:80px;
-transition: transform 3s cubic-bezier(.25,.8,.25,1);
-}
-
-.activePlayer{
-background:#4a8cff;
-color:white;
-transform:scale(1.25);
-}
-
-@keyframes pulse{
-
-0%{
-transform:scale(1)
-}
-
-50%{
-transform:scale(1.35)
-}
-
-100%{
-transform:scale(1.25)
-}
-
-}
-
-.bottleCenter{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-}
-
-#pointer{
-position:absolute;
-top:-22px;
-left:50%;
-transform:translateX(-50%);
-font-size:18px;
-color:red;
+.bottleSimple{
+text-align:center;
+margin-top:40px;
 }
 
 #bottle{
-font-size:60px;
-transform:rotate(-90deg);
-}
-  
-.activePlayer{
-background:#4a8cff;
-color:white;
-transform:scale(1.2);
-transition:0.3s;
+font-size:70px;
+margin:20px;
+transition: transform 1.5s ease-out;
 }
 
-.bottleCircle{
-position:relative;
-width:360px;
-height:360px;
-margin:40px auto;
+#bottleResult{
+font-size:28px;
+margin:20px;
+font-weight:bold;
 }
 
 .circlePlayer{
