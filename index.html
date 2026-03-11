@@ -278,11 +278,9 @@ const t = translations[lang]
 
 document.getElementById("app").innerHTML = `
 
-<div class="mainScreen">
-
-<div class="mainMenu">
-
 <h1>${t.title}</h1>
+
+<div class="mainButtons">
 
 <button onclick="openCouple()">❤️ ${t.couple}</button>
 
@@ -292,11 +290,9 @@ document.getElementById("app").innerHTML = `
 
 </div>
 
-<div class="bottomMenu">
+<div class="languageButton">
 
 <button onclick="changeLanguage()">⚙ ${t.settings}</button>
-
-</div>
 
 </div>
 
