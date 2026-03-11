@@ -10,6 +10,22 @@
 
 <style>
 
+.fadeIn{
+animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform: translateY(10px);
+}
+
+to{
+opacity:1;
+transform: translateY(0);
+}
+}
+
 .mainScreen{
 display:flex;
 flex-direction:column;
@@ -280,7 +296,8 @@ function loadMain(){
 const t = translations[lang]
 
 document.getElementById("app").innerHTML = `
-
+<div class="fadeIn">
+</div>
 <h1>${t.title}</h1>
 
 <button onclick="openCouple()">❤️ ${t.couple}</button>
