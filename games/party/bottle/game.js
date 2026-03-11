@@ -84,6 +84,26 @@ highlightClosestPlayer()
 
 }
 
+function highlightClosestPlayer(){
+
+const angle = bottleRotation % 360
+
+const sector = 360 / players.length
+
+const index = Math.round(angle / sector) % players.length
+
+document.querySelectorAll(".circlePlayer").forEach(p=>{
+p.classList.remove("activePlayer")
+})
+
+const selected = document.querySelector(".player-"+index)
+
+if(selected){
+selected.classList.add("activePlayer")
+}
+
+}
+
 function showBottleGame(){
 
 const t = translations[lang]
