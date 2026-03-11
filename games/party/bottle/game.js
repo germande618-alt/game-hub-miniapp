@@ -21,6 +21,12 @@ document.getElementById("app").innerHTML=`
 
 <div id="playersList"></div>
 
+<div class="bottleArea">
+
+<img id="bottle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bottle_icon.svg/512px-Bottle_icon.svg.png">
+
+</div>
+
 <button onclick="spinBottle()">${t.start}</button>
 
 <button onclick="openParty()">⬅ ${t.back}</button>
