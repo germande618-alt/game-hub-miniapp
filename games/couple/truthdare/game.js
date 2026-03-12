@@ -30,6 +30,28 @@ showPlayers()
 
 function showPlayers(){
 
+if(!mode){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML = `
+
+<h2>💘 ${t.truth}</h2>
+
+<button onclick="selectMode('date')">💫 Первое свидание</button>
+
+<button onclick="selectMode('couple')">❤️ Давно вместе</button>
+
+<button onclick="selectMode('adult')">🔞 18+</button>
+
+<button onclick="openCouple()">⬅ ${t.back}</button>
+
+`
+
+return
+
+}
+
 players=[]
 currentPlayer=0
 
