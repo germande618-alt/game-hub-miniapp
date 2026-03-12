@@ -124,7 +124,7 @@ showTurn()
 
 function showTruth(){
 
-const list = cards[mode].truth[lang] || cards[mode].truth.en
+const list = cards.truth[lang] || cards.truth.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
@@ -134,7 +134,7 @@ showChallenge(challenge)
 
 function showDare(){
 
-const list = cards[mode].dare[lang] || cards[mode].dare.en
+const list = cards.dare[lang] || cards.dare.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
