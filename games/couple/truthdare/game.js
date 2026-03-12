@@ -1,3 +1,5 @@
+let mode = "date"
+
 function showPlayers(){
 
 players=[]
