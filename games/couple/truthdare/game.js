@@ -1,5 +1,33 @@
 let mode = "date"
 
+function openTruthDare(){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML = `
+
+<h2>💘 ${t.truth}</h2>
+
+<button onclick="selectMode('date')">💫 Первое свидание</button>
+
+<button onclick="selectMode('couple')">❤️ Давно вместе</button>
+
+<button onclick="selectMode('adult')">🔞 18+</button>
+
+<button onclick="openCouple()">⬅ ${t.back}</button>
+
+`
+
+}
+
+function selectMode(selected){
+
+mode = selected
+
+showPlayers()
+
+}
+
 function showPlayers(){
 
 players=[]
@@ -96,7 +124,7 @@ showTurn()
 
 function showTruth(){
 
-const list = cards.truth[lang] || cards.truth.en
+const list = cards[mode].truth[lang] || cards[mode].truth.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
@@ -106,7 +134,7 @@ showChallenge(challenge)
 
 function showDare(){
 
-const list = cards.dare[lang] || cards.dare.en
+const list = cards[mode].dare[lang] || cards[mode].dare.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
