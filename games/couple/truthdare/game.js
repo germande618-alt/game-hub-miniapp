@@ -28,6 +28,14 @@ showPlayers()
 
 }
 
+function selectMode(selected){
+
+mode = selected
+
+showPlayers()
+
+}
+
 function showPlayers(){
 
 if(!mode){
@@ -148,17 +156,9 @@ function showTruth(){
 
 let list
 
-if(mode === "date"){
-list = dateTruth
-}
-
-if(mode === "couple"){
-list = coupleTruth
-}
-
-if(mode === "adult"){
-list = adultTruth
-}
+if(mode === "date") list = dateTruth
+if(mode === "couple") list = coupleTruth
+if(mode === "adult") list = adultTruth
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
@@ -170,17 +170,9 @@ function showDare(){
 
 let list
 
-if(mode === "date"){
-list = dateDare
-}
-
-if(mode === "couple"){
-list = coupleDare
-}
-
-if(mode === "adult"){
-list = adultDare
-}
+if(mode === "date") list = dateDare
+if(mode === "couple") list = coupleDare
+if(mode === "adult") list = adultDare
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
