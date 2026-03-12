@@ -126,15 +126,15 @@ const t = translations[lang]
 
 document.getElementById("app").innerHTML = `
 
-<h2>💘 Выберите режим</h2>
+<h2>💘 ${t.modeTitle}</h2>
 
-<button onclick="setMode('date')">💫 Первое свидание</button>
+<button onclick="setMode('date')">💫 ${t.dateMode}</button>
 
-<button onclick="setMode('couple')">❤️ Давно знакомы</button>
+<button onclick="setMode('couple')">❤️ ${t.coupleMode}</button>
 
-<button onclick="setMode('adult')">🔞 18+</button>
+<button onclick="setMode('adult')">🔞 ${t.adultMode}</button>
 
-<button onclick="showPlayers()">⬅ ${t.back}</button>
+<button onclick="showPlayers()">⬅️ ${t.back}</button>
 
 `
 
