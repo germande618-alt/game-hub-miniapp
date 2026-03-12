@@ -114,7 +114,35 @@ function startGame(){
 
 if(players.length===0) return
 
-currentPlayer=0
+currentPlayer = 0
+
+showModeSelect()
+
+}
+
+function showModeSelect(){
+
+const t = translations[lang]
+
+document.getElementById("app").innerHTML = `
+
+<h2>💘 Выберите режим</h2>
+
+<button onclick="setMode('date')">💫 Первое свидание</button>
+
+<button onclick="setMode('couple')">❤️ Давно знакомы</button>
+
+<button onclick="setMode('adult')">🔞 18+</button>
+
+<button onclick="showPlayers()">⬅ ${t.back}</button>
+
+`
+
+}
+
+function setMode(selected){
+
+mode = selected
 
 showTurn()
 
