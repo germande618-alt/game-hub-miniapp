@@ -1,34 +1,68 @@
 const cards = {
 
+date:{
+
 truth:{
-
 ru:[
-"Чего ты боишься больше всего?",
-"Кто тебе нравится больше всего здесь?",
-"Какой самый неловкий момент в твоей жизни?"
+"Какое было твое первое впечатление обо мне?"
 ],
-
 en:[
-"What is your biggest fear?",
-"Who do you like the most here?",
-"What was your most embarrassing moment?"
+"What was your first impression of me?"
 ]
-
 },
 
 dare:{
-
 ru:[
-"Танцуй 10 секунд",
-"Спой песню",
-"Сделай 5 отжиманий"
+"Скажи мне милый комплимент"
 ],
-
 en:[
-"Dance for 10 seconds",
-"Sing a song",
-"Do 5 pushups"
+"Give me a cute compliment"
 ]
+}
+
+},
+
+couple:{
+
+truth:{
+ru:[
+"Когда ты понял что влюбился?"
+],
+en:[
+"When did you realize you loved me?"
+]
+},
+
+dare:{
+ru:[
+"Обними меня на 10 секунд"
+],
+en:[
+"Hug me for 10 seconds"
+]
+}
+
+},
+
+adult:{
+
+truth:{
+ru:[
+"Какая у тебя романтическая фантазия?"
+],
+en:[
+"What romantic fantasy do you have?"
+]
+},
+
+dare:{
+ru:[
+"Поцелуй меня"
+],
+en:[
+"Kiss me"
+]
+}
 
 }
 
