@@ -124,7 +124,19 @@ showTurn()
 
 function showTruth(){
 
-const list = cards[mode].truth[lang] || cards[mode].truth.en
+let list
+
+if(mode === "date"){
+list = dateTruth
+}
+
+if(mode === "couple"){
+list = coupleTruth
+}
+
+if(mode === "adult"){
+list = adultTruth
+}
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
@@ -134,7 +146,19 @@ showChallenge(challenge)
 
 function showDare(){
 
-const list = cards[mode].dare[lang] || cards[mode].dare.en
+let list
+
+if(mode === "date"){
+list = dateDare
+}
+
+if(mode === "couple"){
+list = coupleDare
+}
+
+if(mode === "adult"){
+list = adultDare
+}
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
