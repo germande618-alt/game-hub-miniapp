@@ -39,17 +39,17 @@ function showDateIdea(){
 
 let list
 
-if(dateMode === "home") list = homeIdeas
-if(dateMode === "walk") list = walkIdeas
-if(dateMode === "culture") list = cultureIdeas
-if(dateMode === "extreme") list = extremeIdeas
-if(dateMode === "romantic") list = romanticIdeas
+if(dateMode==="home") list = ideas.home[lang] || ideas.home.en
+if(dateMode==="walk") list = ideas.walk[lang] || ideas.walk.en
+if(dateMode==="culture") list = ideas.culture[lang] || ideas.culture.en
+if(dateMode==="extreme") list = ideas.extreme[lang] || ideas.extreme.en
+if(dateMode==="romantic") list = ideas.romantic[lang] || ideas.romantic.en
 
 const idea = list[Math.floor(Math.random()*list.length)]
 
 const t = translations[lang]
 
-document.getElementById("app").innerHTML = `
+document.getElementById("app").innerHTML=`
 
 <h2>${t.dateIdeas}</h2>
 
