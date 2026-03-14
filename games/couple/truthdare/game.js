@@ -184,9 +184,11 @@ function showTruth(){
 
 let list
 
-if(mode === "date") list = dateTruth
-if(mode === "couple") list = coupleTruth
-if(mode === "adult") list = adultTruth
+if(mode === "date") list = dateTruth[lang]
+if(mode === "couple") list = coupleTruth[lang]
+if(mode === "adult") list = adultTruth[lang]
+
+if(!list) list = dateTruth.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
@@ -198,9 +200,11 @@ function showDare(){
 
 let list
 
-if(mode === "date") list = dateDare
-if(mode === "couple") list = coupleDare
-if(mode === "adult") list = adultDare
+if(mode === "date") list = dateDare[lang]
+if(mode === "couple") list = coupleDare[lang]
+if(mode === "adult") list = adultDare[lang]
+
+if(!list) list = dateDare.en
 
 const challenge = list[Math.floor(Math.random()*list.length)]
 
