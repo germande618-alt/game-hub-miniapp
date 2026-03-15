@@ -60,15 +60,17 @@ document.getElementById("app").innerHTML = `
 
 function showJoinRoom(game){
 
+const t = translations[lang]
+
 document.getElementById("app").innerHTML = `
 
-<h2>${game}</h2>
+<h2>${t[game]}</h2>
 
-<input id="roomCode" placeholder="ABCD">
+<input id="roomCode" placeholder="${t.roomCode}">
 
-<button onclick="joinRoom('${game}')">Войти</button>
+<button onclick="joinRoom('${game}')">🔑 ${t.join}</button>
 
-<button onclick="openOnline()">⬅ Назад</button>
+<button onclick="openOnline()">⬅ ${t.back}</button>
 
 `
 
