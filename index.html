@@ -183,6 +183,16 @@ let lang = localStorage.getItem("lang")
 let players = []
 let currentPlayer = 0
 
+let playerID = localStorage.getItem("playerID")
+
+if(!playerID){
+
+playerID = Math.random().toString(36).substring(2,10)
+
+localStorage.setItem("playerID",playerID)
+
+}
+
 const translations = {
 
 ru:{
