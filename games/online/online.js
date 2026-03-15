@@ -120,9 +120,9 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function enterRoom(game, code){
+function enterRoom(game,code){
 
-playerName = document.getElementById("playerNameInput").value
+let playerName = document.getElementById("playerNameInput").value
 
 if(!playerName){
 playerName = "Игрок"
