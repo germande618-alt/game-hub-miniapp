@@ -1,3 +1,5 @@
+let playerName = ""
+
 function openOnline(){
 
 const t = translations[lang]
@@ -40,7 +42,7 @@ function createRoom(game){
 
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
-document.getElementById("app").innerHTML = `
+askPlayerName(game, code)
 
 <h2>Комната ${code}</h2>
 
@@ -105,5 +107,45 @@ document.getElementById("app").innerHTML = `
 function startOnlineGame(game){
 
 alert("Запуск игры: " + game)
+
+}
+
+function askPlayerName(game, code){
+
+document.getElementById("app").innerHTML = `
+
+<h2>Введите имя</h2>
+
+<input id="playerNameInput" placeholder="Ваше имя">
+
+<button onclick="enterRoom('${game}','${code}')">Продолжить</button>
+
+`
+
+}
+
+function enterRoom(game, code){
+
+playerName = document.getElementById("playerNameInput").value
+
+if(!playerName){
+playerName = "Игрок"
+}
+
+document.getElementById("app").innerHTML = `
+
+<h2>Комната ${code}</h2>
+
+<p>Игра: ${game}</p>
+
+<h3>Игроки</h3>
+
+<p>1. ${playerName}</p>
+
+<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
+
+<button onclick="openOnline()">⬅ Назад</button>
+
+`
 
 }
