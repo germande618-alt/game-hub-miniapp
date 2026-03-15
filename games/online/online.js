@@ -42,17 +42,13 @@ function createRoom(game){
 
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
-document.getElementById("app").innerHTML =
+document.getElementById("app").innerHTML = `
 
-<h2>Комната ${code}</h2>
+<h2>Введите имя</h2>
 
-<p>Игра: ${game}</p>
+<input id="playerNameInput" placeholder="Ваше имя">
 
-<h3>Игроки</h3>
-
-<p>1. Вы</p>
-
-<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
+<button onclick="enterRoom('${game}','${code}')">➡ Продолжить</button>
 
 <button onclick="openOnline()">⬅ Назад</button>
 
