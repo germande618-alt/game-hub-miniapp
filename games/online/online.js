@@ -4,11 +4,13 @@ const t = translations[lang]
 
 document.getElementById("app").innerHTML = `
 
-<h1>🌐 ${t.online}</h1>
+<h2>🌐 ${t.online}</h2>
 
-<button onclick="createRoom()">${t.createRoom}</button>
+<button onclick="openOnlineGame('durak')">🃏 Дурак</button>
 
-<button onclick="joinRoom()">${t.joinRoom}</button>
+<button onclick="openOnlineGame('mafia')">🕵️ Мафия</button>
+
+<button onclick="openOnlineGame('draw')">🎨 Рисуй и угадывай</button>
 
 <button onclick="loadMain()">⬅ ${t.back}</button>
 
@@ -16,17 +18,35 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function createRoom(){
+function openOnlineGame(game){
 
-const code = Math.floor(1000 + Math.random()*9000)
+const t = translations[lang]
 
 document.getElementById("app").innerHTML = `
 
-<h2>Комната создана</h2>
+<h2>${game}</h2>
 
-<div class="roomCode">${code}</div>
+<button onclick="createRoom('${game}')">➕ ${t.createRoom}</button>
 
-<p>Поделитесь кодом с друзьями</p>
+<button onclick="showJoinRoom('${game}')">🔑 ${t.joinRoom}</button>
+
+<button onclick="openOnline()">⬅ ${t.back}</button>
+
+`
+
+}
+
+function createRoom(game){
+
+const code = Math.random().toString(36).substring(2,6).toUpperCase()
+
+document.getElementById("app").innerHTML = `
+
+<h2>${game}</h2>
+
+<p>Код комнаты:</p>
+
+<h1>${code}</h1>
 
 <button onclick="openOnline()">⬅ Назад</button>
 
@@ -34,15 +54,15 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function joinRoom(){
+function showJoinRoom(game){
 
 document.getElementById("app").innerHTML = `
 
-<h2>Введите код комнаты</h2>
+<h2>${game}</h2>
 
-<input id="roomInput" placeholder="1234">
+<input id="roomCode" placeholder="ABCD">
 
-<button onclick="connectRoom()">Подключиться</button>
+<button onclick="joinRoom('${game}')">Войти</button>
 
 <button onclick="openOnline()">⬅ Назад</button>
 
@@ -50,10 +70,10 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function connectRoom(){
+function joinRoom(game){
 
-const code = document.getElementById("roomInput").value
+const code = document.getElementById("roomCode").value
 
-alert("Подключение к комнате " + code)
+alert("Игра: " + game + " | Комната: " + code)
 
 }
