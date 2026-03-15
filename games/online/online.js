@@ -40,17 +40,19 @@ document.getElementById("app").innerHTML = `
 
 function createRoom(game){
 
+const t = translations[lang]
+
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
 document.getElementById("app").innerHTML = `
 
-<h2>Введите имя</h2>
+<h2>${t.enterName}</h2>
 
-<input id="playerNameInput" placeholder="Ваше имя">
+<input id="playerNameInput" placeholder="${t.yourName}">
 
-<button onclick="enterRoom('${game}','${code}')">➡ Продолжить</button>
+<button onclick="enterRoom('${game}','${code}')">➡ ${t.continue}</button>
 
-<button onclick="openOnline()">⬅ Назад</button>
+<button onclick="openOnline()">⬅ ${t.back}</button>
 
 `
 
@@ -120,27 +122,29 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function enterRoom(game,code){
+function enterRoom(game, code){
+
+const t = translations[lang]
 
 let playerName = document.getElementById("playerNameInput").value
 
 if(!playerName){
-playerName = "Игрок"
+playerName = t.player
 }
 
 document.getElementById("app").innerHTML = `
 
-<h2>Комната ${code}</h2>
+<h2>${t.room} ${code}</h2>
 
-<p>Игра: ${game}</p>
+<p>${t.game}: ${game}</p>
 
-<h3>Игроки</h3>
+<h3>${t.players}</h3>
 
 <p>1. ${playerName}</p>
 
-<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
+<button onclick="startOnlineGame('${game}')">🎮 ${t.startGame}</button>
 
-<button onclick="openOnline()">⬅ Назад</button>
+<button onclick="openOnline()">⬅ ${t.back}</button>
 
 `
 
