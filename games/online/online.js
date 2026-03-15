@@ -42,7 +42,7 @@ function createRoom(game){
 
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
-askPlayerName(game, code)
+document.getElementById("app").innerHTML =
 
 <h2>Комната ${code}</h2>
 
