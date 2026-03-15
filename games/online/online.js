@@ -8,11 +8,11 @@ document.getElementById("app").innerHTML = `
 
 <h2>🌐 ${t.online}</h2>
 
-<button onclick="openOnlineGame('durak')">🃏 Дурак</button>
+<button onclick="openOnlineGame('durak')">🃏 ${t.durak}</button>
 
-<button onclick="openOnlineGame('mafia')">🕵️ Мафия</button>
+<button onclick="openOnlineGame('mafia')">🕵️ ${t.mafia}</button>
 
-<button onclick="openOnlineGame('draw')">🎨 Рисуй и угадывай</button>
+<button onclick="openOnlineGame('draw')">🎨 ${t.draw}</button>
 
 <button onclick="loadMain()">⬅ ${t.back}</button>
 
