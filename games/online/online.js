@@ -1,3 +1,5 @@
+let roomID = null
+let currentGame = null
 let playerName = ""
 
 function openOnline(){
@@ -21,6 +23,7 @@ document.getElementById("app").innerHTML = `
 }
 
 function openOnlineGame(game){
+currentGame = game
 
 const t = translations[lang]
 
@@ -43,6 +46,7 @@ function createRoom(game){
 const t = translations[lang]
 
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
+roomID = code
 
 document.getElementById("app").innerHTML = `
 
