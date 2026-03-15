@@ -42,11 +42,15 @@ const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
 document.getElementById("app").innerHTML = `
 
-<h2>${game}</h2>
+<h2>Комната ${code}</h2>
 
-<p>Код комнаты:</p>
+<p>Игра: ${game}</p>
 
-<h1>${code}</h1>
+<h3>Игроки</h3>
+
+<p>1. Вы</p>
+
+<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
 
 <button onclick="openOnline()">⬅ Назад</button>
 
@@ -95,5 +99,11 @@ document.getElementById("app").innerHTML = `
 <button onclick="openOnline()">⬅ Назад</button>
 
 `
+
+}
+
+function startOnlineGame(game){
+
+alert("Запуск игры: " + game)
 
 }
