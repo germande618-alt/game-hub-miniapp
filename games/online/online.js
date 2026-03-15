@@ -77,3 +77,23 @@ const code = document.getElementById("roomCode").value
 alert("Игра: " + game + " | Комната: " + code)
 
 }
+
+function openRoom(code, game){
+
+document.getElementById("app").innerHTML = `
+
+<h2>Комната ${code}</h2>
+
+<p>Игра: ${game}</p>
+
+<p>Игроки:</p>
+
+<p>1. Вы</p>
+
+<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
+
+<button onclick="openOnline()">⬅ Назад</button>
+
+`
+
+}
