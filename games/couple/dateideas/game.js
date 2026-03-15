@@ -1,3 +1,6 @@
+let shuffledIdeas = []
+let ideaIndex = 0
+
 function openDateIdeas(){
 
 const t = translations[lang]
@@ -30,6 +33,12 @@ function startDateMode(mode){
 
 dateMode = mode
 
+const list = ideas[mode][lang] || ideas[mode].en
+
+shuffledIdeas = [...list].sort(() => Math.random() - 0.5)
+
+ideaIndex = 0
+
 showDateIdea()
 
 }
@@ -37,19 +46,21 @@ showDateIdea()
 
 function showDateIdea(){
 
-let list
+if(ideaIndex >= shuffledIdeas.length){
 
-if(dateMode==="home") list = ideas.home[lang] || ideas.home.en
-if(dateMode==="walk") list = ideas.walk[lang] || ideas.walk.en
-if(dateMode==="culture") list = ideas.culture[lang] || ideas.culture.en
-if(dateMode==="extreme") list = ideas.extreme[lang] || ideas.extreme.en
-if(dateMode==="romantic") list = ideas.romantic[lang] || ideas.romantic.en
+// когда карточки закончились — перемешиваем заново
+shuffledIdeas = [...shuffledIdeas].sort(() => Math.random() - 0.5)
+ideaIndex = 0
 
-const idea = list[Math.floor(Math.random()*list.length)]
+}
+
+const idea = shuffledIdeas[ideaIndex]
+
+ideaIndex++
 
 const t = translations[lang]
 
-document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML = `
 
 <h2>${t.dateIdeas}</h2>
 
