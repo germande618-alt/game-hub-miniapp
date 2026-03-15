@@ -1,3 +1,7 @@
+let currentRoom = ""
+let roomPlayers = []
+let currentGame = ""
+
 function openOnline(){
 
 const t = translations[lang]
@@ -38,19 +42,13 @@ document.getElementById("app").innerHTML = `
 
 function createRoom(game){
 
-const code = Math.random().toString(36).substring(2,6).toUpperCase()
+currentGame = game
 
-document.getElementById("app").innerHTML = `
+currentRoom = Math.random().toString(36).substring(2,6).toUpperCase()
 
-<h2>${game}</h2>
+roomPlayers = ["Вы"]
 
-<p>Код комнаты:</p>
-
-<h1>${code}</h1>
-
-<button onclick="openOnline()">⬅ Назад</button>
-
-`
+openRoom()
 
 }
 
@@ -72,8 +70,54 @@ document.getElementById("app").innerHTML = `
 
 function joinRoom(game){
 
-const code = document.getElementById("roomCode").value
+currentGame = game
 
-alert("Игра: " + game + " | Комната: " + code)
+currentRoom = document.getElementById("roomCode").value.toUpperCase()
+
+roomPlayers = ["Вы"]
+
+openRoom()
+
+}
+
+function openRoom(){
+
+let playersHTML = ""
+
+roomPlayers.forEach((p,i)=>{
+playersHTML += <p>${i+1}. ${p}</p>
+})
+
+document.getElementById("app").innerHTML = `
+
+<h2>Комната ${currentRoom}</h2>
+
+<h3>Игроки</h3>
+
+${playersHTML}
+
+<button onclick="addFakePlayer()">➕ Добавить игрока (тест)</button>
+
+<button onclick="startOnlineGame()">🎮 Начать игру</button>
+
+<button onclick="openOnline()">⬅ Назад</button>
+
+`
+
+}
+
+function addFakePlayer(){
+
+const name = "Игрок " + (roomPlayers.length+1)
+
+roomPlayers.push(name)
+
+openRoom()
+
+}
+
+function startOnlineGame(){
+
+alert("Запуск игры: " + currentGame)
 
 }
