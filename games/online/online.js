@@ -1,4 +1,3 @@
-let isHost = false
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
 
 let roomID = null
@@ -14,31 +13,19 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("Server message:", data)
 
-if(data.type === "room_created"){
+    if(data.type === "room_created"){
+        roomID = data.code
 
-    roomID = data.code
-    isHost = true
-
-    askPlayerName(currentGame, roomID)
-
-}
+        document.getElementById("app").innerHTML = `
+        <h2>Комната ${roomID}</h2>
+        <p>Отправьте этот код друзьям</p>
+        `
+    }
 
     if(data.type === "joined"){
         roomID = data.code
         openRoom(roomID, currentGame)
     }
-
-if(data.type === "players"){
-
-    let playersHTML = ""
-
-    for(let i = 1; i <= data.count; i++){
-        playersHTML += <p>${i}. Игрок</p>
-    }
-
-    document.getElementById("playersList").innerHTML = playersHTML
-
-}
 
 }
 
@@ -157,20 +144,6 @@ document.getElementById("app").innerHTML = `
 function startOnlineGame(game){
 
 alert("Запуск игры: " + game)
-
-}
-
-function askPlayerName(game, code){
-
-document.getElementById("app").innerHTML = `
-
-<h2>Введите имя</h2>
-
-<input id="playerNameInput" placeholder="Ваше имя">
-
-<button onclick="enterRoom('${game}')">Продолжить</button>
-
-`
 
 }
 
