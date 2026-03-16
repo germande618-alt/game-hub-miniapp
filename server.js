@@ -33,47 +33,68 @@ wss.on("connection", ws => {
             console.log("Room created:", code)
         }
 
-       // войти в комнату
-if(data.type === "join"){
+        // войти в комнату
+        if(data.type === "join"){
 
-    const code = data.code.toUpperCase()
+            const code = data.code.toUpperCase()
 
-    if(!rooms[code]){
-        ws.send(JSON.stringify({
-            type:"error",
-            message:"room_not_found"
-        }))
-        return
-    }
+            if(!rooms[code]){
+                ws.send(JSON.stringify({
+                    type:"error",
+                    message:"room_not_found"
+                }))
+                return
+            }
 
-    // лимит игроков
-    if(rooms[code].length >= 8){
-        ws.send(JSON.stringify({
-            type:"error",
-            message:"room_full"
-        }))
-        return
-    }
+            // лимит игроков
+            if(rooms[code].length >= 8){
+                ws.send(JSON.stringify({
+                    type:"error",
+                    message:"room_full"
+                }))
+                return
+            }
 
-    rooms[code].push(ws)
-    ws.room = code
+            rooms[code].push(ws)
+            ws.room = code
 
-    ws.send(JSON.stringify({
-        type:"joined",
-        code:code
-    }))
-
-    // обновить список игроков
-    const players = rooms[code].length
-
-    rooms[code].forEach(client=>{
-        if(client.readyState === WebSocket.OPEN){
-            client.send(JSON.stringify({
-                type:"players",
-                count:players
+            ws.send(JSON.stringify({
+                type:"joined",
+                code:code
             }))
+
+            // обновить список игроков
+            const players = rooms[code].length
+
+            rooms[code].forEach(client=>{
+                if(client.readyState === WebSocket.OPEN){
+                    client.send(JSON.stringify({
+                        type:"players",
+                        count:players
+                    }))
+                }
+            })
+
+            console.log("Player joined room:", code)
         }
+
     })
 
-    console.log("Player joined room:", code)
-}
+    ws.on("close", () => {
+
+        const room = ws.room
+
+        if(room && rooms[room]){
+            rooms[room] = rooms[room].filter(client => client !== ws)
+
+            if(rooms[room].length === 0){
+                delete rooms[room]
+                console.log("Room deleted:", room)
+            }
+        }
+
+        console.log("Player disconnected")
+
+    })
+
+})
