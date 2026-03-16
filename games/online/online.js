@@ -1,4 +1,5 @@
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
+
 socket.onmessage = (event) => {
 
     const data = JSON.parse(event.data)
@@ -84,9 +85,6 @@ function createRoom(game){
 
 const t = translations[lang]
 
-const code = Math.random().toString(36).substring(2,6).toUpperCase()
-roomID = code
-
 socket.send(JSON.stringify({
     type: "create"
 }))
@@ -97,9 +95,9 @@ document.getElementById("app").innerHTML = `
 
 <input id="playerNameInput" placeholder="${t.yourName}">
 
-<button onclick="enterRoom('${game}','${code}')">➡ ${t.continue}</button>
+<button onclick="enterRoom('${game}')">➡️ ${t.continue}</button>
 
-<button onclick="openOnline()">⬅ ${t.back}</button>
+<button onclick="openOnline()">⬅️ ${t.back}</button>
 
 `
 
