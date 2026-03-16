@@ -172,7 +172,7 @@ document.getElementById("app").innerHTML = `
 
 }
 
-function enterRoom(game, code){
+function enterRoom(game){
 
 const t = translations[lang]
 
@@ -184,7 +184,7 @@ playerName = t.player
 
 document.getElementById("app").innerHTML = `
 
-<h2>${t.room} ${code}</h2>
+<h2>${t.room} ${roomID}</h2>
 
 <p>${t.game}: ${game}</p>
 
@@ -194,7 +194,7 @@ document.getElementById("app").innerHTML = `
 
 <button onclick="startOnlineGame('${game}')">🎮 ${t.startGame}</button>
 
-<button onclick="openOnline()">⬅ ${t.back}</button>
+<button onclick="openOnline()">⬅️ ${t.back}</button>
 
 `
 
