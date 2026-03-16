@@ -1,4 +1,27 @@
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
+socket.onmessage = (event) => {
+
+    const data = JSON.parse(event.data)
+
+    // сервер создал комнату
+    if(data.type === "room_created"){
+
+        roomID = data.code
+
+        console.log("Room created:", roomID)
+
+    }
+
+    // игрок вошёл
+    if(data.type === "joined"){
+
+        roomID = data.code
+
+        console.log("Joined room:", roomID)
+
+    }
+
+}
 
 socket.onopen = () => {
     console.log("Connected to server")
@@ -58,6 +81,10 @@ const t = translations[lang]
 const code = Math.random().toString(36).substring(2,6).toUpperCase()
 roomID = code
 
+socket.send(JSON.stringify({
+    type: "create"
+}))
+
 document.getElementById("app").innerHTML = `
 
 <h2>${t.enterName}</h2>
@@ -92,9 +119,12 @@ document.getElementById("app").innerHTML = `
 
 function joinRoom(game){
 
-const code = document.getElementById("roomCode").value
+const code = document.getElementById("roomCode").value.toUpperCase()
 
-alert("Игра: " + game + " | Комната: " + code)
+socket.send(JSON.stringify({
+    type:"join",
+    code:code
+}))
 
 }
 
