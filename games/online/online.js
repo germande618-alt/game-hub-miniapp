@@ -8,16 +8,22 @@ socket.onmessage = (event) => {
 
         roomID = data.code
 
-        console.log("Room created:", roomID)
+        document.getElementById("app").innerHTML = `
+        <h2>Комната ${roomID}</h2>
+        <p>Отправьте этот код друзьям</p>
+        `
 
     }
 
-    // игрок вошёл
+    // игрок вошел
     if(data.type === "joined"){
 
         roomID = data.code
 
-        console.log("Joined room:", roomID)
+        document.getElementById("app").innerHTML = `
+        <h2>Комната ${roomID}</h2>
+        <p>Вы в комнате</p>
+        `
 
     }
 
