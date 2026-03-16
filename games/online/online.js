@@ -17,7 +17,7 @@ if(data.type === "room_created"){
 
     roomID = data.code
 
-    openRoom(roomID, currentGame)
+    askPlayerName(currentGame, roomID)
 
 }
 
@@ -143,6 +143,20 @@ document.getElementById("app").innerHTML = `
 function startOnlineGame(game){
 
 alert("Запуск игры: " + game)
+
+}
+
+function askPlayerName(game, code){
+
+document.getElementById("app").innerHTML = `
+
+<h2>Введите имя</h2>
+
+<input id="playerNameInput" placeholder="Ваше имя">
+
+<button onclick="enterRoom('${game}')">Продолжить</button>
+
+`
 
 }
 
