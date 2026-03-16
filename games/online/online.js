@@ -14,9 +14,10 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("Server message:", data)
 
- if(data.type === "room_created"){
+if(data.type === "room_created"){
 
     roomID = data.code
+    isHost = true
 
     askPlayerName(currentGame, roomID)
 
