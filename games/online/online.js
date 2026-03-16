@@ -1,3 +1,13 @@
+const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
+
+socket.onopen = () => {
+    console.log("Connected to server")
+}
+
+socket.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    console.log("Server message:", data)
+}
 let roomID = null
 let currentGame = null
 let playerName = ""
