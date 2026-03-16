@@ -1,3 +1,4 @@
+let isHost = false
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
 
 let roomID = null
