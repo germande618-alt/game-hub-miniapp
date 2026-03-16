@@ -13,14 +13,13 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("Server message:", data)
 
-    if(data.type === "room_created"){
-        roomID = data.code
+ if(data.type === "room_created"){
 
-        document.getElementById("app").innerHTML = `
-        <h2>Комната ${roomID}</h2>
-        <p>Отправьте этот код друзьям</p>
-        `
-    }
+    roomID = data.code
+
+    askPlayerName(currentGame, roomID)
+
+}
 
     if(data.type === "joined"){
         roomID = data.code
@@ -85,6 +84,20 @@ document.getElementById("app").innerHTML = `
 <button onclick="enterRoom('${game}')">➡️ ${t.continue}</button>
 
 <button onclick="openOnline()">⬅️ ${t.back}</button>
+
+`
+
+}
+
+function askPlayerName(game, code){
+
+document.getElementById("app").innerHTML = `
+
+<h2>Введите имя</h2>
+
+<input id="playerNameInput" placeholder="Ваше имя">
+
+<button onclick="enterRoom('${game}')">Продолжить</button>
 
 `
 
