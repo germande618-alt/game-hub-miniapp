@@ -13,14 +13,13 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("Server message:", data)
 
-    if(data.type === "room_created"){
-        roomID = data.code
+if(data.type === "room_created"){
 
-        document.getElementById("app").innerHTML = `
-        <h2>Комната ${roomID}</h2>
-        <p>Отправьте этот код друзьям</p>
-        `
-    }
+    roomID = data.code
+
+    openRoom(roomID, currentGame)
+
+}
 
     if(data.type === "joined"){
         roomID = data.code
