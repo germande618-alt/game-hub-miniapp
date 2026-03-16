@@ -136,12 +136,6 @@ socket.send(JSON.stringify({
 
 function openRoom(code, game){
 
-let startButton = ""
-
-if(isHost){
-    startButton = <button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
-}
-
 document.getElementById("app").innerHTML = `
 
 <h2>Комната ${code}</h2>
@@ -150,9 +144,9 @@ document.getElementById("app").innerHTML = `
 
 <p>Игроки:</p>
 
-<div id="playersList"></div>
+<p>1. Вы</p>
 
-${startButton}
+<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
 
 <button onclick="openOnline()">⬅️ Назад</button>
 
