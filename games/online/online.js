@@ -124,13 +124,15 @@ document.getElementById("app").innerHTML = `
 
 function askPlayerName(game, code){
 
+const t = translations[lang]
+
 document.getElementById("app").innerHTML = `
 
-<h2>Введите имя</h2>
+<h2>${t.enterName}</h2>
 
-<input id="playerNameInput" placeholder="Ваше имя">
+<input id="playerNameInput" placeholder="${t.yourName}">
 
-<button onclick="enterRoom('${game}')">Продолжить</button>
+<button onclick="enterRoom('${game}')">➡️ ${t.continue}</button>
 
 `
 
