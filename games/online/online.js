@@ -167,7 +167,6 @@ function enterRoom(game){
 const t = translations[lang]
 
 playerName = document.getElementById("playerNameInput").value
-
 if(!playerName){
 playerName = t.player
 }
