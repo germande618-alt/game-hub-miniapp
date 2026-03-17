@@ -46,6 +46,28 @@ wss.on("connection", ws => {
                 return
             }
 
+        // сохранить имя игрока
+if(data.type === "set_name"){
+
+    ws.name = data.name
+
+    const room = ws.room
+
+    if(!room) return
+
+    const players = rooms[room].map(client => client.name || "Игрок")
+
+    rooms[room].forEach(client=>{
+        if(client.readyState === WebSocket.OPEN){
+            client.send(JSON.stringify({
+                type:"players",
+                players:players
+            }))
+        }
+    })
+
+}
+
             // лимит игроков
             if(rooms[code].length >= 8){
                 ws.send(JSON.stringify({
