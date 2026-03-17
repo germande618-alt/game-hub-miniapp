@@ -25,9 +25,9 @@ if(data.type === "room_created"){
 }
 
     if(data.type === "joined"){
-        roomID = data.code
-        openRoom(roomID, currentGame)
-    }
+    roomID = data.code
+    askPlayerName(currentGame, roomID)
+}
 
 if(data.type === "players"){
 
