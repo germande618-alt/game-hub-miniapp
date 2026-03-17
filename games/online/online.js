@@ -34,25 +34,29 @@ if(data.type === "players"){
     let playersHTML = ""
 
     data.players.forEach((name, i)=>{
-        playersHTML += <p>${i+1}. ${name}</p>
+        playersHTML += "<p>" + (i+1) + ". " + name + "</p>"
     })
 
-    document.getElementById("app").innerHTML = `
+    let startButton = ""
 
-    <h2>Комната ${roomID}</h2>
+    if(isHost){
+        startButton = '<button onclick="startOnlineGame(\'' + currentGame + '\')">🎮 Начать игру</button>'
+    }
 
-    <p>Игра: ${currentGame}</p>
+    document.getElementById("app").innerHTML =
 
-    <h3>Игроки:</h3>
+    "<h2>Комната " + roomID + "</h2>" +
 
-    ${playersHTML}
+    "<p>Игра: " + currentGame + "</p>" +
 
-   ${isHost ? <button onclick="startOnlineGame('${currentGame || ""}')">🎮 Начать игру</button> : ""}
+    "<h3>Игроки:</h3>" +
 
-    <button onclick="openOnline()">⬅️ Назад</button>
+    playersHTML +
 
-    `
- }
+    startButton +
+
+    '<button onclick="openOnline()">⬅️ Назад</button>'
+}
 
 }
 
