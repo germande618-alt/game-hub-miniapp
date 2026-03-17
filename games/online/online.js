@@ -1,3 +1,4 @@
+console.log("SCRIPT LOADED")
 let isHost = false
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
 
@@ -56,6 +57,7 @@ if(data.type === "players"){
 }
 
 function openOnline(){
+    console.log("openOnline CLICKED")
 
 const t = translations[lang]
 
