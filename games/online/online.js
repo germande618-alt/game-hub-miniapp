@@ -208,7 +208,3 @@ socket.send(JSON.stringify({
     type:"set_name",
     name:playerName
 }))
-
-openRoom(roomID, game)
-
-}
