@@ -46,7 +46,7 @@ if(data.type === "players"){
 
     ${playersHTML}
 
-    ${isHost ? <button onclick="startOnlineGame('${currentGame}')">🎮 Начать игру</button> : ""}
+   ${isHost ? <button onclick="startOnlineGame('${currentGame || ""}')">🎮 Начать игру</button> : ""}
 
     <button onclick="openOnline()">⬅️ Назад</button>
 
