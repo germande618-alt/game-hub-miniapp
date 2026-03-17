@@ -114,7 +114,7 @@ document.getElementById("app").innerHTML = `
 
 <input id="playerNameInput" placeholder="${t.yourName}">
 
-<button onclick="enterRoom('${game}')">➡️ ${t.continue}</button>
+<button onclick="enterRoom()">➡️ ${t.continue}</button>
 
 <button onclick="openOnline()">⬅️ ${t.back}</button>
 
