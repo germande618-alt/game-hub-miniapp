@@ -28,6 +28,31 @@ if(data.type === "room_created"){
         openRoom(roomID, currentGame)
     }
 
+if(data.type === "players"){
+
+    let playersHTML = ""
+
+    data.players.forEach((name, i)=>{
+        playersHTML += <p>${i+1}. ${name}</p>
+    })
+
+    document.getElementById("app").innerHTML = `
+
+    <h2>Комната ${roomID}</h2>
+
+    <p>Игра: ${currentGame}</p>
+
+    <h3>Игроки:</h3>
+
+    ${playersHTML}
+
+    ${isHost ? <button onclick="startOnlineGame('${currentGame}')">🎮 Начать игру</button> : ""}
+
+    <button onclick="openOnline()">⬅️ Назад</button>
+
+    `
+ }
+
 }
 
 function openOnline(){
