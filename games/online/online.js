@@ -102,39 +102,35 @@ document.getElementById("app").innerHTML = `
 
 function createRoom(game){
 
-const t = translations[lang]
+    const t = translations[lang]
 
-socket.send(JSON.stringify({
-    type: "create"
-}))
+    currentGame = game
 
-document.getElementById("app").innerHTML = `
+    socket.send(JSON.stringify({
+        type: "create"
+    }))
 
-<h2>${t.enterName}</h2>
+    document.getElementById("app").innerHTML = 
+    "<h2>" + t.enterName + "</h2>" +
 
-<input id="playerNameInput" placeholder="${t.yourName}">
+    "<input id='playerNameInput' placeholder='" + t.yourName + "'>" +
 
-<button onclick="enterRoom()">➡️ ${t.continue}</button>
+    "<button onclick='enterRoom()'>➡️ " + t.continue + "</button>" +
 
-<button onclick="openOnline()">⬅️ ${t.back}</button>
-
-`  
+    "<button onclick='openOnline()'>⬅️ " + t.back + "</button>"
 
 }
 
 function askPlayerName(game, code){
 
-const t = translations[lang]
+    const t = translations[lang]
 
-document.getElementById("app").innerHTML = `
+    document.getElementById("app").innerHTML = 
+    "<h2>" + t.enterName + "</h2>" +
 
-<h2>${t.enterName}</h2>
+    "<input id='playerNameInput' placeholder='" + t.yourName + "'>" +
 
-<input id="playerNameInput" placeholder="${t.yourName}">
-
-<button onclick="enterRoom('${game}')">➡️ ${t.continue}</button>
-
-`
+    "<button onclick='enterRoom()'>➡️ " + t.continue + "</button>"
 
 }
 
@@ -195,17 +191,22 @@ alert("Запуск игры: " + game)
 
 }
 
-function enterRoom(game){
+function enterRoom(){
 
-const t = translations[lang]
+    const t = translations[lang]
 
-playerName = document.getElementById("playerNameInput").value
-if(!playerName){
-playerName = t.player
-}
+    playerName = document.getElementById("playerNameInput").value
 
-socket.send(JSON.stringify({
-    type:"set_name",
-    name:playerName
-}))
+    if(!playerName){
+        playerName = t.player
+    }
+
+    socket.send(JSON.stringify({
+        type:"set_name",
+        name:playerName
+    }))
+
+    document.getElementById("app").innerHTML =
+    "<h2>" + t.room + " " + roomID + "</h2>" +
+    "<p>⏳ Ожидание игроков...</p>"
 }
