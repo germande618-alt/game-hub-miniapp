@@ -52,7 +52,6 @@ if(data.type === "set_name"){
     ws.name = data.name
 
     const room = ws.room
-
     if(!room) return
 
     const players = rooms[room].map(client => client.name || "Игрок")
@@ -66,6 +65,7 @@ if(data.type === "set_name"){
         }
     })
 
+    console.log("Players updated:", players)
 }
 
             // лимит игроков
