@@ -46,37 +46,6 @@ wss.on("connection", ws => {
                 return
             }
 
-  // сохранить имя игрока
-if(data.type === "set_name"){
-
-    ws.name = data.name
-
-    const room = ws.room
-    if(!room) return
-
-    const players = rooms[room].map(client => client.name || "Игрок")
-
-    rooms[room].forEach(client=>{
-        if(client.readyState === WebSocket.OPEN){
-            client.send(JSON.stringify({
-                type:"players",
-                players:players
-            }))
-        }
-    })
-
-    console.log("Players updated:", players)
-}
-
-            // лимит игроков
-            if(rooms[code].length >= 8){
-                ws.send(JSON.stringify({
-                    type:"error",
-                    message:"room_full"
-                }))
-                return
-            }
-
             rooms[code].push(ws)
             ws.room = code
 
@@ -85,19 +54,29 @@ if(data.type === "set_name"){
                 code:code
             }))
 
-            // обновить список игроков
-            const players = rooms[code].length
+            console.log("Player joined:", code)
+        }
 
-            rooms[code].forEach(client=>{
+        // 🔥 СОХРАНИТЬ ИМЯ (ГЛАВНОЕ)
+        if(data.type === "set_name"){
+
+            ws.name = data.name
+
+            const room = ws.room
+            if(!room) return
+
+            const players = rooms[room].map(client => client.name || "Игрок")
+
+            rooms[room].forEach(client=>{
                 if(client.readyState === WebSocket.OPEN){
                     client.send(JSON.stringify({
                         type:"players",
-                        count:players
+                        players:players
                     }))
                 }
             })
 
-            console.log("Player joined room:", code)
+            console.log("Players updated:", players)
         }
 
     })
@@ -116,7 +95,6 @@ if(data.type === "set_name"){
         }
 
         console.log("Player disconnected")
-
     })
 
 })
