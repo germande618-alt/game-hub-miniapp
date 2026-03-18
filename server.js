@@ -46,7 +46,7 @@ wss.on("connection", ws => {
                 return
             }
 
-        // сохранить имя игрока
+  // сохранить имя игрока
 if(data.type === "set_name"){
 
     ws.name = data.name
@@ -65,6 +65,7 @@ if(data.type === "set_name"){
         }
     })
 
+    console.log("Players updated:", players)
 }
 
             // лимит игроков
