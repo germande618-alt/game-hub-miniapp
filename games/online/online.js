@@ -1,3 +1,4 @@
+console.log("ONLINE JS LOADED")
 console.log("SCRIPT LOADED")
 let isHost = false
 const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
@@ -151,6 +152,7 @@ function showJoinRoom(game){
 }
 
 function joinRoom(){
+    console.log("JOIN CLICKED")
 
     const code = document.getElementById("roomCode").value.toUpperCase()
 
