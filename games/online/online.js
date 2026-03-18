@@ -137,24 +137,39 @@ function askPlayerName(game, code){
 
 function showJoinRoom(game){
 
-    const t = translations[lang]
-
     currentGame = game
 
     document.getElementById("app").innerHTML =
-    "<h2>" + t[game] + "</h2>" +
+    "<h2>Вход в комнату</h2>" +
 
-    "<input id='roomCode' placeholder='" + t.roomCode + "'>" +
+    "<input id='roomCode' placeholder='Код комнаты'>" +
 
-    "<button onclick='joinRoom()'>🔑 " + t.join + "</button>" +
+    "<button id='joinBtn'>Войти</button>" +
 
-    "<button onclick='openOnline()'>⬅️ " + t.back + "</button>"
+    "<button onclick='openOnline()'>Назад</button>"
+
+    setTimeout(()=>{
+        document.getElementById("joinBtn").onclick = joinRoom
+    }, 0)
 }
 
 function joinRoom(){
+
     console.log("JOIN CLICKED")
 
-    const code = document.getElementById("roomCode").value.toUpperCase()
+    const input = document.getElementById("roomCode")
+
+    if(!input){
+        alert("Ошибка: нет поля ввода")
+        return
+    }
+
+    const code = input.value.trim().toUpperCase()
+
+    if(!code){
+        alert("Введите код")
+        return
+    }
 
     socket.send(JSON.stringify({
         type:"join",
