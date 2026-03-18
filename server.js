@@ -65,7 +65,6 @@ if(data.type === "set_name"){
         }
     })
 
-    console.log("Players updated:", players)
 }
 
             // лимит игроков
