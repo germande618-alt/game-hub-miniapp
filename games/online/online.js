@@ -136,32 +136,28 @@ function askPlayerName(game, code){
 
 function showJoinRoom(game){
 
-const t = translations[lang]
+    const t = translations[lang]
 
-document.getElementById("app").innerHTML = `
+    currentGame = game
 
-<h2>${t[game]}</h2>
+    document.getElementById("app").innerHTML =
+    "<h2>" + t[game] + "</h2>" +
 
-<input id="roomCode" placeholder="${t.roomCode}">
+    "<input id='roomCode' placeholder='" + t.roomCode + "'>" +
 
-<button onclick="joinRoom('${game}')">🔑 ${t.join}</button>
+    "<button onclick='joinRoom()'>🔑 " + t.join + "</button>" +
 
-<button onclick="openOnline()">⬅️ ${t.back}</button>
-
-`
-
+    "<button onclick='openOnline()'>⬅️ " + t.back + "</button>"
 }
 
-function joinRoom(game){
+function joinRoom(){
 
-currentGame = game
+    const code = document.getElementById("roomCode").value.toUpperCase()
 
-const code = document.getElementById("roomCode").value.toUpperCase()
-
-socket.send(JSON.stringify({
-    type:"join",
-    code:code
-}))
+    socket.send(JSON.stringify({
+        type:"join",
+        code:code
+    }))
 
 }
 
