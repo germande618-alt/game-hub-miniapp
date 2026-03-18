@@ -1,218 +1,122 @@
-console.log("ONLINE JS LOADED")
-console.log("SCRIPT LOADED")
-let isHost = false
-const socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
+console.log("ONLINE LOADED")
+
+let socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
 
 let roomID = null
 let currentGame = null
 let playerName = ""
+let isHost = false
 
 socket.onopen = () => {
-    console.log("Connected to server")
+    console.log("Connected")
 }
 
 socket.onmessage = (event) => {
 
     const data = JSON.parse(event.data)
-    console.log("Server message:", data)
+    console.log("SERVER:", data)
 
-if(data.type === "room_created"){
-
-    roomID = data.code
-    isHost = true
-
-    askPlayerName(currentGame, roomID)
-
-}
-
-    if(data.type === "joined"){
-    roomID = data.code
-    askPlayerName(currentGame, roomID)
-}
-
-if(data.type === "players"){
-
-    let playersHTML = ""
-
-    data.players.forEach((name, i)=>{
-        playersHTML += "<p>" + (i+1) + ". " + name + "</p>"
-    })
-
-    let startButton = ""
-
-    if(isHost){
-        startButton = '<button onclick="startOnlineGame(\'' + currentGame + '\')">🎮 Начать игру</button>'
+    // создали комнату
+    if(data.type === "room_created"){
+        roomID = data.code
+        isHost = true
+        askName()
     }
 
-    document.getElementById("app").innerHTML =
+    // вошли в комнату
+    if(data.type === "joined"){
+        roomID = data.code
+        isHost = false
+        askName()
+    }
 
-    "<h2>Комната " + roomID + "</h2>" +
+    // список игроков
+    if(data.type === "players"){
 
-    "<p>Игра: " + currentGame + "</p>" +
+        let html = "<h2>Комната " + roomID + "</h2>"
+        html += "<h3>Игроки:</h3>"
 
-    "<h3>Игроки:</h3>" +
+        data.players.forEach((p,i)=>{
+            html += "<p>" + (i+1) + ". " + p + "</p>"
+        })
 
-    playersHTML +
+        if(isHost){
+            html += "<button onclick='startGame()'>🎮 Начать игру</button>"
+        }
 
-    startButton +
+        html += "<button onclick='openOnline()'>⬅️ Назад</button>"
 
-    '<button onclick="openOnline()">⬅️ Назад</button>'
-}
-
+        document.getElementById("app").innerHTML = html
+    }
 }
 
 function openOnline(){
-    console.log("openOnline CLICKED")
 
-const t = translations[lang]
+    document.getElementById("app").innerHTML =
+    "<h2>Онлайн</h2>" +
 
-document.getElementById("app").innerHTML = `
-
-<h2>🌐 ${t.online}</h2>
-
-<button onclick="openOnlineGame('durak')">🃏 ${t.durak}</button>
-
-<button onclick="openOnlineGame('mafia')">🕵️ ${t.mafia}</button>
-
-<button onclick="openOnlineGame('draw')">🎨 ${t.draw}</button>
-
-<button onclick="loadMain()">⬅️ ${t.back}</button>
-
-`
-
+    "<button onclick=\"openGame('durak')\">🃏 Дурак</button>" +
+    "<button onclick=\"openGame('mafia')\">🕵️ Мафия</button>" +
+    "<button onclick=\"openGame('draw')\">🎨 Рисуй</button>" +
+    "<button onclick=\"loadMain()\">⬅️ Назад</button>"
 }
 
-function openOnlineGame(game){
-
-currentGame = game
-const t = translations[lang]
-
-document.getElementById("app").innerHTML = `
-
-<h2>${game}</h2>
-
-<button onclick="createRoom('${game}')">➕ ${t.createRoom}</button>
-
-<button onclick="showJoinRoom('${game}')">🔑 ${t.joinRoom}</button>
-
-<button onclick="openOnline()">⬅️ ${t.back}</button>
-
-`
-
-}
-
-function createRoom(game){
-
-    const t = translations[lang]
-
-    currentGame = game
-
-    socket.send(JSON.stringify({
-        type: "create"
-    }))
-
-    document.getElementById("app").innerHTML = 
-    "<h2>" + t.enterName + "</h2>" +
-
-    "<input id='playerNameInput' placeholder='" + t.yourName + "'>" +
-
-    "<button onclick='enterRoom()'>➡️ " + t.continue + "</button>" +
-
-    "<button onclick='openOnline()'>⬅️ " + t.back + "</button>"
-
-}
-
-function askPlayerName(game, code){
-
-    const t = translations[lang]
-
-    document.getElementById("app").innerHTML = 
-    "<h2>" + t.enterName + "</h2>" +
-
-    "<input id='playerNameInput' placeholder='" + t.yourName + "'>" +
-
-    "<button onclick='enterRoom()'>➡️ " + t.continue + "</button>"
-
-}
-
-function showJoinRoom(game){
+function openGame(game){
 
     currentGame = game
 
     document.getElementById("app").innerHTML =
-    "<h2>Вход в комнату</h2>" +
+    "<h2>" + game + "</h2>" +
 
-    "<input id='roomCode' placeholder='Код комнаты'>" +
+    "<button onclick=\"createRoom()\">➕ Создать комнату</button>" +
+    "<button onclick=\"showJoin()\">🔑 Войти</button>" +
+    "<button onclick=\"openOnline()\">⬅️ Назад</button>"
+}
 
-    "<button id='joinBtn'>Войти</button>" +
+function createRoom(){
+
+    socket.send(JSON.stringify({
+        type:"create"
+    }))
+}
+
+function showJoin(){
+
+    document.getElementById("app").innerHTML =
+    "<h2>Введите код</h2>" +
+
+    "<input id='roomCode'>" +
+
+    "<button onclick='joinRoom()'>Войти</button>" +
 
     "<button onclick='openOnline()'>Назад</button>"
-
-    setTimeout(()=>{
-        document.getElementById("joinBtn").onclick = joinRoom
-    }, 0)
 }
 
 function joinRoom(){
 
-    console.log("JOIN CLICKED")
-
-    const input = document.getElementById("roomCode")
-
-    if(!input){
-        alert("Ошибка: нет поля ввода")
-        return
-    }
-
-    const code = input.value.trim().toUpperCase()
-
-    if(!code){
-        alert("Введите код")
-        return
-    }
+    const code = document.getElementById("roomCode").value.toUpperCase()
 
     socket.send(JSON.stringify({
         type:"join",
         code:code
     }))
-
 }
 
-function openRoom(code, game){
+function askName(){
 
-document.getElementById("app").innerHTML = `
+    document.getElementById("app").innerHTML =
+    "<h2>Введите имя</h2>" +
 
-<h2>Комната ${code}</h2>
+    "<input id='nameInput'>" +
 
-<p>Игра: ${game}</p>
-
-<p>Игроки:</p>
-
-<p>1. Вы</p>
-
-<button onclick="startOnlineGame('${game}')">🎮 Начать игру</button>
-
-<button onclick="openOnline()">⬅️ Назад</button>
-
-`
-
+    "<button onclick='sendName()'>Продолжить</button>"
 }
 
-function startOnlineGame(game){
+function sendName(){
 
-alert("Запуск игры: " + game)
+    const input = document.getElementById("nameInput")
 
-}
-
-function enterRoom(){
-
-    const t = translations[lang]
-
-    playerName = document.getElementById("playerNameInput").value
-
-    if(!playerName){
-        playerName = t.player
-    }
+    playerName = input.value || "Игрок"
 
     socket.send(JSON.stringify({
         type:"set_name",
@@ -220,6 +124,10 @@ function enterRoom(){
     }))
 
     document.getElementById("app").innerHTML =
-    "<h2>" + t.room + " " + roomID + "</h2>" +
-    "<p>⏳ Ожидание игроков...</p>"
+    "<h2>Комната " + roomID + "</h2>" +
+    "<p>Ожидание игроков...</p>"
+}
+
+function startGame(){
+    alert("Игра запускается")
 }
