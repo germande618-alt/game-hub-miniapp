@@ -5,6 +5,21 @@ const wss = new WebSocket.Server({ port: PORT })
 
 let rooms = {}
 
+function createDeck(){
+    const suits = ["♠","♥","♦","♣"]
+    const values = ["6","7","8","9","10","J","Q","K","A"]
+
+    let deck = []
+
+    suits.forEach(suit=>{
+        values.forEach(value=>{
+            deck.push(value + suit)
+        })
+    })
+
+    return deck.sort(()=>Math.random()-0.5)
+}
+
 console.log("Server started on port", PORT)
 
 wss.on("connection", ws => {
@@ -78,6 +93,44 @@ wss.on("connection", ws => {
 
             console.log("Players updated:", players)
         }
+
+    // старт игры
+if(data.type === "start_game"){
+
+    const room = ws.room
+    if(!room) return
+
+    // создаем колоду
+    const suits = ["♠","♥","♦","♣"]
+    const values = ["6","7","8","9","10","J","Q","K","A"]
+
+    let deck = []
+
+    suits.forEach(suit=>{
+        values.forEach(value=>{
+            deck.push(value + suit)
+        })
+    })
+
+    // перемешать
+    deck.sort(()=>Math.random()-0.5)
+
+    // раздать карты
+    rooms[room].players = rooms[room].map(client=>({
+        ws: client,
+        cards: deck.splice(0,6)
+    }))
+
+    // отправить каждому его карты
+    rooms[room].players.forEach(player=>{
+        player.ws.send(JSON.stringify({
+            type:"your_cards",
+            cards: player.cards
+        }))
+    })
+
+    console.log("Game started in room:", room)
+}
 
     })
 
