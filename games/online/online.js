@@ -118,7 +118,7 @@ document.getElementById("app").innerHTML = `
 
 <button onclick="openOnline()">⬅️ ${t.back}</button>
 
-`
+`  
 
 }
 
