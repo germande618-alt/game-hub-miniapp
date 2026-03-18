@@ -16,6 +16,17 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
+    if(data.type === "your_cards"){
+
+    let html = "<h2>Твои карты</h2>"
+
+    data.cards.forEach(card=>{
+        html += "<button>" + card + "</button>"
+    })
+
+    document.getElementById("app").innerHTML = html
+}
+
     // создали комнату
     if(data.type === "room_created"){
         roomID = data.code
@@ -129,5 +140,7 @@ function sendName(){
 }
 
 function startGame(){
-    alert("Игра запускается")
+    socket.send(JSON.stringify({
+        type:"start_game"
+    }))
 }
