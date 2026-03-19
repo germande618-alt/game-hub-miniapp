@@ -44,7 +44,7 @@ const offset = (i - center) * 55   // шире веер
         onclick="playCard('${card}')"
         style="
             left:50%;
-            transform: translateX(${offset}px) rotate(${angle}deg);
+transform: translateX(calc(-50% + ${offset}px)) rotate(${angle}deg);
             z-index:${i};
         "
     >
