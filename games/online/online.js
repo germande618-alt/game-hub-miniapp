@@ -16,15 +16,29 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-    if(data.type === "your_cards"){
+  if(data.type === "your_cards"){
 
-    let html = "<h2>Твои карты</h2>"
+    let enemyCount = 6 // пока временно
 
-    data.cards.forEach(card=>{
-        html += "<button>" + card + "</button>"
-    })
+    document.getElementById("app").innerHTML = `
 
-    document.getElementById("app").innerHTML = html
+    <div id="table">
+
+        <div id="enemy">
+            👤 Противник (${enemyCount})
+        </div>
+
+        <div id="board"></div>
+
+        <div id="player">
+            ${data.cards.map(card => 
+                <div class="card" onclick="playCard('${card}')">${card}</div>
+            ).join("")}
+        </div>
+
+    </div>
+
+    `
 }
 
     // создали комнату
