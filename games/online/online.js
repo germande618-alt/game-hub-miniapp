@@ -22,47 +22,48 @@ socket.onmessage = (event) => {
         let enemyCount = 6
 
         document.getElementById("app").innerHTML = `
-`
-        <div id="table">
 
-            <div id="enemy">
-                👤 Противник (${enemyCount})
+<div id="table">
+
+    <div id="enemy">
+        👤 Противник (${enemyCount})
+    </div>
+
+    <div id="board">
+
+        <div id="deck"></div>
+
+        <div id="trump">
+            <img src="cards/6_of_hearts.png">
+        </div>
+
+    </div>
+
+    <div id="player">
+        ${data.cards.map((card, i) => {
+
+            const total = data.cards.length
+            const spread = 40
+            const angle = (i - (total - 1) / 2) * 10
+
+            return `
+            <div class="card"
+                style="
+                    left: calc(50% + ${(i - (total - 1)/2) * spread}px);
+                    transform: translateX(-50%) rotate(${angle}deg);
+                    z-index: ${i};
+                "
+                onclick="selectCard('${card}', this)"
+            >
+                <img src="${getCardImage(card)}">
             </div>
-
-            <div id="board">
-
-    <div id="deck"></div>
-
-    <div id="trump">
-        <img src="cards/6_of_hearts.png">
+            `
+        }).join("")}
     </div>
 
 </div>
 
-            <div id="player">
-               ${data.cards.map((card, i) => {
-
-    const total = data.cards.length
-    const spread = 40
-    const angle = (i - (total - 1) / 2) * 10
-
-    return `
-    <div class="card"
-        style="
-            left: calc(50% + ${(i - (total - 1)/2) * spread}px);
-            transform: translateX(-50%) rotate(${angle}deg);
-            z-index: ${i};
-        "
-        onclick="selectCard('${card}', this)"
-    >
-        <img src="${getCardImage(card)}">
-    </div>
-  `
-}).join("")}
-            </div>
-
-        </div>
-    `
+`
     }
 
     // 🔥 КАРТА НА СТОЛЕ
