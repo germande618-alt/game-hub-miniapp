@@ -212,15 +212,25 @@ function getCardImage(card){
     let value = card.slice(0, -1)
     const suit = card.slice(-1)
 
-    let suitLetter = ""
+    let suitName = ""
 
-    if(suit === "♥") suitLetter = "H"
-    if(suit === "♦") suitLetter = "D"
-    if(suit === "♠") suitLetter = "S"
-    if(suit === "♣") suitLetter = "C"
+    if(suit === "♥") suitName = "hearts"
+    if(suit === "♦") suitName = "diamonds"
+    if(suit === "♠") suitName = "spades"
+    if(suit === "♣") suitName = "clubs"
 
-    // 💥 ВАЖНО — API использует 0 вместо 10
-    if(value === "10") value = "0"
+    let valueName = value
 
-    return https://deckofcardsapi.com/static/img/${value}${suitLetter}.png
+    if(value === "J") valueName = "jack"
+    if(value === "Q") valueName = "queen"
+    if(value === "K") valueName = "king"
+    if(value === "A") valueName = "ace"
+
+    let suffix = ""
+
+    if(["jack","queen","king"].includes(valueName)){
+        suffix = "2"
+    }
+
+    return cards/${valueName}_of_${suitName}${suffix}.png
 }
