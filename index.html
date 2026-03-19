@@ -10,12 +10,33 @@
 
 <style>
 
+#player {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 220px;
+    width: 100%;
+}
+
+#player .card {
+    position: absolute;
+    width: 110px;
+    height: 160px;
+    transition: 0.25s;
+    transform-origin: bottom center;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+}
+
 #board {
     position: relative;
     flex: 1;
 }
 
-/* колода */
 #deck {
     position: absolute;
     width: 80px;
@@ -27,7 +48,6 @@
     transform: translate(-50%, -50%);
 }
 
-/* козырь */
 #trump {
     position: absolute;
     width: 80px;
@@ -40,19 +60,6 @@
 #trump img {
     width: 100%;
     height: 100%;
-}
-
-/* карты на столе */
-#board .card {
-    position: absolute;
-    width: 80px;
-    height: 120px;
-}
-
-.card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 
 .fly {
