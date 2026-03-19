@@ -36,8 +36,8 @@ ${data.cards.map((card, i) => {
     const total = data.cards.length
     const center = (total - 1) / 2
 
-    const angle = (i - center) * 6   // было 10 → стало 6 (мягче)
-    const offset = (i - center) * 30 // центрируем!
+   const angle = (i - center) * 8     // больше наклон
+const offset = (i - center) * 55   // шире веер
 
     return `<div 
         class="card" 
