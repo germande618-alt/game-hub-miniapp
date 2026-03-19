@@ -19,77 +19,70 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-    // 🃏 РАЗДАЧА КАРТ
     if(data.type === "your_cards"){
 
-    let enemyCount = 6
+        let enemyCount = 6
 
-    document.getElementById("app").innerHTML = `
-<div id="table">
+        const cardsHTML = data.cards.map((card, i) => {
+            return `
+                <div class="card"
+                    style="
+                        left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);
+                        transform: translateX(-50%) rotate(${(i - (data.cards.length - 1)/2) * 10}deg);
+                        z-index: ${i};
+                    "
+                    onclick="selectCard('${card}', this)"
+                >
+                    <img src="${getCardImage(card)}">
+                </div>
+            `
+        }).join("")
 
-    <div id="enemy">
-        👤 Противник (${enemyCount})
-    </div>
+        document.getElementById("app").innerHTML = `
+            <div id="table">
 
-    <div id="board">
-        <div id="deck"></div>
-        <div id="trump">
-            <img src="cards/6_of_hearts.png">
-        </div>
-    </div>
+                <div id="enemy">
+                    👤 Противник (${enemyCount})
+                </div>
 
-    <div id="player">
-        ${data.cards.map((card, i) => `
-            <div class="card"
-                style="
-                    left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);
-                    transform: translateX(-50%) rotate(${(i - (data.cards.length - 1)/2) * 10}deg);
-                    z-index: ${i};
-                "
-                onclick="selectCard('${card}', this)"
-            >
-                <img src="${getCardImage(card)}">
+                <div id="board">
+                    <div id="deck"></div>
+                    <div id="trump">
+                        <img src="cards/6_of_hearts.png">
+                    </div>
+                </div>
+
+                <div id="player">
+                    ${cardsHTML}
+                </div>
+
             </div>
-        `).join("")}
-    </div>
+        `
+    }
 
-</div>
-`
-}
-
-    // 🃏 КАРТА НА СТОЛ
     if(data.type === "card_played"){
-
         const board = document.getElementById("board")
-
-        const count = board.querySelectorAll(".card").length
 
         const cardEl = document.createElement("div")
         cardEl.className = "card"
-
-        cardEl.style.left = (40 + count * 8) + "%"
-        cardEl.style.top = (40 + (count % 2) * 10) + "%"
 
         cardEl.innerHTML = <img src="${getCardImage(data.card)}">
 
         board.appendChild(cardEl)
     }
 
-    // комната создана
     if(data.type === "room_created"){
         roomID = data.code
         isHost = true
         askName()
     }
 
-    // вошли
     if(data.type === "joined"){
         roomID = data.code
         isHost = false
         askName()
     }
 
-    // список игроков
     if(data.type === "players"){
 
         let html = "<h2>Комната " + roomID + "</h2>"
