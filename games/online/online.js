@@ -32,7 +32,7 @@ socket.onmessage = (event) => {
 
             <div id="player">
                 ${data.cards.map(card => 
-                   <div class="card" onclick="playCard('${card}')">${card}</div>
+                   `<div class="card" onclick="playCard('${card}')">${card}</div>`
                 ).join("")}
             </div>
 
@@ -44,7 +44,7 @@ socket.onmessage = (event) => {
     if(data.type === "card_played"){
 
         document.getElementById("board").innerHTML +=
-    <div class="card">${data.card}</div>
+    `<div class="card">${data.card}</div>`
     }
 
     // создали комнату
