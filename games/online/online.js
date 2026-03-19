@@ -16,6 +16,7 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
+    // 🎮 получили карты
     if(data.type === "your_cards"){
 
         let enemyCount = 6
@@ -31,55 +32,40 @@ socket.onmessage = (event) => {
             <div id="board"></div>
 
             <div id="player">
-${data.cards.map((card, i) => {
-
-    const total = data.cards.length
-    const center = (total - 1) / 2
-
-    const angle = (i - center) * 8
-    const offset = (i - center) * 55
-
-    return `<div 
-        class="card"
-        onclick="playCard('${card}', this)"
-        style="
-            left:50%;
-            transform: translateX(calc(-50% + ${offset}px)) rotate(${angle}deg);
-            z-index:${i};
-        "
-    >
-        <img src="${getCardImage(card)}" style="width:100%; height:100%; border-radius:10px;">
-    </div>`
-
-}).join("")}
+                ${data.cards.map(card => 
+                    `<div class="card" onclick="playCard('${card}')">
+                        <img src="${getCardImage(card)}" style="width:100%; height:100%; border-radius:10px;">
+                    </div>`
+                ).join("")}
             </div>
 
         </div>
-
         `
     }
 
+    // 🎯 карта сыграна
     if(data.type === "card_played"){
-
         document.getElementById("board").innerHTML +=
-    `<div class="board-card">${data.card}</div>`
+        `<div class="card">
+            <img src="${getCardImage(data.card)}" style="width:100%; height:100%;">
+        </div>`
     }
 
-    // создали комнату
+    // 🏠 создали комнату
     if(data.type === "room_created"){
         roomID = data.code
         isHost = true
         askName()
     }
 
-    // вошли в комнату
+    // 🚪 вошли
     if(data.type === "joined"){
         roomID = data.code
         isHost = false
         askName()
     }
 
-    // список игроков
+    // 👥 список игроков
     if(data.type === "players"){
 
         let html = "<h2>Комната " + roomID + "</h2>"
@@ -98,6 +84,8 @@ ${data.cards.map((card, i) => {
         document.getElementById("app").innerHTML = html
     }
 }
+
+// ================= UI =================
 
 function openOnline(){
 
@@ -123,10 +111,7 @@ function openGame(game){
 }
 
 function createRoom(){
-
-    socket.send(JSON.stringify({
-        type:"create"
-    }))
+    socket.send(JSON.stringify({ type:"create" }))
 }
 
 function showJoin(){
@@ -177,16 +162,22 @@ function sendName(){
     "<p>Ожидание игроков...</p>"
 }
 
-function playCard(card, el){
+// ================= ИГРА =================
 
+function playCard(card){
+
+    const el = event.target.closest(".card")
     const rect = el.getBoundingClientRect()
 
-    const fly = document.createElement("div")
-    fly.className = "fly"
-    fly.innerText = card
-
+    const fly = el.cloneNode(true)
+    fly.style.position = "fixed"
     fly.style.left = rect.left + "px"
     fly.style.top = rect.top + "px"
+    fly.style.width = rect.width + "px"
+    fly.style.
+    height = rect.height + "px"
+    fly.style.zIndex = "1000"
+    fly.style.transition = "0.4s"
 
     document.body.appendChild(fly)
 
@@ -208,6 +199,14 @@ function playCard(card, el){
     }))
 }
 
+function startGame(){
+    socket.send(JSON.stringify({
+        type:"start_game"
+    }))
+}
+
+// ================= КАРТЫ =================
+
 function getCardImage(card){
 
     const value = card.slice(0, -1)
@@ -221,10 +220,4 @@ function getCardImage(card){
     if(suit === "♣") suitLetter = "C"
 
     return https://deckofcardsapi.com/static/img/${value}${suitLetter}.png
-}
-
-function startGame(){
-    socket.send(JSON.stringify({
-        type:"start_game"
-    }))
 }
