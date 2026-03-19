@@ -7,6 +7,9 @@ let currentGame = null
 let playerName = ""
 let isHost = false
 
+let selectedCard = null
+let selectedElement = null
+
 socket.onopen = () => {
     console.log("Connected")
 }
@@ -16,7 +19,7 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-    // 🔥 РАЗДАЧА КАРТ
+    // 🃏 РАЗДАЧА КАРТ
     if(data.type === "your_cards"){
 
         let enemyCount = 6
@@ -40,49 +43,42 @@ socket.onmessage = (event) => {
     </div>
 
     <div id="player">
-        ${data.cards.map((card, i) => {
-
-            const total = data.cards.length
-            const spread = 40
-            const angle = (i - (total - 1) / 2) * 10
-
-            return `
+        ${data.cards.map((card, i) => `
             <div class="card"
                 style="
-                    left: calc(50% + ${(i - (total - 1)/2) * spread}px);
-                    transform: translateX(-50%) rotate(${angle}deg);
+                    left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);
+                    transform: translateX(-50%) rotate(${(i - (data.cards.length - 1)/2) * 10}deg);
                     z-index: ${i};
                 "
                 onclick="selectCard('${card}', this)"
             >
                 <img src="${getCardImage(card)}">
             </div>
-            `
-        }).join("")}
+        `).join("")}
     </div>
 
 </div>
 
-`
+        `
     }
 
-    // 🔥 КАРТА НА СТОЛЕ
+    // 🃏 КАРТА НА СТОЛ
     if(data.type === "card_played"){
 
-    const board = document.getElementById("board")
+        const board = document.getElementById("board")
 
-    const count = board.querySelectorAll(".card").length
+        const count = board.querySelectorAll(".card").length
 
-    const cardEl = document.createElement("div")
-    cardEl.className = "card"
+        const cardEl = document.createElement("div")
+        cardEl.className = "card"
 
-    cardEl.style.left = (50 + count * 30) + "%"
-    cardEl.style.top = (40 + (count % 2) * 20) + "%"
+        cardEl.style.left = (40 + count * 8) + "%"
+        cardEl.style.top = (40 + (count % 2) * 10) + "%"
 
-    cardEl.innerHTML = <img src="${getCardImage(data.card)}">
+        cardEl.innerHTML = <img src="${getCardImage(data.card)}">
 
-    board.appendChild(cardEl)
-}
+        board.appendChild(cardEl)
+    }
 
     // комната создана
     if(data.type === "room_created"){
@@ -118,7 +114,27 @@ socket.onmessage = (event) => {
     }
 }
 
-// 🔥 ПОЛУЧЕНИЕ КАРТИНКИ
+// 🧠 ВЫБОР КАРТЫ
+function selectCard(card, el){
+
+    if(selectedCard === card){
+        playCard(card, el)
+        selectedCard = null
+        selectedElement = null
+        return
+    }
+
+    if(selectedElement){
+        selectedElement.style.transform = selectedElement.style.transform.replace(" translateY(-30px)", "")
+    }
+
+    selectedCard = card
+    selectedElement = el
+
+    el.style.transform += " translateY(-30px)"
+}
+
+// 🎯 ПОЛУЧЕНИЕ КАРТИНКИ
 function getCardImage(card){
 
     let value = card.slice(0, -1)
@@ -144,10 +160,10 @@ function getCardImage(card){
         suffix = "2"
     }
 
-    return `cards/${valueName}_of_${suitName}${suffix}.png`
+    return cards/${valueName}_of_${suitName}${suffix}.png
 }
 
-// 🔥 КЛИК ПО КАРТЕ
+// 🎮 КИНУТЬ КАРТУ
 function playCard(card, el){
 
     const rect = el.getBoundingClientRect()
@@ -162,7 +178,6 @@ function playCard(card, el){
     fly.style.height = rect.height + "px"
     fly.style.transition = "0.4s"
     fly.style.zIndex = "999"
-
     document.body.appendChild(fly)
 
     setTimeout(() => {
@@ -183,7 +198,7 @@ function playCard(card, el){
     }))
 }
 
-// UI функции
+// UI
 function openOnline(){
     document.getElementById("app").innerHTML =
     "<h2>Онлайн</h2>" +
@@ -204,7 +219,7 @@ function openGame(game){
 }
 
 function createRoom(){
-socket.send(JSON.stringify({ type:"create" }))
+    socket.send(JSON.stringify({ type:"create" }))
 }
 
 function showJoin(){
@@ -250,29 +265,4 @@ function startGame(){
     socket.send(JSON.stringify({
         type:"start_game"
     }))
-}
-
-let selectedCard = null
-let selectedElement = null
-
-function selectCard(card, el){
-
-    // если уже выбрана → играем
-    if(selectedCard === card){
-        playCard(card, el)
-        selectedCard = null
-        selectedElement = null
-        return
-    }
-
-    // сброс старой
-    if(selectedElement){
-        selectedElement.style.transform = selectedElement.style.transform.replace(" translateY(-30px)", "")
-    }
-
-    selectedCard = card
-    selectedElement = el
-
-    // поднимаем карту
-    el.style.transform += " translateY(-30px)"
 }
