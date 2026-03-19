@@ -29,7 +29,15 @@ socket.onmessage = (event) => {
                 👤 Противник (${enemyCount})
             </div>
 
-            <div id="board"></div>
+            <div id="board">
+
+    <div id="deck"></div>
+
+    <div id="trump">
+        <img src="cards/6_of_hearts.png">
+    </div>
+
+</div>
 
             <div id="player">
                ${data.cards.map((card, i) => {
