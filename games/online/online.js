@@ -41,6 +41,12 @@ socket.onmessage = (event) => {
     `
 }
 
+if(data.type === "card_played"){
+
+    document.getElementById("board").innerHTML +=
+        <div class="card">${data.card}</div>
+}
+
     // создали комнату
     if(data.type === "room_created"){
         roomID = data.code
@@ -151,6 +157,15 @@ function sendName(){
     document.getElementById("app").innerHTML =
     "<h2>Комната " + roomID + "</h2>" +
     "<p>Ожидание игроков...</p>"
+}
+
+function playCard(card){
+
+    socket.send(JSON.stringify({
+        type:"play_card",
+        card:card
+    }))
+
 }
 
 function startGame(){
