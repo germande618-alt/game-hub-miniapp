@@ -22,10 +22,9 @@ socket.onmessage = (event) => {
     // 🃏 РАЗДАЧА КАРТ
     if(data.type === "your_cards"){
 
-        let enemyCount = 6
+    let enemyCount = 6
 
-        document.getElementById("app").innerHTML = `
-
+    document.getElementById("app").innerHTML = `
 <div id="table">
 
     <div id="enemy">
@@ -33,13 +32,10 @@ socket.onmessage = (event) => {
     </div>
 
     <div id="board">
-
         <div id="deck"></div>
-
         <div id="trump">
             <img src="cards/6_of_hearts.png">
         </div>
-
     </div>
 
     <div id="player">
@@ -58,9 +54,8 @@ socket.onmessage = (event) => {
     </div>
 
 </div>
-
-        `
-    }
+`
+}
 
     // 🃏 КАРТА НА СТОЛ
     if(data.type === "card_played"){
