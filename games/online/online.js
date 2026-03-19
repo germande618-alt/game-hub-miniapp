@@ -209,7 +209,7 @@ function startGame(){
 
 function getCardImage(card){
 
-    const value = card.slice(0, -1)
+    let value = card.slice(0, -1)
     const suit = card.slice(-1)
 
     let suitLetter = ""
@@ -218,6 +218,9 @@ function getCardImage(card){
     if(suit === "♦") suitLetter = "D"
     if(suit === "♠") suitLetter = "S"
     if(suit === "♣") suitLetter = "C"
+
+    // 💥 ВАЖНО — API использует 0 вместо 10
+    if(value === "10") value = "0"
 
     return https://deckofcardsapi.com/static/img/${value}${suitLetter}.png
 }
