@@ -16,7 +16,7 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-    // 🎮 получили карты
+    // 🔥 РАЗДАЧА КАРТ
     if(data.type === "your_cards"){
 
         let enemyCount = 6
@@ -33,8 +33,8 @@ socket.onmessage = (event) => {
 
             <div id="player">
                 ${data.cards.map(card => 
-                    `<div class="card" onclick="playCard('${card}')">
-                        <img src="${getCardImage(card)}" style="width:100%; height:100%; border-radius:10px;">
+                    `<div class="card" onclick="playCard('${card}', this)">
+                        <img src="${getCardImage(card)}">
                     </div>`
                 ).join("")}
             </div>
@@ -43,29 +43,29 @@ socket.onmessage = (event) => {
         `
     }
 
-    // 🎯 карта сыграна
+    // 🔥 КАРТА НА СТОЛЕ
     if(data.type === "card_played"){
         document.getElementById("board").innerHTML +=
         `<div class="card">
-            <img src="${getCardImage(data.card)}" style="width:100%; height:100%;">
+            <img src="${getCardImage(data.card)}">
         </div>`
     }
 
-    // 🏠 создали комнату
+    // комната создана
     if(data.type === "room_created"){
         roomID = data.code
         isHost = true
         askName()
     }
 
-    // 🚪 вошли
+    // вошли
     if(data.type === "joined"){
         roomID = data.code
         isHost = false
         askName()
     }
 
-    // 👥 список игроков
+    // список игроков
     if(data.type === "players"){
 
         let html = "<h2>Комната " + roomID + "</h2>"
@@ -85,128 +85,7 @@ socket.onmessage = (event) => {
     }
 }
 
-// ================= UI =================
-
-function openOnline(){
-
-    document.getElementById("app").innerHTML =
-    "<h2>Онлайн</h2>" +
-
-    "<button onclick=\"openGame('durak')\">🃏 Дурак</button>" +
-    "<button onclick=\"openGame('mafia')\">🕵️ Мафия</button>" +
-    "<button onclick=\"openGame('draw')\">🎨 Рисуй</button>" +
-    "<button onclick=\"loadMain()\">⬅️ Назад</button>"
-}
-
-function openGame(game){
-
-    currentGame = game
-
-    document.getElementById("app").innerHTML =
-    "<h2>" + game + "</h2>" +
-
-    "<button onclick=\"createRoom()\">➕ Создать комнату</button>" +
-    "<button onclick=\"showJoin()\">🔑 Войти</button>" +
-    "<button onclick=\"openOnline()\">⬅️ Назад</button>"
-}
-
-function createRoom(){
-    socket.send(JSON.stringify({ type:"create" }))
-}
-
-function showJoin(){
-
-    document.getElementById("app").innerHTML =
-    "<h2>Введите код</h2>" +
-
-    "<input id='roomCode'>" +
-
-    "<button onclick='joinRoom()'>Войти</button>" +
-
-    "<button onclick='openOnline()'>Назад</button>"
-}
-
-function joinRoom(){
-
-    const code = document.getElementById("roomCode").value.toUpperCase()
-
-    socket.send(JSON.stringify({
-        type:"join",
-        code:code
-    }))
-}
-
-function askName(){
-
-    document.getElementById("app").innerHTML =
-    "<h2>Введите имя</h2>" +
-
-    "<input id='nameInput'>" +
-
-    "<button onclick='sendName()'>Продолжить</button>"
-}
-
-function sendName(){
-
-    const input = document.getElementById("nameInput")
-
-    playerName = input.value || "Игрок"
-
-    socket.send(JSON.stringify({
-        type:"set_name",
-        name:playerName
-    }))
-
-    document.getElementById("app").innerHTML =
-    "<h2>Комната " + roomID + "</h2>" +
-    "<p>Ожидание игроков...</p>"
-}
-
-// ================= ИГРА =================
-
-function playCard(card){
-
-    const el = event.target.closest(".card")
-    const rect = el.getBoundingClientRect()
-
-    const fly = el.cloneNode(true)
-    fly.style.position = "fixed"
-    fly.style.left = rect.left + "px"
-    fly.style.top = rect.top + "px"
-    fly.style.width = rect.width + "px"
-    fly.style.
-    height = rect.height + "px"
-    fly.style.zIndex = "1000"
-    fly.style.transition = "0.4s"
-
-    document.body.appendChild(fly)
-
-    setTimeout(() => {
-        fly.style.left = "50%"
-        fly.style.top = "40%"
-        fly.style.transform = "translate(-50%, -50%) scale(0.7)"
-    }, 10)
-
-    setTimeout(() => {
-        fly.remove()
-    }, 400)
-
-    el.style.opacity = "0.3"
-
-    socket.send(JSON.stringify({
-        type:"play_card",
-        card:card
-    }))
-}
-
-function startGame(){
-    socket.send(JSON.stringify({
-        type:"start_game"
-    }))
-}
-
-// ================= КАРТЫ =================
-
+// 🔥 ПОЛУЧЕНИЕ КАРТИНКИ
 function getCardImage(card){
 
     let value = card.slice(0, -1)
@@ -233,4 +112,109 @@ function getCardImage(card){
     }
 
     return cards/${valueName}_of_${suitName}${suffix}.png
+}
+
+// 🔥 КЛИК ПО КАРТЕ
+function playCard(card, el){
+
+    const rect = el.getBoundingClientRect()
+
+    const fly = document.createElement("img")
+    fly.src = getCardImage(card)
+
+    fly.style.position = "fixed"
+    fly.style.left = rect.left + "px"
+    fly.style.top = rect.top + "px"
+    fly.style.width = rect.width + "px"
+    fly.style.height = rect.height + "px"
+    fly.style.transition = "0.4s"
+    fly.style.zIndex = "999"
+
+    document.body.appendChild(fly)
+
+    setTimeout(() => {
+        fly.style.left = "50%"
+        fly.style.top = "40%"
+        fly.style.transform = "translate(-50%, -50%) scale(0.7)"
+    }, 10)
+
+    setTimeout(() => {
+        fly.remove()
+    }, 400)
+
+    el.style.opacity = "0.3"
+
+    socket.send(JSON.stringify({
+        type:"play_card",
+        card:card
+    }))
+}
+
+// UI функции
+function openOnline(){
+    document.getElementById("app").innerHTML =
+    "<h2>Онлайн</h2>" +
+    "<button onclick=\"openGame('durak')\">🃏 Дурак</button>" +
+    "<button onclick=\"openGame('mafia')\">🕵️ Мафия</button>" +
+    "<button onclick=\"openGame('draw')\">🎨 Рисуй</button>" +
+    "<button onclick=\"loadMain()\">⬅️ Назад</button>"
+}
+
+function openGame(game){
+    currentGame = game
+
+    document.getElementById("app").innerHTML =
+    "<h2>" + game + "</h2>" +
+    "<button onclick=\"createRoom()\">➕ Создать комнату</button>" +
+    "<button onclick=\"showJoin()\">🔑 Войти</button>" +
+    "<button onclick=\"openOnline()\">⬅️ Назад</button>"
+}
+
+function createRoom(){
+socket.send(JSON.stringify({ type:"create" }))
+}
+
+function showJoin(){
+    document.getElementById("app").innerHTML =
+    "<h2>Введите код</h2>" +
+    "<input id='roomCode'>" +
+    "<button onclick='joinRoom()'>Войти</button>" +
+    "<button onclick='openOnline()'>Назад</button>"
+}
+
+function joinRoom(){
+    const code = document.getElementById("roomCode").value.toUpperCase()
+
+    socket.send(JSON.stringify({
+        type:"join",
+        code:code
+    }))
+}
+
+function askName(){
+    document.getElementById("app").innerHTML =
+    "<h2>Введите имя</h2>" +
+    "<input id='nameInput'>" +
+    "<button onclick='sendName()'>Продолжить</button>"
+}
+
+function sendName(){
+    const input = document.getElementById("nameInput")
+
+    playerName = input.value || "Игрок"
+
+    socket.send(JSON.stringify({
+        type:"set_name",
+        name:playerName
+    }))
+
+    document.getElementById("app").innerHTML =
+    "<h2>Комната " + roomID + "</h2>" +
+    "<p>Ожидание игроков...</p>"
+}
+
+function startGame(){
+    socket.send(JSON.stringify({
+        type:"start_game"
+    }))
 }
