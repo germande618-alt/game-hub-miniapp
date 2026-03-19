@@ -16,9 +16,9 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-  if(data.type === "your_cards"){
+ if(data.type === "your_cards"){
 
-    let enemyCount = 6 // пока временно
+    let enemyCount = 6
 
     document.getElementById("app").innerHTML = `
 
