@@ -232,3 +232,28 @@ function startGame(){
         type:"start_game"
     }))
 }
+
+let selectedCard = null
+let selectedElement = null
+
+function selectCard(card, el){
+
+    // если уже выбрана → играем
+    if(selectedCard === card){
+        playCard(card, el)
+        selectedCard = null
+        selectedElement = null
+        return
+    }
+
+    // сброс старой
+    if(selectedElement){
+        selectedElement.style.transform = selectedElement.style.transform.replace(" translateY(-30px)", "")
+    }
+
+    selectedCard = card
+    selectedElement = el
+
+    // поднимаем карту
+    el.style.transform += " translateY(-30px)"
+}
