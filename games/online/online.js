@@ -48,7 +48,7 @@ ${data.cards.map((card, i) => {
             z-index:${i};
         "
     >
-        ${card}
+        <img src="${getCardImage(card)}" style="width:100%; height:100%; border-radius:10px;">
     </div>`
 
 }).join("")}
@@ -206,6 +206,21 @@ function playCard(card, el){
         type:"play_card",
         card:card
     }))
+}
+
+function getCardImage(card){
+
+    const value = card.slice(0, -1)
+    const suit = card.slice(-1)
+
+    let suitLetter = ""
+
+    if(suit === "♥") suitLetter = "H"
+    if(suit === "♦") suitLetter = "D"
+    if(suit === "♠") suitLetter = "S"
+    if(suit === "♣") suitLetter = "C"
+
+    return https://deckofcardsapi.com/static/img/${value}${suitLetter}.png
 }
 
 function startGame(){
