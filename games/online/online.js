@@ -36,15 +36,15 @@ ${data.cards.map((card, i) => {
     const total = data.cards.length
     const center = (total - 1) / 2
 
-   const angle = (i - center) * 8     // больше наклон
-const offset = (i - center) * 55   // шире веер
+    const angle = (i - center) * 8
+    const offset = (i - center) * 55
 
     return `<div 
-        class="card" 
-        onclick="playCard('${card}')"
+        class="card"
+        onclick="playCard('${card}', this)"
         style="
             left:50%;
-transform: translateX(calc(-50% + ${offset}px)) rotate(${angle}deg);
+            transform: translateX(calc(-50% + ${offset}px)) rotate(${angle}deg);
             z-index:${i};
         "
     >
@@ -177,14 +177,10 @@ function sendName(){
     "<p>Ожидание игроков...</p>"
 }
 
-function playCard(card){
-
-    // находим элемент карты
-    const el = event.target
+function playCard(card, el){
 
     const rect = el.getBoundingClientRect()
 
-    // создаём "летающую" карту
     const fly = document.createElement("div")
     fly.className = "fly"
     fly.innerText = card
@@ -194,21 +190,18 @@ function playCard(card){
 
     document.body.appendChild(fly)
 
-    // задержка чтобы CSS применился
     setTimeout(() => {
-
         fly.style.left = "50%"
         fly.style.top = "40%"
         fly.style.transform = "translate(-50%, -50%) scale(0.7)"
-
     }, 10)
 
-    // удалить через время
     setTimeout(() => {
         fly.remove()
     }, 400)
 
-    // отправляем на сервер
+    el.style.opacity = "0.3"
+
     socket.send(JSON.stringify({
         type:"play_card",
         card:card
