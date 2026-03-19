@@ -62,7 +62,7 @@ const offset = (i - center) * 55   // шире веер
     if(data.type === "card_played"){
 
         document.getElementById("board").innerHTML +=
-    `<div class="card">${data.card}</div>`
+    `<div class="board-card">${data.card}</div>`
     }
 
     // создали комнату
