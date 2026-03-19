@@ -22,7 +22,7 @@ socket.onmessage = (event) => {
         let enemyCount = 6
 
         document.getElementById("app").innerHTML = `
-
+`
         <div id="table">
 
             <div id="enemy">
@@ -57,7 +57,7 @@ socket.onmessage = (event) => {
     >
         <img src="${getCardImage(card)}">
     </div>
-    `
+  `
 }).join("")}
             </div>
 
