@@ -67,11 +67,21 @@ socket.onmessage = (event) => {
 
     // 🔥 КАРТА НА СТОЛЕ
     if(data.type === "card_played"){
-        document.getElementById("board").innerHTML +=
-        `<div class="card">
-            <img src="${getCardImage(data.card)}">
-        </div>`
-    }
+
+    const board = document.getElementById("board")
+
+    const count = board.querySelectorAll(".card").length
+
+    const cardEl = document.createElement("div")
+    cardEl.className = "card"
+
+    cardEl.style.left = (50 + count * 30) + "%"
+    cardEl.style.top = (40 + (count % 2) * 20) + "%"
+
+    cardEl.innerHTML = <img src="${getCardImage(data.card)}">
+
+    board.appendChild(cardEl)
+}
 
     // комната создана
     if(data.type === "room_created"){
