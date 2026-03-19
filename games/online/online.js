@@ -44,7 +44,7 @@ socket.onmessage = (event) => {
 if(data.type === "card_played"){
 
     document.getElementById("board").innerHTML +=
-        <div class="card">${data.card}</div>
+    <div class="card">${data.card}</div>
 }
 
     // создали комнату
