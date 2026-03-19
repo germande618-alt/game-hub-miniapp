@@ -16,36 +16,36 @@ socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
- if(data.type === "your_cards"){
+    if(data.type === "your_cards"){
 
-    let enemyCount = 6
+        let enemyCount = 6
 
-    document.getElementById("app").innerHTML = `
+        document.getElementById("app").innerHTML = `
 
-    <div id="table">
+        <div id="table">
 
-        <div id="enemy">
-            👤 Противник (${enemyCount})
+            <div id="enemy">
+                👤 Противник (${enemyCount})
+            </div>
+
+            <div id="board"></div>
+
+            <div id="player">
+                ${data.cards.map(card => 
+                    <div class="card" onclick="playCard('${card}')">${card}</div>
+                ).join("")}
+            </div>
+
         </div>
 
-        <div id="board"></div>
+        `
+    }
 
-        <div id="player">
-            ${data.cards.map(card => 
-                <div class="card" onclick="playCard('${card}')">${card}</div>
-            ).join("")}
-        </div>
+    if(data.type === "card_played"){
 
-    </div>
-
-    `
-}
-
-if(data.type === "card_played"){
-
-    document.getElementById("board").innerHTML +=
-    <div class="card">${data.card}</div>
-}
+        document.getElementById("board").innerHTML +=
+            <div class="card">${data.card}</div>
+    }
 
     // создали комнату
     if(data.type === "room_created"){
