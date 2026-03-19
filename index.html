@@ -55,10 +55,18 @@
 
 #player {
     position: relative;
-    height: 180px;
-    width: 100%;
+    height: 200px;
     display: flex;
     justify-content: center;
+    align-items: flex-end;
+}
+
+/* контейнер не двигаем */
+#player .card {
+    position: absolute;
+    width: 90px;
+    height: 130px;
+    transition: 0.3s;
 }
 
 .card {
