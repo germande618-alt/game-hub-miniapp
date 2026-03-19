@@ -31,20 +31,26 @@ socket.onmessage = (event) => {
             <div id="board"></div>
 
             <div id="player">
-                ${data.cards.map((card, i) => {
-    const angle = (i - data.cards.length / 2) * 10
-    const offset = i * 40
+${data.cards.map((card, i) => {
+
+    const total = data.cards.length
+    const center = (total - 1) / 2
+
+    const angle = (i - center) * 6   // было 10 → стало 6 (мягче)
+    const offset = (i - center) * 30 // центрируем!
 
     return `<div 
         class="card" 
         onclick="playCard('${card}')"
         style="
-            left:${offset}px;
-            transform: rotate(${angle}deg);
+            left:50%;
+            transform: translateX(${offset}px) rotate(${angle}deg);
+            z-index:${i};
         "
     >
         ${card}
     </div>`
+
 }).join("")}
             </div>
 
