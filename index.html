@@ -54,19 +54,20 @@
 }
 
 #player {
-    position: relative;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 220px;
+    width: 100%;
 }
 
-/* контейнер не двигаем */
 #player .card {
     position: absolute;
-    width: 90px;
-    height: 130px;
-    transition: 0.3s;
+    width: 110px;
+    height: 160px;
+    transition: 0.25s;
+    transform-origin: bottom center;
 }
 
 .card {
