@@ -10,6 +10,35 @@
 
 <style>
 
+#player {
+    position: relative;
+    height: 140px;
+}
+
+.card {
+    position: absolute;
+    bottom: 0;
+
+    width: 60px;
+    height: 90px;
+
+    background: white;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+/* эффект наведения */
+.card:active {
+    transform: translateY(-30px) scale(1.1);
+}
+
 html, body {
     margin: 0;
     padding: 0;
