@@ -32,19 +32,20 @@ socket.onmessage = (event) => {
             <div id="board"></div>
 
             <div id="player">
-                ${data.cards.map((card, i) => {
+               ${data.cards.map((card, i) => {
 
     const total = data.cards.length
-    const offset = i - (total - 1) / 2
+    const spread = 40
+    const angle = (i - (total - 1) / 2) * 10
 
     return `
     <div class="card"
         style="
-            transform: rotate(${offset * 8}deg) translateY(${Math.abs(offset)*-10}px);
-            left: calc(50% + ${offset * 30}px);
+            left: calc(50% + ${(i - (total - 1)/2) * spread}px);
+            transform: translateX(-50%) rotate(${angle}deg);
             z-index: ${i};
         "
-        onclick="playCard('${card}', this)"
+        onclick="selectCard('${card}', this)"
     >
         <img src="${getCardImage(card)}">
     </div>
