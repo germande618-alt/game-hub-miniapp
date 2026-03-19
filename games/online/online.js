@@ -31,9 +31,21 @@ socket.onmessage = (event) => {
             <div id="board"></div>
 
             <div id="player">
-                ${data.cards.map(card => 
-                   `<div class="card" onclick="playCard('${card}')">${card}</div>`
-                ).join("")}
+                ${data.cards.map((card, i) => {
+    const angle = (i - data.cards.length / 2) * 10
+    const offset = i * 40
+
+    return `<div 
+        class="card" 
+        onclick="playCard('${card}')"
+        style="
+            left:${offset}px;
+            transform: rotate(${angle}deg);
+        "
+    >
+        ${card}
+    </div>`
+}).join("")}
             </div>
 
         </div>
