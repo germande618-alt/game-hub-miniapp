@@ -179,11 +179,40 @@ function sendName(){
 
 function playCard(card){
 
+    // находим элемент карты
+    const el = event.target
+
+    const rect = el.getBoundingClientRect()
+
+    // создаём "летающую" карту
+    const fly = document.createElement("div")
+    fly.className = "fly"
+    fly.innerText = card
+
+    fly.style.left = rect.left + "px"
+    fly.style.top = rect.top + "px"
+
+    document.body.appendChild(fly)
+
+    // задержка чтобы CSS применился
+    setTimeout(() => {
+
+        fly.style.left = "50%"
+        fly.style.top = "40%"
+        fly.style.transform = "translate(-50%, -50%) scale(0.7)"
+
+    }, 10)
+
+    // удалить через время
+    setTimeout(() => {
+        fly.remove()
+    }, 400)
+
+    // отправляем на сервер
     socket.send(JSON.stringify({
         type:"play_card",
         card:card
     }))
-
 }
 
 function startGame(){
