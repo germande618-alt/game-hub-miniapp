@@ -62,7 +62,7 @@ socket.onmessage = (event) => {
             </div>
 
         </div>
-        `
+    `
     }
 
     // 🔥 КАРТА НА СТОЛЕ
