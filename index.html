@@ -10,6 +10,24 @@
 
 <style>
 
+.board-card {
+    width: 50px;
+    height: 70px;
+    background: white;
+    border-radius: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 5px;
+}
+
+.card:active {
+    transform: translateY(-40px) scale(1.15);
+    z-index: 999;
+}
+
 #player {
     position: relative;
     height: 180px;
