@@ -66,16 +66,22 @@ socket.onmessage = (event) => {
         `
     }
 
-    if(data.type === "card_played"){
-        const board = document.getElementById("board")
+    if (data.type === "card_played") {
+    const board = document.getElementById("board")
 
-        const cardEl = document.createElement("div")
-        cardEl.className = "card"
+    const cardEl = document.createElement("div")
+    cardEl.className = "card"
 
-        cardEl.innerHTML = `<img src="${getCardImage(data.card)}">`
+    cardEl.innerHTML = `<img src="${getCardImage(data.card)}">`
 
-        board.appendChild(cardEl)
-    }
+    // 👉 добавляем позицию
+    const index = board.children.length
+
+    cardEl.style.left = (index * 40) + "px"
+    cardEl.style.top = "0px"
+
+    board.appendChild(cardEl)
+}
 
     if(data.type === "room_created"){
         roomID = data.code
