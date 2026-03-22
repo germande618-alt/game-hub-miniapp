@@ -69,7 +69,7 @@ if (data.type === "start") {
 
             </div>
         `
-        trump = { suit: "hearts", value: "6" }
+        trump = "6_of_hearts"
 renderTrump()
     }
 
