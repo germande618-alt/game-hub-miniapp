@@ -27,6 +27,13 @@ socket.onmessage = (event) => {
   renderTable()
 }
 
+if (data.type === "start") {
+    deck = data.deck
+    trump = deck[deck.length - 1]
+
+    renderTrump()
+}    
+
     if(data.type === "your_cards"){
 
         let enemyCount = 6
@@ -309,6 +316,14 @@ function playCard(card) {
 
   renderHand()
   renderTable()
+}
+
+function renderTrump() {
+    const el = document.getElementById("trump")
+
+    if (!trump) return
+
+    el.innerHTML = `<img src="${getCardImage(trump)}">`
 }
 
 function startGame(){
