@@ -69,6 +69,8 @@ if (data.type === "start") {
 
             </div>
         `
+        trump = { suit: "hearts", value: "6" }
+renderTrump()
     }
 
     if (data.type === "card_played") {
