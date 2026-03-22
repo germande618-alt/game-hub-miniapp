@@ -1,3 +1,4 @@
+let tableCards = []
 console.log("ONLINE LOADED")
 
 let socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
@@ -18,6 +19,11 @@ socket.onmessage = (event) => {
 
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
+
+    if (data.type === "move") {
+  tableCards.push(data.card)
+  renderTable()
+}
 
     if(data.type === "your_cards"){
 
@@ -247,6 +253,33 @@ function sendName(){
     document.getElementById("app").innerHTML =
     "<h2>Комната " + roomID + "</h2>" +
     "<p>Ожидание игроков...</p>"
+}
+
+function renderTable() {
+  const board = document.getElementById("board")
+  board.innerHTML = ""
+
+  tableCards.forEach((card, i) => {
+    const el = document.createElement("div")
+    el.className = "card"
+    el.innerHTML = `<img src="${getCardImage(card)}">`
+
+    el.style.left = (i * 40) + "px"
+    el.style.top = "0px"
+
+    board.appendChild(el)
+  })
+}
+
+function playCard(card) {
+  tableCards.push(card)
+
+  renderTable()
+
+  socket.send(JSON.stringify({
+    type: "move",
+    card: card
+  }))
 }
 
 function startGame(){
