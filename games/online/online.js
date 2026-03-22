@@ -66,7 +66,7 @@ socket.onmessage = (event) => {
         const cardEl = document.createElement("div")
         cardEl.className = "card"
 
-        cardEl.innerHTML = <img src="${getCardImage(data.card)}">
+        cardEl.innerHTML = `<img src="${getCardImage(data.card)}">`
 
         board.appendChild(cardEl)
     }
