@@ -148,7 +148,7 @@ function getCardImage(card){
         suffix = "2"
     }
 
-    return cards/${valueName}_of_${suitName}${suffix}.png
+    return `cards/${valueName}_of_${suitName}${suffix}.png`
 }
 
 // 🎮 КИНУТЬ КАРТУ
