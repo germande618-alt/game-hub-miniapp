@@ -28,11 +28,9 @@ socket.onmessage = (event) => {
 }
 
 if (data.type === "start") {
-    deck = data.deck
-    trump = deck[deck.length - 1]
-
+    trump = data.trump
     renderTrump()
-}    
+}  
 
     if(data.type === "your_cards"){
 
@@ -62,9 +60,7 @@ if (data.type === "start") {
 
                 <div id="board">
                     <div id="deck"></div>
-                    <div id="trump">
-                        <img src="cards/6_of_hearts.png">
-                    </div>
+                    <div id="trump"></div>
                 </div>
 
                 <div id="player">
@@ -320,7 +316,6 @@ function playCard(card) {
 
 function renderTrump() {
     const el = document.getElementById("trump")
-
     if (!trump) return
 
     el.innerHTML = `<img src="${getCardImage(trump)}">`
