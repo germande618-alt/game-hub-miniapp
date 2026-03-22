@@ -1,3 +1,5 @@
+let deck = []
+let trump = null
 let tableCards = []
 console.log("ONLINE LOADED")
 
@@ -265,31 +267,48 @@ function renderTable() {
   const board = document.getElementById("board")
   board.innerHTML = ""
 
-  tableCards.forEach((card, i) => {
-    const el = document.createElement("div")
-    el.className = "card"
-    el.innerHTML = `<img src="${getCardImage(card)}">`
+  tableCards.forEach((pair, i) => {
+    // атака
+    const attack = document.createElement("div")
+    attack.className = "card"
+    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
+    attack.style.left = (i * 70) + "px"
+    attack.style.top = "0px"
 
-    el.style.left = (i * 40) + "px"
-    el.style.top = "0px"
+    board.appendChild(attack)
 
-    board.appendChild(el)
+    // защита
+    if (pair.defense) {
+      const defense = document.createElement("div")
+      defense.className = "card"
+      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
+      defense.style.left = (i * 70 + 15) + "px"
+      defense.style.top = "20px"
+
+      board.appendChild(defense)
+    }
   })
 }
 
 function playCard(card) {
-    tableCards.push(card)
+  if (tableCards.length === 0) {
+    // первая карта — атака
+    tableCards.push({ attack: card, defense: null })
+  } else {
+    // если есть атака без защиты — защищаемся
+    const last = tableCards[tableCards.length - 1]
 
-    // удалить из руки
-    playerHand = playerHand.filter(c => c !== card)
+    if (!last.defense) {
+      last.defense = card
+    } else {
+      tableCards.push({ attack: card, defense: null })
+    }
+  }
 
-    renderHand()
-    renderTable()
+  playerHand = playerHand.filter(c => c !== card)
 
-    socket.send(JSON.stringify({
-        type: "move",
-        card: card
-    }))
+  renderHand()
+  renderTable()
 }
 
 function startGame(){
