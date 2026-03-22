@@ -278,14 +278,18 @@ function renderTable() {
 }
 
 function playCard(card) {
-  tableCards.push(card)
+    tableCards.push(card)
 
-  renderTable()
+    // удалить из руки
+    playerHand = playerHand.filter(c => c !== card)
 
-  socket.send(JSON.stringify({
-    type: "move",
-    card: card
-  }))
+    renderHand()
+    renderTable()
+
+    socket.send(JSON.stringify({
+        type: "move",
+        card: card
+    }))
 }
 
 function startGame(){
