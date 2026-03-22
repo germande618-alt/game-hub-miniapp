@@ -1,6 +1,9 @@
-let deck = []
+// ====== СОСТОЯНИЕ ======
 let trump = null
 let tableCards = []
+let playerHand = []
+let enemyCount = 6
+
 console.log("ONLINE LOADED")
 
 let socket = new WebSocket("wss://game-hub-miniapp-production.up.railway.app")
@@ -13,35 +16,34 @@ let isHost = false
 let selectedCard = null
 let selectedElement = null
 
+// ====== ПОДКЛЮЧЕНИЕ ======
 socket.onopen = () => {
     console.log("Connected")
 }
 
+// ====== ПОЛУЧЕНИЕ ДАННЫХ ======
 socket.onmessage = (event) => {
 
     const data = JSON.parse(event.data)
     console.log("SERVER:", data)
 
-    if (data.type === "move") {
-  tableCards.push(data.card)
-  renderTable()
-}
+    // старт игры (козырь)
+    if (data.type === "start") {
+        trump = data.trump || "6♥"
+        renderTrump()
+    }
 
-if (data.type === "start") {
-    trump = data.trump
-    renderTrump()
-}  
-
+    // карты игрока
     if(data.type === "your_cards"){
 
-        let enemyCount = 6
+        playerHand = data.cards
 
-        const cardsHTML = data.cards.map((card, i) => {
+        const cardsHTML = playerHand.map((card, i) => {
             return `
                 <div class="card"
                     style="
-                        left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);
-                        transform: translateX(-50%) rotate(${(i - (data.cards.length - 1)/2) * 10}deg);
+                        left: calc(50% + ${(i - (playerHand.length - 1)/2) * 40}px);
+                        transform: translateX(-50%) rotate(${(i - (playerHand.length - 1)/2) * 10}deg);
                         z-index: ${i};
                     "
                     onclick="selectCard('${card}', this)"
@@ -69,27 +71,25 @@ if (data.type === "start") {
 
             </div>
         `
-        trump = "6_of_hearts"
-renderTrump()
+
+        // временный козырь (если сервер не дал)
+        if (!trump) {
+            trump = "6♥"
+        }
+
+        renderTrump()
+        renderTable()
     }
 
+    // карта сыграна
     if (data.type === "card_played") {
-    const board = document.getElementById("board")
+        tableCards.push({ attack: data.card, defense: null })
+        enemyCount--
+        renderTable()
+        updateEnemy()
+    }
 
-    const cardEl = document.createElement("div")
-    cardEl.className = "card"
-
-    cardEl.innerHTML = `<img src="${getCardImage(data.card)}">`
-
-    // 👉 добавляем позицию
-    const index = board.children.length
-
-    cardEl.style.left = (index * 40) + "px"
-    cardEl.style.top = "0px"
-
-    board.appendChild(cardEl)
-}
-
+    // комната
     if(data.type === "room_created"){
         roomID = data.code
         isHost = true
@@ -121,7 +121,7 @@ renderTrump()
     }
 }
 
-// 🧠 ВЫБОР КАРТЫ
+// ====== ВЫБОР КАРТЫ ======
 function selectCard(card, el){
 
     if(selectedCard === card){
@@ -141,7 +141,7 @@ function selectCard(card, el){
     el.style.transform += " translateY(-30px)"
 }
 
-// 🎯 ПОЛУЧЕНИЕ КАРТИНКИ
+// ====== КАРТИНКА ======
 function getCardImage(card){
 
     let value = card.slice(0, -1)
@@ -170,7 +170,7 @@ function getCardImage(card){
     return `cards/${valueName}_of_${suitName}${suffix}.png`
 }
 
-// 🎮 КИНУТЬ КАРТУ
+// ====== КИНУТЬ КАРТУ ======
 function playCard(card, el){
 
     const rect = el.getBoundingClientRect()
@@ -189,7 +189,7 @@ function playCard(card, el){
 
     setTimeout(() => {
         fly.style.left = "50%"
-        fly.style.top = "40%"
+        fly.style.top = "50%"
         fly.style.transform = "translate(-50%, -50%) scale(0.7)"
     }, 10)
 
@@ -197,7 +197,13 @@ function playCard(card, el){
         fly.remove()
     }, 400)
 
-    el.style.opacity = "0.3"
+    // удалить карту из руки
+    playerHand = playerHand.filter(c => c !== card)
+
+    el.remove()
+
+    // логика стола
+    playCardLogic(card)
 
     socket.send(JSON.stringify({
         type:"play_card",
@@ -205,7 +211,72 @@ function playCard(card, el){
     }))
 }
 
-// UI
+// ====== ЛОГИКА СТОЛА ======
+function playCardLogic(card) {
+  if (tableCards.length === 0) {
+    tableCards.push({ attack: card, defense: null })
+  } else {
+    const last = tableCards[tableCards.length - 1]
+
+    if (!last.defense) {
+      last.defense = card
+    } else {
+      tableCards.push({ attack: card, defense: null })
+    }
+  }
+
+  renderTable()
+}
+
+// ====== ОТРИСОВКА СТОЛА ======
+function renderTable() {
+  const board = document.getElementById("board")
+  if (!board) return
+
+  board.innerHTML = `
+    <div id="deck"></div>
+    <div id="trump"></div>
+  `
+
+  tableCards.forEach((pair, i) => {
+
+    const attack = document.createElement("div")
+    attack.className = "card"
+    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
+    attack.style.left = (i * 70) + "px"
+    attack.style.top = "0px"
+    board.appendChild(attack)
+
+    if (pair.defense) {
+      const defense = document.createElement("div")
+      defense.className = "card"
+      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
+      defense.style.left = (i * 70 + 15) + "px"
+      defense.style.top = "20px"
+      board.appendChild(defense)
+    }
+  })
+
+  renderTrump()
+}
+
+// ====== КОЗЫРЬ ======
+function renderTrump() {
+    const el = document.getElementById("trump")
+    if (!el || !trump) return
+
+    el.innerHTML = `<img src="${getCardImage(trump)}">`
+}
+
+// ====== ПРОТИВНИК ======
+function updateEnemy(){
+    const el = document.getElementById("enemy")
+    if(el){
+        el.innerText = "👤 Противник (" + enemyCount + ")"
+    }
+}
+
+// ====== UI ======
 function openOnline(){
     document.getElementById("app").innerHTML =
     "<h2>Онлайн</h2>" +
@@ -266,61 +337,6 @@ function sendName(){
     document.getElementById("app").innerHTML =
     "<h2>Комната " + roomID + "</h2>" +
     "<p>Ожидание игроков...</p>"
-}
-
-function renderTable() {
-  const board = document.getElementById("board")
-  board.innerHTML = ""
-
-  tableCards.forEach((pair, i) => {
-    // атака
-    const attack = document.createElement("div")
-    attack.className = "card"
-    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
-    attack.style.left = (i * 70) + "px"
-    attack.style.top = "0px"
-
-    board.appendChild(attack)
-
-    // защита
-    if (pair.defense) {
-      const defense = document.createElement("div")
-      defense.className = "card"
-      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
-      defense.style.left = (i * 70 + 15) + "px"
-      defense.style.top = "20px"
-
-      board.appendChild(defense)
-    }
-  })
-}
-
-function playCard(card) {
-  if (tableCards.length === 0) {
-    // первая карта — атака
-    tableCards.push({ attack: card, defense: null })
-  } else {
-    // если есть атака без защиты — защищаемся
-    const last = tableCards[tableCards.length - 1]
-
-    if (!last.defense) {
-      last.defense = card
-    } else {
-      tableCards.push({ attack: card, defense: null })
-    }
-  }
-
-  playerHand = playerHand.filter(c => c !== card)
-
-  renderHand()
-  renderTable()
-}
-
-function renderTrump() {
-    const el = document.getElementById("trump")
-    if (!trump) return
-
-    el.innerHTML = `<img src="${getCardImage(trump)}">`
 }
 
 function startGame(){
