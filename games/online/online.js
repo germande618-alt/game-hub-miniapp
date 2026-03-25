@@ -30,17 +30,6 @@ if (data.type === "update_state") {
     renderTable()
 }
 
-    // ❗ если игры ещё нет — игнорируем
-    if (!document.getElementById("board")) return
-
-    tableCards.push({
-        attack: data.card,
-        defense: null
-    });
-
-    renderTable();
-}
-
   // 🂡 КОЗЫРЬ
   if (data.type === "start") {
     trump = data.trump;
