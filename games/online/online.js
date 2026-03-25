@@ -282,7 +282,7 @@ function renderTable() {
 
       board.appendChild(defense)
     }
-  });
+  })
 
   renderTrump()
 }
