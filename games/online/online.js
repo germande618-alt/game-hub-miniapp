@@ -357,6 +357,24 @@ function canPlay(card) {
   return valuesOnTable.some(c => c.startsWith(value))
 }
 
+function renderHand(cards){
+
+    const player = document.getElementById("player")
+    if(!player) return
+
+    player.innerHTML = cards.map((card, i) => `
+        <div class="card"
+            style="
+                left: calc(50% + ${(i - (cards.length - 1)/2) * 40}px);
+                transform: translateX(-50%);
+            "
+            onclick="selectCard('${card}', this)"
+        >
+            <img src="${getCardImage(card)}">
+        </div>
+    `).join("")
+}
+
 function sendName() {
   const input = document.getElementById("nameInput");
   playerName = input.value || "Игрок";
