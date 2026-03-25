@@ -347,6 +347,22 @@ function askName() {
   `;
 }
 
+function canPlay(card) {
+
+  // если стол пуст — можно любую
+  if (tableCards.length === 0) return true
+
+  // можно подкидывать только по значению
+  const valuesOnTable = tableCards.flatMap(p => [
+    p.attack,
+    p.defense
+  ]).filter(Boolean)
+
+  const value = card.slice(0, -1)
+
+  return valuesOnTable.some(c => c.startsWith(value))
+}
+
 function sendName() {
   const input = document.getElementById("nameInput");
   playerName = input.value || "Игрок";
