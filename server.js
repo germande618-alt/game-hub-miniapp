@@ -149,25 +149,51 @@ if(data.type === "card_played"){
     const room = ws.room
     if(!room) return
 
-    if(!rooms[room].table){
-        rooms[room].table = []
+    const game = rooms[room]
+
+    const playerIndex = game.players.findIndex(p => p.ws === ws)
+    if(playerIndex !== game.turn) return // ❌ не твой ход
+
+    const player = game.players[playerIndex]
+
+    // убираем карту из руки
+    player.cards = player.cards.filter(c => c !== data.card)
+
+    // если стол пуст — атака
+    if(game.table.length === 0){
+        game.table.push({ attack: data.card, defense: null })
+    } else {
+        const last = game.table[game.table.length - 1]
+
+        // защита
+        if(!last.defense){
+            last.defense = data.card
+
+            // смена хода
+            game.turn = (game.turn + 1) % game.players.length
+
+            // добор карт
+            game.players.forEach(p=>{
+                while(p.cards.length < 6 && game.deck.length > 0){
+                    p.cards.push(game.deck.pop())
+                }
+            })
+        } else {
+            game.table.push({ attack: data.card, defense: null })
+        }
     }
 
-    rooms[room].table.push({
-        attack: data.card,
-        defense: null
-    })
-
-    rooms[room].forEach(client => {
-        client.send(JSON.stringify({
-            type: "update_state",
-            table: rooms[room].table
+    // отправка ВСЕМ
+    game.players.forEach((p, i)=>{
+        p.ws.send(JSON.stringify({
+            type:"update_state",
+            table: game.table,
+            cards: p.cards,
+            yourTurn: i === game.turn,
+            deckCount: game.deck.length
         }))
     })
-
 }
-
-    })
 
     ws.on("close", () => {
 
