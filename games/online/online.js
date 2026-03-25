@@ -139,6 +139,8 @@ function selectCard(card, el) {
     return;
   }
 
+  if (!canPlay(card)) return;
+
   if (selectedElement) {
     selectedElement.style.transform =
       selectedElement.style.transform.replace(" translateY(-30px)", "");
