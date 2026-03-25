@@ -244,8 +244,11 @@ function renderTable() {
   const col = i % 3        // колонка (0,1,2)
   const row = Math.floor(i / 3)  // ряд (0,1)
 
-  const x = col * 80
-  const y = row * 120
+  const startX = -80   // сдвиг влево (центрирование)
+const startY = -60   // сдвиг вверх
+
+const x = startX + col * 80
+const y = startY + row * 120
 
   // атака
   const attack = document.createElement("div")
