@@ -139,7 +139,7 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
-  const base = "https://raw.githubusercontent.com/germande618-alt/game-hub-miniapp/main/cards/";
+  const base = "https://germande618-alt.github.io/game-hub-miniapp/cards/";
 
   if (
     card.includes("jack") ||
