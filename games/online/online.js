@@ -139,8 +139,17 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
-  // если это картинка с картинками (J Q K)
-  if (card.includes("jack") || card.includes("queen") || card.includes("king")) {
+  // проверяем есть ли файл с обычным именем
+  const img = new Image();
+  img.src = `cards/${card}.png`;
+
+  // если это J Q K A → используем версию с 2
+  if (
+    card.includes("jack") ||
+    card.includes("queen") ||
+    card.includes("king") ||
+    card.includes("ace")
+  ) {
     return `cards/${card}2.png`;
   }
 
