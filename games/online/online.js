@@ -139,29 +139,43 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
-  const value = card.slice(0, -1);
-  const suit = card.slice(-1);
 
-  const suits = {
-    "♥": "hearts",
-    "♦": "diamonds",
-    "♠": "spades",
-    "♣": "clubs"
-  };
+  // если уже формат нормальный (6♥)
+  if (card.includes("♥") || card.includes("♦") || card.includes("♠") || card.includes("♣")) {
 
-  const values = {
-    "J": "jack",
-    "Q": "queen",
-    "K": "king",
-    "A": "ace"
-  };
+    const value = card.slice(0, -1);
+    const suit = card.slice(-1);
 
-  const suitName = suits[suit] || "";
-  const valueName = values[value] || value;
+    const suits = {
+      "♥": "hearts",
+      "♦": "diamonds",
+      "♠": "spades",
+      "♣": "clubs"
+    };
 
-  const suffix = ["jack", "queen", "king"].includes(valueName) ? "2" : "";
+    const values = {
+      "J": "jack",
+      "Q": "queen",
+      "K": "king",
+      "A": "ace"
+    };
 
-  return `cards/${valueName}_of_${suitName}${suffix}.png`;
+    const suitName = suits[suit] || "";
+    const valueName = values[value] || value;
+
+    const suffix = ["jack", "queen", "king"].includes(valueName) ? "2" : "";
+
+    return `cards/${valueName}_of_${suitName}${suffix}.png`;
+  }
+
+  // если формат типа 10_of_hearts
+  if (card.includes("_of_")) {
+    return `cards/${card}.png`;
+  }
+
+  // fallback (если вообще непонятно)
+  console.log("UNKNOWN CARD FORMAT:", card);
+  return "cards/back.png";
 }
 
 // 🎮 ХОД
