@@ -23,7 +23,12 @@ socket.onmessage = (event) => {
   console.log("SERVER:", data);
 
   // 🃏 ХОД
-if (data.type === "card_played") {
+if (data.type === "update_state") {
+    tableCards = data.table
+    trump = data.trump
+
+    renderTable()
+}
 
     // ❗ если игры ещё нет — игнорируем
     if (!document.getElementById("board")) return
