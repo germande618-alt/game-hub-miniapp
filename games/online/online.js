@@ -171,7 +171,7 @@ function getCardImage(card) {
     const suitName = suits[suit] || "";
     const valueName = values[value] || value;
 
-    const suffix = ["jack", "queen", "king"].includes(valueName) ? "2" : "";
+    const suffix = ["jack", "queen", "king", "ace"].includes(valueName) ? "2" : "";
 
     return `cards/${valueName}_of_${suitName}${suffix}.png`;
   }
