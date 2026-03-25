@@ -139,6 +139,11 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
+  // если это картинка с картинками (J Q K)
+  if (card.includes("jack") || card.includes("queen") || card.includes("king")) {
+    return `cards/${card}2.png`;
+  }
+
   return `cards/${card}.png`;
 }
 
