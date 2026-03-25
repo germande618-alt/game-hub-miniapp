@@ -208,9 +208,9 @@ function playCard(card, el) {
   el.remove();
 
   socket.send(JSON.stringify({
-    type: "play_card",
-    card: card
-  }));
+    type:"card_played",
+    card:card
+}))
 }
 
 // 🃏 СТОЛ
