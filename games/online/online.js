@@ -209,7 +209,7 @@ function playCard(card, el) {
     fly.remove();
   }, 400);
 
-  el.remove();
+ el.style.opacity = "0.3"
 
   socket.send(JSON.stringify({
     type:"card_played",
