@@ -241,6 +241,8 @@ function renderTable() {
 
   tableCards.forEach((pair, i) => {
 
+  if (!pair.attack) return
+
   const col = i % 3        // колонка (0,1,2)
   const row = Math.floor(i / 3)  // ряд (0,1)
 
