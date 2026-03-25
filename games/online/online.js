@@ -160,7 +160,7 @@ function playCard(card, el) {
     fly.remove();
   }, 400);
 
-  el.style.opacity = "0.3";
+  el.remove();
 
   socket.send(JSON.stringify({
     type: "play_card",
