@@ -100,17 +100,29 @@ if(data.type === "start_game"){
     const room = ws.room
     if(!room) return
 
-    // создаем колоду
-    const suits = ["♠","♥","♦","♣"]
-    const values = ["6","7","8","9","10","J","Q","K","A"]
+    const deck = createDeck()
 
-    let deck = []
+    rooms[room] = {
+        players: rooms[room].map(client => ({
+            ws: client,
+            cards: deck.splice(0,6)
+        })),
+        table: [],
+        deck: deck,
+        turn: 0 // 0 = первый игрок атакует
+    }
 
-    suits.forEach(suit=>{
-        values.forEach(value=>{
-            deck.push(value + suit)
-        })
+    // отправляем карты
+    rooms[room].players.forEach((player, i)=>{
+        player.ws.send(JSON.stringify({
+            type:"your_cards",
+            cards: player.cards,
+            yourTurn: i === 0
+        }))
     })
+
+    console.log("Game started:", room)
+}
 
     // перемешать
     deck.sort(()=>Math.random()-0.5)
