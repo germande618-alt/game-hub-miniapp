@@ -139,21 +139,18 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
-  // проверяем есть ли файл с обычным именем
-  const img = new Image();
-  img.src = `cards/${card}.png`;
+  const base = "https://raw.githubusercontent.com/germande618-alt/game-hub-miniapp/main/cards/";
 
-  // если это J Q K A → используем версию с 2
   if (
     card.includes("jack") ||
     card.includes("queen") ||
     card.includes("king") ||
     card.includes("ace")
   ) {
-    return `cards/${card}2.png`;
+    return base + card + "2.png";
   }
 
-  return `cards/${card}.png`;
+  return base + card + ".png";
 }
 
 // 🎮 ХОД
