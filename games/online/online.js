@@ -239,7 +239,7 @@ function renderTable() {
     const attack = document.createElement("div");
     attack.className = "card";
     attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`;
-    attack.style.left = (i * 70) + "px";
+    attack.style.left = (i * 60 - tableCards.length * 30) + "px";
     attack.style.top = "50%";
 attack.style.transform = "translateY(-50%)";
     board.appendChild(attack);
