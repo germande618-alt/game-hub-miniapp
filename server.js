@@ -28,15 +28,22 @@ wss.on("connection", ws => {
 
     ws.on("message", message => {
 
-        const data = JSON.parse(message)
+        let data
+        try {
+            data = JSON.parse(message)
+        } catch {
+            return
+        }
 
-        // создать комнату
+        // 🏠 СОЗДАТЬ КОМНАТУ
         if(data.type === "create"){
 
             const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
-            rooms[code] = []
-            rooms[code].push(ws)
+            rooms[code] = {
+                clients: [ws],
+                game: null
+            }
 
             ws.room = code
 
@@ -48,7 +55,7 @@ wss.on("connection", ws => {
             console.log("Room created:", code)
         }
 
-        // войти в комнату
+        // 🚪 ВОЙТИ В КОМНАТУ
         if(data.type === "join"){
 
             const code = data.code.toUpperCase()
@@ -61,7 +68,7 @@ wss.on("connection", ws => {
                 return
             }
 
-            rooms[code].push(ws)
+            rooms[code].clients.push(ws)
             ws.room = code
 
             ws.send(JSON.stringify({
@@ -72,17 +79,17 @@ wss.on("connection", ws => {
             console.log("Player joined:", code)
         }
 
-        // 🔥 СОХРАНИТЬ ИМЯ (ГЛАВНОЕ)
+        // 👤 УСТАНОВИТЬ ИМЯ
         if(data.type === "set_name"){
 
             ws.name = data.name
 
             const room = ws.room
-            if(!room) return
+            if(!room || !rooms[room]) return
 
-            const players = rooms[room].map(client => client.name || "Игрок")
+            const players = rooms[room].clients.map(client => client.name || "Игрок")
 
-            rooms[room].forEach(client=>{
+            rooms[room].clients.forEach(client=>{
                 if(client.readyState === WebSocket.OPEN){
                     client.send(JSON.stringify({
                         type:"players",
@@ -91,98 +98,115 @@ wss.on("connection", ws => {
                 }
             })
 
-            console.log("Players updated:", players)
+            console.log("Players:", players)
         }
 
-    // старт игры
-if(data.type === "start_game"){
+        // ▶️ СТАРТ ИГРЫ
+        if(data.type === "start_game"){
 
-    const room = ws.room
-    if(!room) return
+            const room = ws.room
+            if(!room || !rooms[room]) return
 
-    const deck = createDeck()
+            const roomData = rooms[room]
+            const deck = createDeck()
 
-    rooms[room] = {
-        players: rooms[room].map(client => ({
-            ws: client,
-            cards: deck.splice(0,6)
-        })),
-        table: [],
-        deck: deck,
-        turn: 0 // 0 = первый игрок атакует
-    }
+            roomData.game = {
+                players: roomData.clients.map(client => ({
+                    ws: client,
+                    cards: deck.splice(0,6)
+                })),
+                table: [],
+                deck: deck,
+                turn: 0
+            }
 
-    // отправляем карты
-    rooms[room].players.forEach((player, i)=>{
-        player.ws.send(JSON.stringify({
-            type:"your_cards",
-            cards: player.cards,
-            yourTurn: i === 0
-        }))
-    })
+            // отправляем карты
+            roomData.game.players.forEach((player, i)=>{
+                player.ws.send(JSON.stringify({
+                    type:"your_cards",
+                    cards: player.cards,
+                    yourTurn: i === 0
+                }))
+            })
 
-    console.log("Game started:", room)
-}
+            console.log("Game started:", room)
+        }
 
-if(data.type === "card_played"){
+        // 🃏 ХОД КАРТОЙ
+        if(data.type === "card_played"){
 
-    const room = ws.room
-    if(!room) return
+            const room = ws.room
+            if(!room || !rooms[room] || !rooms[room].game) return
 
-    const game = rooms[room]
+            const game = rooms[room].game
 
-    const playerIndex = game.players.findIndex(p => p.ws === ws)
-    if(playerIndex !== game.turn) return // ❌ не твой ход
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+            if(playerIndex !== game.turn) return
 
-    const player = game.players[playerIndex]
+            const player = game.players[playerIndex]
 
-    // убираем карту из руки
-    player.cards = player.cards.filter(c => c !== data.card)
+            // удалить ОДНУ карту
+            const index = player.cards.indexOf(data.card)
+            if(index === -1) return
+            player.cards.splice(index, 1)
 
-    // если стол пуст — атака
-    if(game.table.length === 0){
-        game.table.push({ attack: data.card, defense: null })
-    } else {
-        const last = game.table[game.table.length - 1]
+            // логика стола
+            if(game.table.length === 0){
+                game.table.push({ attack: data.card, defense: null })
+            } else {
+                const last = game.table[game.table.length - 1]
 
-        // защита
-        if(!last.defense){
-            last.defense = data.card
+                if(!last.defense){
+                    last.defense = data.card
 
-            // смена хода
-            game.turn = (game.turn + 1) % game.players.length
+                    // смена хода
+                    game.turn = (game.turn + 1) % game.players.length
 
-            // добор карт
-            game.players.forEach(p=>{
-                while(p.cards.length < 6 && game.deck.length > 0){
-                    p.cards.push(game.deck.pop())
+                    // добор карт
+                    game.players.forEach(p=>{
+                        while(p.cards.length < 6 && game.deck.length > 0){
+                            p.cards.push(game.deck.pop())
+                        }
+                    })
+                } else {
+                    game.table.push({ attack: data.card, defense: null })
+                }
+            }
+
+            // отправка состояния
+            game.players.forEach((p, i)=>{
+                if(p.ws.readyState === WebSocket.OPEN){
+                    p.ws.send(JSON.stringify({
+                        type:"update_state",
+                        table: game.table,
+                        cards: p.cards,
+                        yourTurn: i === game.turn,
+                        deckCount: game.deck.length
+                    }))
                 }
             })
-        } else {
-            game.table.push({ attack: data.card, defense: null })
         }
-    }
 
-    // отправка ВСЕМ
-    game.players.forEach((p, i)=>{
-        p.ws.send(JSON.stringify({
-            type:"update_state",
-            table: game.table,
-            cards: p.cards,
-            yourTurn: i === game.turn,
-            deckCount: game.deck.length
-        }))
     })
-}
 
+    // ❌ ОТКЛЮЧЕНИЕ
     ws.on("close", () => {
 
         const room = ws.room
 
         if(room && rooms[room]){
-            rooms[room] = rooms[room].filter(client => client !== ws)
 
-            if(rooms[room].length === 0){
+            // удалить из clients
+            rooms[room].clients = rooms[room].clients.filter(c => c !== ws)
+
+            // удалить из игры если есть
+            if(rooms[room].game){
+                rooms[room].game.players =
+                    rooms[room].game.players.filter(p => p.ws !== ws)
+            }
+
+            // если пусто — удалить комнату
+            if(rooms[room].clients.length === 0){
                 delete rooms[room]
                 console.log("Room deleted:", room)
             }
