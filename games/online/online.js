@@ -25,9 +25,12 @@ socket.onmessage = (event) => {
   // 🃏 ХОД
 if (data.type === "update_state") {
     tableCards = data.table
-    trump = data.trump
-
     renderTable()
+
+    // обновляем руку
+    if (data.cards) {
+        renderHand(data.cards)
+    }
 }
 
   // 🂡 КОЗЫРЬ
