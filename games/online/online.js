@@ -255,8 +255,9 @@ const y = startY + row * 120
   attack.className = "card"
   attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
 
-  attack.style.left = x + "px"
-  attack.style.top = y + "px"
+  attack.style.left = "50%"
+attack.style.top = "50%"
+attack.style.transform = `translate(${x}px, ${y}px)`
 
   board.appendChild(attack)
 
