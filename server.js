@@ -100,43 +100,6 @@ if(data.type === "start_game"){
     const room = ws.room
     if(!room) return
 
-if(data.type === "card_played"){
-
-    const room = ws.room
-    if(!room) return
-
-    // создаём стол если его нет
-    if(!rooms[room].table){
-        rooms[room].table = []
-    }
-
-    // добавляем карту на стол
-    rooms[room].table.push({
-        attack: data.card,
-        defense: null
-    })
-
-    // отправляем ВСЕМ игрокам
-    rooms[room].forEach(client => {
-
-        // если у тебя уже players структура — проверим
-        if(client.ws){
-            client.ws.send(JSON.stringify({
-                type: "update_state",
-                table: rooms[room].table
-            }))
-        } else {
-            client.send(JSON.stringify({
-                type: "update_state",
-                table: rooms[room].table
-            }))
-        }
-
-    })
-
-    console.log("Card played:", data.card)
-}
-
     // создаем колоду
     const suits = ["♠","♥","♦","♣"]
     const values = ["6","7","8","9","10","J","Q","K","A"]
@@ -167,6 +130,29 @@ if(data.type === "card_played"){
     })
 
     console.log("Game started in room:", room)
+}
+
+if(data.type === "card_played"){
+
+    const room = ws.room
+    if(!room) return
+
+    if(!rooms[room].table){
+        rooms[room].table = []
+    }
+
+    rooms[room].table.push({
+        attack: data.card,
+        defense: null
+    })
+
+    rooms[room].forEach(client => {
+        client.send(JSON.stringify({
+            type: "update_state",
+            table: rooms[room].table
+        }))
+    })
+
 }
 
     })
