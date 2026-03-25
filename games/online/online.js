@@ -236,24 +236,36 @@ function renderTable() {
   `;
 
   tableCards.forEach((pair, i) => {
-    const attack = document.createElement("div");
-    attack.className = "card";
-    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`;
-    attack.style.left = (i * 60 - tableCards.length * 30) + "px";
-    attack.style.top = "50%";
-attack.style.transform = "translateY(-50%)";
-    board.appendChild(attack);
 
-    if (pair.defense) {
-      const defense = document.createElement("div");
-      defense.className = "card";
-      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`;
-      defense.style.left = (i * 70 + 15) + "px";
-      defense.style.top = "50%";
-defense.style.transform = "translateY(-50%) rotate(10deg)";
-      board.appendChild(defense);
-    }
-  });
+  const col = i % 3        // колонка (0,1,2)
+  const row = Math.floor(i / 3)  // ряд (0,1)
+
+  const x = col * 80
+  const y = row * 120
+
+  // атака
+  const attack = document.createElement("div")
+  attack.className = "card"
+  attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
+
+  attack.style.left = x + "px"
+  attack.style.top = y + "px"
+
+  board.appendChild(attack)
+
+  // защита
+  if (pair.defense) {
+    const defense = document.createElement("div")
+    defense.className = "card"
+    defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
+
+    defense.style.left = (x + 20) + "px"
+    defense.style.top = (y + 20) + "px"
+    defense.style.transform = "rotate(10deg)"
+
+    board.appendChild(defense)
+  }
+});
 
   renderTrump();
 }
