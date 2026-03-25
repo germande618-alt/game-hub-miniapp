@@ -139,19 +139,29 @@ function selectCard(card, el) {
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
-  const base = "https://germande618-alt.github.io/game-hub-miniapp/cards/";
+  const value = card.slice(0, -1);
+  const suit = card.slice(-1);
 
-  // для карт с картинками
-  if (
-    card.includes("jack") ||
-    card.includes("queen") ||
-    card.includes("king") ||
-    card.includes("ace")
-  ) {
-    return base + card + "2.png";
-  }
+  const suits = {
+    "♥": "hearts",
+    "♦": "diamonds",
+    "♠": "spades",
+    "♣": "clubs"
+  };
 
-  return base + card + ".png";
+  const values = {
+    "J": "jack",
+    "Q": "queen",
+    "K": "king",
+    "A": "ace"
+  };
+
+  const suitName = suits[suit] || "";
+  const valueName = values[value] || value;
+
+  const suffix = ["jack", "queen", "king"].includes(valueName) ? "2" : "";
+
+  return `cards/${valueName}_of_${suitName}${suffix}.png`;
 }
 
 // 🎮 ХОД
