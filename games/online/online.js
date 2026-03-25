@@ -148,7 +148,7 @@ function selectCard(card, el) {
 // 🎯 КАРТИНКА
 function getCardImage(card) {
 
-  // если уже формат нормальный (6♥)
+  // если формат типа "Q♠"
   if (card.includes("♥") || card.includes("♦") || card.includes("♠") || card.includes("♣")) {
 
     const value = card.slice(0, -1);
@@ -168,21 +168,18 @@ function getCardImage(card) {
       "A": "ace"
     };
 
-    const suitName = suits[suit] || "";
+    const suitName = suits[suit];
     const valueName = values[value] || value;
 
-    const suffix = ["jack", "queen", "king", "ace"].includes(valueName) ? "2" : "";
-
-    return `cards/${valueName}_of_${suitName}${suffix}.png`;
+    return `cards/${valueName}_of_${suitName}.png`;
   }
 
-  // если формат типа 10_of_hearts
+  // если уже формат "queen_of_spades"
   if (card.includes("_of_")) {
     return `cards/${card}.png`;
   }
 
-  // fallback (если вообще непонятно)
-  console.log("UNKNOWN CARD FORMAT:", card);
+  console.log("UNKNOWN CARD:", card);
   return "cards/back.png";
 }
 
