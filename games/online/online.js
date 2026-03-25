@@ -215,6 +215,14 @@ function playCard(card, el) {
     type:"card_played",
     card:card
 }))
+
+tableCards.push({
+    attack: card,
+    defense: null
+})
+
+renderTable()
+  
 }
 
 // 🃏 СТОЛ
