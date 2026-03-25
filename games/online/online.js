@@ -133,7 +133,7 @@ function selectCard(card, el) {
     return;
   }
 
-  if (!window.yourTurn) return;
+  if (window.yourTurn === false) return;
 
   if (!canPlay(card)) return;
 
