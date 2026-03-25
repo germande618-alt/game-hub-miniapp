@@ -1,4 +1,4 @@
-let deck = ["6_of_hearts", "7_of_hearts", "8_of_hearts"];
+let deck = [];
 let trump = null;
 let tableCards = [];
 
@@ -22,19 +22,38 @@ socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
   console.log("SERVER:", data);
 
+  // 🃏 ХОД
   if (data.type === "move") {
     tableCards.push(data.card);
     renderTable();
   }
 
+  // 🂡 КОЗЫРЬ
   if (data.type === "start") {
     trump = data.trump;
     renderTrump();
   }
 
+  // 🎴 ТВОИ КАРТЫ
   if (data.type === "your_cards") {
     let enemyCount = 6;
 
+    // 👤 ВРАГ (рубашки)
+    let enemyCards = "";
+    for (let i = 0; i < enemyCount; i++) {
+      enemyCards += `
+        <div class="card"
+          style="
+            left: calc(50% + ${(i - (enemyCount - 1)/2) * 20}px);
+            transform: translateX(-50%);
+          "
+        >
+          <img src="cards/back.png">
+        </div>
+      `;
+    }
+
+    // 🧍 ТВОИ КАРТЫ
     const cardsHTML = data.cards.map((card, i) => {
       return `
         <div class="card"
@@ -52,32 +71,35 @@ socket.onmessage = (event) => {
 
     document.getElementById("app").innerHTML = `
       <div id="table">
-       let enemyCards = "";
-for (let i = 0; i < enemyCount; i++) {
-  enemyCards += `
-    <div class="card"
-      style="
-        left: calc(50% + ${(i - (enemyCount - 1)/2) * 20}px);
-        transform: translateX(-50%);
-      "
-    >
-      <img src="cards/back.png">
-    </div>
-  `;
-}
+        <div id="enemy">${enemyCards}</div>
 
+        <div id="board">
+          <div id="deck"></div>
+          <div id="trump"></div>
+        </div>
+
+        <div id="player">${cardsHTML}</div>
+      </div>
+    `;
+
+    renderTrump();
+  }
+
+  // 🏠 СОЗДАНИЕ КОМНАТЫ
   if (data.type === "room_created") {
     roomID = data.code;
     isHost = true;
     askName();
   }
 
+  // 🔑 ВХОД
   if (data.type === "joined") {
     roomID = data.code;
     isHost = false;
     askName();
   }
 
+  // 👥 СПИСОК ИГРОКОВ
   if (data.type === "players") {
     let html = `<h2>Комната ${roomID}</h2>`;
     html += `<h3>Игроки:</h3>`;
@@ -115,12 +137,12 @@ function selectCard(card, el) {
   el.style.transform += " translateY(-30px)";
 }
 
-// 🎯 ПОЛУЧЕНИЕ КАРТИНКИ
+// 🎯 КАРТИНКА
 function getCardImage(card) {
   return `cards/${card}.png`;
 }
 
-// 🎮 КИНУТЬ КАРТУ
+// 🎮 ХОД
 function playCard(card, el) {
   const rect = el.getBoundingClientRect();
 
@@ -153,6 +175,50 @@ function playCard(card, el) {
     type: "play_card",
     card: card
   }));
+}
+
+// 🃏 СТОЛ
+function renderTable() {
+  const board = document.getElementById("board");
+  if (!board) return;
+
+  board.innerHTML = `
+    <div id="deck"></div>
+    <div id="trump"></div>
+  `;
+
+  tableCards.forEach((pair, i) => {
+    const attack = document.createElement("div");
+    attack.className = "card";
+    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`;
+    attack.style.left = (i * 70) + "px";
+    attack.style.top = "0px";
+    board.appendChild(attack);
+
+    if (pair.defense) {
+      const defense = document.createElement("div");
+      defense.className = "card";
+      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`;
+      defense.style.left = (i * 70 + 15) + "px";
+      defense.style.top = "20px";
+      board.appendChild(defense);
+    }
+  });
+
+  renderTrump();
+}
+
+// 🂡 КОЗЫРЬ
+function renderTrump() {
+  const el = document.getElementById("trump");
+  if (!el || !trump) return;
+
+  el.innerHTML = `<img src="${getCardImage(trump)}">`;
+}
+
+// ▶️ СТАРТ
+function startGame() {
+  socket.send(JSON.stringify({ type: "start_game" }));
 }
 
 // UI
@@ -220,41 +286,4 @@ function sendName() {
     <h2>Комната ${roomID}</h2>
     <p>Ожидание игроков...</p>
   `;
-}
-
-// 🃏 СТОЛ
-function renderTable() {
-  const board = document.getElementById("board");
-  board.innerHTML = "";
-
-  tableCards.forEach((pair, i) => {
-    const attack = document.createElement("div");
-    attack.className = "card";
-    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`;
-    attack.style.left = (i * 70) + "px";
-    attack.style.top = "0px";
-    board.appendChild(attack);
-
-    if (pair.defense) {
-      const defense = document.createElement("div");
-      defense.className = "card";
-      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`;
-      defense.style.left = (i * 70 + 15) + "px";
-      defense.style.top = "20px";
-      board.appendChild(defense);
-    }
-  });
-}
-
-// 🂡 КОЗЫРЬ
-function renderTrump() {
-  const el = document.getElementById("trump");
-  if (!trump) return;
-
-  el.innerHTML = `<img src="${getCardImage(trump)}">`;
-}
-
-// ▶️ СТАРТ
-function startGame() {
-  socket.send(JSON.stringify({ type: "start_game" }));
 }
