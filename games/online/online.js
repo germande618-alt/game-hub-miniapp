@@ -231,53 +231,60 @@ renderTable()
 
 // 🃏 СТОЛ
 function renderTable() {
-  const board = document.getElementById("board");
-  if (!board) return;
+  const board = document.getElementById("board")
+  if (!board) return
 
   board.innerHTML = `
     <div id="deck"></div>
     <div id="trump"></div>
-  `;
+  `
+
+  const cols = 3
+  const rows = Math.ceil(tableCards.length / cols)
 
   tableCards.forEach((pair, i) => {
 
-  if (!pair.attack) return
+    // ❗ защита от undefined (убирает ❓)
+    if (!pair || !pair.attack) return
 
-  const col = i % 3        // колонка (0,1,2)
-  const row = Math.floor(i / 3)  // ряд (0,1)
+    const col = i % cols
+    const row = Math.floor(i / cols)
 
-  const startX = -80   // сдвиг влево (центрирование)
-const startY = -60   // сдвиг вверх
+    // центрирование
+    const offsetX = -((cols - 1) * 40)
+    const offsetY = -((rows - 1) * 60)
 
-const x = startX + col * 80
-const y = startY + row * 120
+    const x = col * 80 + offsetX
+    const y = row * 120 + offsetY
 
-  // атака
-  const attack = document.createElement("div")
-  attack.className = "card"
-  attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
+    // 🃏 атака
+    const attack = document.createElement("div")
+    attack.className = "card"
+    attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`
 
-  attack.style.left = "50%"
-attack.style.top = "50%"
-attack.style.transform = `translate(${x}px, ${y}px)`
+    attack.style.position = "absolute"
+    attack.style.left = "50%"
+    attack.style.top = "50%"
+    attack.style.transform = `translate(${x}px, ${y}px)`
 
-  board.appendChild(attack)
+    board.appendChild(attack)
 
-  // защита
-  if (pair.defense) {
-    const defense = document.createElement("div")
-    defense.className = "card"
-    defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
+    // 🛡 защита
+    if (pair.defense) {
+      const defense = document.createElement("div")
+      defense.className = "card"
+      defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`
 
-    defense.style.left = (x + 20) + "px"
-    defense.style.top = (y + 20) + "px"
-    defense.style.transform = "rotate(10deg)"
+      defense.style.position = "absolute"
+      defense.style.left = "50%"
+      defense.style.top = "50%"
+      defense.style.transform = `translate(${x + 20}px, ${y + 20}px) rotate(10deg)`
 
-    board.appendChild(defense)
-  }
-});
+      board.appendChild(defense)
+    }
+  });
 
-  renderTrump();
+  renderTrump()
 }
 
 // 🂡 КОЗЫРЬ
