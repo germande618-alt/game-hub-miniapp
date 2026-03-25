@@ -124,26 +124,6 @@ if(data.type === "start_game"){
     console.log("Game started:", room)
 }
 
-    // перемешать
-    deck.sort(()=>Math.random()-0.5)
-
-    // раздать карты
-    rooms[room].players = rooms[room].map(client=>({
-        ws: client,
-        cards: deck.splice(0,6)
-    }))
-
-    // отправить каждому его карты
-    rooms[room].players.forEach(player=>{
-        player.ws.send(JSON.stringify({
-            type:"your_cards",
-            cards: player.cards
-        }))
-    })
-
-    console.log("Game started in room:", room)
-}
-
 if(data.type === "card_played"){
 
     const room = ws.room
