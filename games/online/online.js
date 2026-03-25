@@ -130,27 +130,7 @@ function selectCard(card, el) {
 
 // 🎯 ПОЛУЧЕНИЕ КАРТИНКИ
 function getCardImage(card) {
-  let value = card.slice(0, -1);
-  const suit = card.slice(-1);
-
-  let suitName = "";
-  if (suit === "♥") suitName = "hearts";
-  if (suit === "♦") suitName = "diamonds";
-  if (suit === "♠") suitName = "spades";
-  if (suit === "♣") suitName = "clubs";
-
-  let valueName = value;
-  if (value === "J") valueName = "jack";
-  if (value === "Q") valueName = "queen";
-  if (value === "K") valueName = "king";
-  if (value === "A") valueName = "ace";
-
-  let suffix = "";
-  if (["jack", "queen", "king"].includes(valueName)) {
-    suffix = "2";
-  }
-
-  return `cards/${valueName}_of_${suitName}${suffix}.png`;
+  return `cards/${card}.png`;
 }
 
 // 🎮 КИНУТЬ КАРТУ
