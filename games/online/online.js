@@ -65,20 +65,6 @@ socket.onmessage = (event) => {
     renderTrump();
   }
 
-  if (data.type === "card_played") {
-    const board = document.getElementById("board");
-
-    const cardEl = document.createElement("div");
-    cardEl.className = "card";
-    cardEl.innerHTML = `<img src="${getCardImage(data.card)}">`;
-
-    const index = board.children.length;
-    cardEl.style.left = (index * 40) + "px";
-    cardEl.style.top = "0px";
-
-    board.appendChild(cardEl);
-  }
-
   if (data.type === "room_created") {
     roomID = data.code;
     isHost = true;
