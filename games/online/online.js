@@ -27,6 +27,8 @@ if (data.type === "update_state") {
     tableCards = data.table
     renderTable()
 
+    window.yourTurn = data.yourTurn
+
     // обновляем руку
     if (data.cards) {
         renderHand(data.cards)
