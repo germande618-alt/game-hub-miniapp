@@ -23,10 +23,14 @@ socket.onmessage = (event) => {
   console.log("SERVER:", data);
 
   // 🃏 ХОД
-  if (data.type === "move") {
-    tableCards.push(data.card);
+  if (data.type === "card_played") {
+    tableCards.push({
+        attack: data.card,
+        defense: null
+    });
+
     renderTable();
-  }
+}
 
   // 🂡 КОЗЫРЬ
   if (data.type === "start") {
