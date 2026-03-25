@@ -52,18 +52,19 @@ socket.onmessage = (event) => {
 
     document.getElementById("app").innerHTML = `
       <div id="table">
-        <div id="enemy">👤 Противник (${enemyCount})</div>
-        <div id="board">
-          <div id="deck"></div>
-          <div id="trump"></div>
-        </div>
-        <div id="player">${cardsHTML}</div>
-      </div>
-    `;
-
-    trump = "6_of_hearts";
-    renderTrump();
-  }
+       let enemyCards = "";
+for (let i = 0; i < enemyCount; i++) {
+  enemyCards += `
+    <div class="card"
+      style="
+        left: calc(50% + ${(i - (enemyCount - 1)/2) * 20}px);
+        transform: translateX(-50%);
+      "
+    >
+      <img src="cards/back.png">
+    </div>
+  `;
+}
 
   if (data.type === "room_created") {
     roomID = data.code;
