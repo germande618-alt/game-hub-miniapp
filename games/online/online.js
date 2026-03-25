@@ -249,7 +249,8 @@ attack.style.transform = "translateY(-50%)";
       defense.className = "card";
       defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`;
       defense.style.left = (i * 70 + 15) + "px";
-      defense.style.top = "20px";
+      defense.style.top = "50%";
+defense.style.transform = "translateY(-50%) rotate(10deg)";
       board.appendChild(defense);
     }
   });
