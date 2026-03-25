@@ -131,6 +131,8 @@ function selectCard(card, el) {
     return;
   }
 
+  if (!window.yourTurn) return;
+
   if (!canPlay(card)) return;
 
   if (selectedElement) {
