@@ -141,6 +141,7 @@ function selectCard(card, el) {
 function getCardImage(card) {
   const base = "https://germande618-alt.github.io/game-hub-miniapp/cards/";
 
+  // для карт с картинками
   if (
     card.includes("jack") ||
     card.includes("queen") ||
