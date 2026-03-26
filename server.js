@@ -190,3 +190,26 @@ rooms[room].game = {
     })
 
 })
+
+function canBeat(attack, defense, trump){
+
+    const attackValue = attack.slice(0, -1)
+    const attackSuit = attack.slice(-1)
+
+    const defenseValue = defense.slice(0, -1)
+    const defenseSuit = defense.slice(-1)
+
+    const order = ["6","7","8","9","10","J","Q","K","A"]
+
+    // одна масть
+    if(defenseSuit === attackSuit){
+        return order.indexOf(defenseValue) > order.indexOf(attackValue)
+    }
+
+    // козырь бьёт
+    if(defenseSuit === trump && attackSuit !== trump){
+        return true
+    }
+
+    return false
+}
