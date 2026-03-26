@@ -87,18 +87,27 @@ socket.onmessage = (event) => {
 
     // ✅ ВАЖНО: КНОПКИ ВНУТРИ
     document.getElementById("app").innerHTML = `
-      <div id="table">
-        <div id="enemy">${enemyCards}</div>
+  <div id="table">
+    <div id="enemy">${enemyCards}</div>
 
-        <div id="board">
-          <div id="deck"></div>
-          <div id="trump"></div>
-        </div>
+    <div id="board">
+      <div id="deck"></div>
+      <div id="trump"></div>
+    </div>
 
-        <div id="player">${cardsHTML}</div>
+    <div id="player">${cardsHTML}</div>
+  </div>
 
-      </div>
-    `;
+  <!-- 👇 ВОТ СЮДА ВСТАВИЛИ -->
+  <div id="hud">
+    <div id="status">Ваш ход</div>
+
+    <div id="actions">
+      <button onclick="takeCards()">Беру</button>
+      <button onclick="endRound()">Бито</button>
+    </div>
+  </div>
+`;
 
     renderTrump();
   }
