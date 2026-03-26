@@ -88,6 +88,10 @@ if (data.type === "update_state") {
         <div id="player">${cardsHTML}</div>
       </div>
     `;
+    <div id="actions" style="position:absolute; bottom:120px; left:50%; transform:translateX(-50%);">
+    <button onclick="takeCards()">Беру</button>
+    <button onclick="endRound()">Бито</button>
+</div>
 
     renderTrump();
   }
