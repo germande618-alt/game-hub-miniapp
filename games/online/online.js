@@ -168,6 +168,8 @@ function selectCard(card, el) {
 // 🎯 КАРТИНКА
 function getCardImage(card) {
 
+  if (!card || typeof card !== "string") return "cards/back.png"
+
   if (card.includes("♥") || card.includes("♦") || card.includes("♠") || card.includes("♣")) {
 
     const value = card.slice(0, -1);
