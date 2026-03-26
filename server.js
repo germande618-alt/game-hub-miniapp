@@ -127,6 +127,41 @@ if(game.phase === "defense" && playerIndex !== game.defendIndex) return
 
 if(game.phase === "throw" && playerIndex !== game.attackIndex) return
 
+    if(game.phase === "attack"){
+    game.table.push({ attack: data.card, defense: null })
+    game.phase = "defense"
+}
+
+            if(game.phase === "defense"){
+
+    const last = game.table.find(p => !p.defense)
+    if(!last) return
+
+    if(!canBeat(last.attack, data.card, game.trump)) return
+
+    last.defense = data.card
+
+    const allDefended = game.table.every(p => p.defense)
+
+    if(allDefended){
+        game.phase = "throw"
+    }
+}
+
+            if(game.phase === "throw"){
+
+    const values = game.table.flatMap(p => [
+        p.attack,
+        p.defense
+    ]).filter(Boolean).map(c => c.slice(0,-1))
+
+    if(!values.includes(data.card.slice(0,-1))) return
+
+    game.table.push({ attack: data.card, defense: null })
+
+    game.phase = "defense"
+}
+
     const room = ws.room
             
     if(!room || !rooms[room] || !rooms[room].game) return
