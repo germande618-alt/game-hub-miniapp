@@ -84,8 +84,6 @@ wss.on("connection", ws => {
         // ▶️ СТАРТ
         if(data.type === "start_game"){
 
-            phase: "attack"
-
             const room = ws.room
             if(!room || !rooms[room]) return
 
