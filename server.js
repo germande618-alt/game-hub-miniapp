@@ -119,57 +119,87 @@ rooms[room].game = {
         // 🃏 ХОД
         if(data.type === "card_played"){
 
-            const room = ws.room
-            if(!room || !rooms[room] || !rooms[room].game) return
+    const room = ws.room
+    if(!room || !rooms[room] || !rooms[room].game) return
 
-            const game = rooms[room].game
+    const game = rooms[room].game
 
-            const playerIndex = game.players.findIndex(p => p.ws === ws)
-            if(playerIndex === -1) return
+    const playerIndex = game.players.findIndex(p => p.ws === ws)
+    const player = game.players[playerIndex]
 
-            // ❗ временно без строгой очереди (чтобы точно работало)
-            // if(playerIndex !== game.turn) return
+    const index = player.cards.indexOf(data.card)
+    if(index === -1) return
 
-            const player = game.players[playerIndex]
+    // удалить карту
+    player.cards.splice(index, 1)
 
-            const index = player.cards.indexOf(data.card)
-            if(index === -1) return
+    // 👉 АТАКА
+    if(playerIndex === game.attackIndex){
 
-            player.cards.splice(index, 1)
+        // первая карта
+        if(game.table.length === 0){
+            game.table.push({ attack: data.card, defense: null })
+        } else {
 
-            // логика стола
-            if(game.table.length === 0){
-                game.table.push({ attack: data.card, defense: null })
-            } else {
-                const last = game.table[game.table.length - 1]
+            // можно подкидывать только по значению
+            const values = game.table.flatMap(p => [
+                p.attack,
+                p.defense
+            ]).filter(Boolean).map(c => c.slice(0,-1))
 
-                if(!last.defense){
-                    last.defense = data.card
-                    game.turn = (game.turn + 1) % game.players.length
-
-                    // добор
-                    game.players.forEach(p=>{
-                        while(p.cards.length < 6 && game.deck.length > 0){
-                            p.cards.push(game.deck.pop())
-                        }
-                    })
-
-                } else {
-                    game.table.push({ attack: data.card, defense: null })
-                }
+            if(!values.includes(data.card.slice(0,-1))){
+                return // нельзя
             }
 
-            // отправка состояния
-            game.players.forEach((p,i)=>{
-                p.ws.send(JSON.stringify({
-                    type:"update_state",
-                    table: game.table,
-                    cards: p.cards,
-                    yourTurn: i === game.turn,
-                    deckCount: game.deck.length
-                }))
-            })
+            game.table.push({ attack: data.card, defense: null })
         }
+    }
+
+    // 👉 ЗАЩИТА
+    if(playerIndex === game.defendIndex){
+
+        const last = game.table.find(p => !p.defense)
+        if(!last) return
+
+        if(!canBeat(last.attack, data.card, game.trump)){
+            return // нельзя бить
+        }
+
+        last.defense = data.card
+
+        // если все карты побиты → конец раунда
+        const allDefended = game.table.every(p => p.defense)
+
+        if(allDefended){
+
+            // очистить стол
+            game.table = []
+
+            // смена ролей
+            game.attackIndex = game.defendIndex
+            game.defendIndex = (game.defendIndex + 1) % game.players.length
+        }
+    }
+
+    // 📦 ДОБОР ДО 6
+    game.players.forEach(p=>{
+        while(p.cards.length < 6 && game.deck.length > 0){
+            p.cards.push(game.deck.pop())
+        }
+    })
+
+    // 📡 ОТПРАВКА
+    game.players.forEach((p,i)=>{
+        p.ws.send(JSON.stringify({
+            type:"update_state",
+            table: game.table,
+            cards: p.cards,
+            yourTurn: i === game.attackIndex || i === game.defendIndex,
+            trump: game.trump,
+            role: i === game.attackIndex ? "attack" : (i === game.defendIndex ? "defend" : "idle")
+        }))
+    })
+}
 
     })
 
