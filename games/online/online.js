@@ -133,7 +133,10 @@ function selectCard(card, el) {
     return;
   }
 
-  if (window.yourTurn === false) return;
+  if (window.yourTurn === false) {
+  console.log("НЕ ТВОЙ ХОД");
+  return;
+}
 
   // временно отключено
 // if (!canPlay(card)) return;
