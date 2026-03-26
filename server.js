@@ -162,6 +162,23 @@ if(game.phase === "throw" && playerIndex !== game.attackIndex) return
     game.phase = "defense"
 }
 
+if(game.phase === "throw" && game.table.length >= 6){
+
+    game.table = []
+
+    game.attackIndex = game.defendIndex
+    game.defendIndex = (game.defendIndex + 1) % game.players.length
+
+    game.phase = "attack"
+
+    // добор
+    game.players.forEach(p=>{
+        while(p.cards.length < 6 && game.deck.length > 0){
+            p.cards.push(game.deck.pop())
+        }
+    })
+}
+
     const room = ws.room
             
     if(!room || !rooms[room] || !rooms[room].game) return
@@ -223,13 +240,6 @@ if(game.phase === "throw" && playerIndex !== game.attackIndex) return
             game.defendIndex = (game.defendIndex + 1) % game.players.length
         }
     }
-
-    // 📦 ДОБОР ДО 6
-    game.players.forEach(p=>{
-        while(p.cards.length < 6 && game.deck.length > 0){
-            p.cards.push(game.deck.pop())
-        }
-    })
 
     // 📡 ОТПРАВКА
     game.players.forEach((p,i)=>{
