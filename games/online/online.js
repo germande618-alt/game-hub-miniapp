@@ -192,6 +192,7 @@ function getCardImage(card) {
 
 // 🎮 ХОД
 function playCard(card, el) {
+  console.log("PLAY:", card);
   const rect = el.getBoundingClientRect();
 
   const fly = document.createElement("img");
