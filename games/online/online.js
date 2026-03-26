@@ -135,7 +135,8 @@ function selectCard(card, el) {
 
   if (window.yourTurn === false) return;
 
-  if (!canPlay(card)) return;
+  // временно отключено
+// if (!canPlay(card)) return;
 
   if (selectedElement) {
     selectedElement.style.transform =
