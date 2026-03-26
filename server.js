@@ -121,7 +121,14 @@ rooms[room].game = {
         // 🃏 ХОД
         if(data.type === "card_played"){
 
+    if(game.phase === "attack" && playerIndex !== game.attackIndex) return
+
+if(game.phase === "defense" && playerIndex !== game.defendIndex) return
+
+if(game.phase === "throw" && playerIndex !== game.attackIndex) return
+
     const room = ws.room
+            
     if(!room || !rooms[room] || !rooms[room].game) return
 
     const game = rooms[room].game
