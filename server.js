@@ -151,22 +151,31 @@ wss.on("connection", ws => {
             const index = player.cards.indexOf(data.card)
             if(index === -1) return
 
-            // очередь
-            if(game.phase === "attack" && playerIndex !== game.attackIndex) return
-            if(game.phase === "defense" && playerIndex !== game.defendIndex) return
-            if(game.phase === "throw" && playerIndex !== game.attackIndex) return
-
             let played = false
 
-            // АТАКА
+            // 🔥 АТАКА (можно несколько карт)
             if(game.phase === "attack"){
-                game.table.push({ attack: data.card, defense: null })
+
+                const value = data.card.slice(0,-1)
+
+                if(game.table.length === 0){
+                    game.table.push({ attack: data.card, defense: null })
+                } else {
+                    const values = game.table.map(p => p.attack.slice(0,-1))
+
+                    if(!values.includes(value)) return
+
+                    game.table.push({ attack: data.card, defense: null })
+                }
+
                 game.phase = "defense"
                 played = true
             }
 
-            // ЗАЩИТА
+            // 🛡 ЗАЩИТА
             else if(game.phase === "defense"){
+
+                if(playerIndex !== game.defendIndex) return
 
                 const last = game.table.find(p => !p.defense)
                 if(!last) return
@@ -184,8 +193,10 @@ wss.on("connection", ws => {
                 played = true
             }
 
-            // ПОДКИДЫВАНИЕ
+            // 🔁 ПОДКИДЫВАНИЕ
             else if(game.phase === "throw"){
+
+                if(playerIndex !== game.attackIndex) return
 
                 const values = game.table.flatMap(p => [
                     p.attack,
@@ -200,12 +211,10 @@ wss.on("connection", ws => {
                 played = true
             }
 
-            // удалить карту ТОЛЬКО если ход валиден
             if(played){
                 player.cards.splice(index, 1)
             }
 
-            // обновление
             game.players.forEach((p,i)=>{
                 p.ws.send(JSON.stringify({
                     type:"update_state",
@@ -220,15 +229,13 @@ wss.on("connection", ws => {
         // БЕРУ
         if(data.type === "take_cards"){
 
-            const room = ws.room
-            if(!room || !rooms[room] || !rooms[room].game) return
-
-            const game = rooms[room].game
+            const game = rooms[ws.room].game
+            if(!game) return
 
             const defender = game.players[game.defendIndex]
 
             game.table.forEach(p=>{
-                defender.cards.push(p.attack)
+                if(p.attack) defender.cards.push(p.attack)
                 if(p.defense) defender.cards.push(p.defense)
             })
 
@@ -239,7 +246,6 @@ wss.on("connection", ws => {
 
             game.phase = "attack"
 
-            // добор
             game.players.forEach(p=>{
                 while(p.cards.length < 6 && game.deck.length > 0){
                     p.cards.push(game.deck.pop())
@@ -257,13 +263,14 @@ wss.on("connection", ws => {
             })
         }
 
-        // БИТО
+        // 🔥 БИТО (запрещено если не всё отбито)
         if(data.type === "end_round"){
 
-            const room = ws.room
-            if(!room || !rooms[room] || !rooms[room].game) return
+            const game = rooms[ws.room].game
+            if(!game) return
 
-            const game = rooms[room].game
+            const hasOpen = game.table.some(p => !p.defense)
+            if(hasOpen) return
 
             game.table = []
 
