@@ -89,15 +89,21 @@ wss.on("connection", ws => {
 
             const deck = createDeck()
 
-            rooms[room].game = {
-                players: rooms[room].clients.map(c => ({
-                    ws: c,
-                    cards: deck.splice(0,6)
-                })),
-                table: [],
-                deck,
-                turn: 0
-            }
+const trumpCard = deck[deck.length - 1] // последняя карта
+const trumpSuit = trumpCard.slice(-1)
+
+rooms[room].game = {
+    players: rooms[room].clients.map(c => ({
+        ws: c,
+        cards: deck.splice(0,6)
+    })),
+    table: [],
+    deck,
+    turn: 0,
+    trump: trumpSuit,
+    attackIndex: 0,
+    defendIndex: 1
+}
 
             const game = rooms[room].game
 
