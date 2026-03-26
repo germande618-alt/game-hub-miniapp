@@ -42,7 +42,6 @@ socket.onmessage = (event) => {
     // ✅ показываем кнопки
     const actions = document.getElementById("actions");
     if (actions) {
-      actions.style.display = data.yourTurn ? "block" : "none";
     }
   }
 
