@@ -173,9 +173,8 @@ rooms[room].game = {
         const allDefended = game.table.every(p => p.defense)
 
         if(allDefended){
-
-            // очистить стол
-            game.table = []
+    game.phase = "throw"   // теперь можно подкидывать
+}
 
             // смена ролей
             game.attackIndex = game.defendIndex
