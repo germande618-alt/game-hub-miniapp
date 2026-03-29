@@ -40,8 +40,6 @@ function canBeat(attack, defense, trump){
     return false
 }
 
-console.log("Server started on port", PORT)
-
 wss.on("connection", ws => {
 
     ws.on("message", message => {
@@ -52,6 +50,9 @@ wss.on("connection", ws => {
         } catch {
             return
         }
+
+        // ❗ защита от undefined карты
+        if(data.card && typeof data.card !== "string") return
 
         // СОЗДАТЬ
         if(data.type === "create"){
@@ -125,25 +126,14 @@ wss.on("connection", ws => {
                 phase: "attack"
             }
 
-            const game = rooms[room].game
-
-            game.players.forEach((p,i)=>{
-                p.ws.send(JSON.stringify({
-                    type:"your_cards",
-                    cards: p.cards,
-                    yourTurn: i === game.attackIndex,
-                    trump: game.trump
-                }))
-            })
+            sendState(room)
         }
 
         // ХОД
         if(data.type === "card_played"){
 
-            const room = ws.room
-            if(!room || !rooms[room] || !rooms[room].game) return
-
-            const game = rooms[room].game
+            const game = rooms[ws.room]?.game
+            if(!game) return
 
             const playerIndex = game.players.findIndex(p => p.ws === ws)
             const player = game.players[playerIndex]
@@ -156,29 +146,25 @@ wss.on("connection", ws => {
             // 🔥 АТАКА (можно несколько карт)
             if(game.phase === "attack"){
 
+                if(playerIndex !== game.attackIndex) return
+
                 const value = data.card.slice(0,-1)
 
                 if(game.table.length === 0){
-                    if(!data.card || typeof data.card !== "string") {
-    console.log("❌ BAD CARD:", data.card)
-    return
-}
-
-game.table.push({ attack: data.card, defense: null })
+                    game.table.push({ attack: data.card, defense: null })
                 } else {
                     const values = game.table.map(p => p.attack.slice(0,-1))
-
                     if(!values.includes(value)) return
 
-                    if(!data.card || typeof data.card !== "string") {
-    console.log("❌ BAD CARD:", data.card)
-    return
-}
-
-game.table.push({ attack: data.card, defense: null })
+                    game.table.push({ attack: data.card, defense: null })
                 }
 
-                game.phase = "defense"
+                // ❗ НЕ переключаем фазу сразу
+                const hasDefense = game.table.some(p => p.defense)
+                if(hasDefense){
+                    game.phase = "defense"
+                }
+
                 played = true
             }
 
@@ -215,12 +201,7 @@ game.table.push({ attack: data.card, defense: null })
 
                 if(!values.includes(data.card.slice(0,-1))) return
 
-                if(!data.card || typeof data.card !== "string") {
-    console.log("❌ BAD CARD:", data.card)
-    return
-}
-
-game.table.push({ attack: data.card, defense: null })
+                game.table.push({ attack: data.card, defense: null })
                 game.phase = "defense"
 
                 played = true
@@ -230,22 +211,17 @@ game.table.push({ attack: data.card, defense: null })
                 player.cards.splice(index, 1)
             }
 
-            game.players.forEach((p,i)=>{
-                p.ws.send(JSON.stringify({
-                    type:"update_state",
-                    table: game.table,
-                    cards: p.cards,
-                    yourTurn: i === game.attackIndex || i === game.defendIndex,
-                    trump: game.trump
-                }))
-            })
+            sendState(ws.room)
         }
 
         // БЕРУ
         if(data.type === "take_cards"){
 
-            const game = rooms[ws.room].game
+            const game = rooms[ws.room]?.game
             if(!game) return
+
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+            if(playerIndex !== game.defendIndex) return
 
             const defender = game.players[game.defendIndex]
 
@@ -256,33 +232,25 @@ game.table.push({ attack: data.card, defense: null })
 
             game.table = []
 
-            game.attackIndex = (game.attackIndex + 1) % game.players.length
+            // ❗ атакующий остаётся тем же
             game.defendIndex = (game.attackIndex + 1) % game.players.length
-
             game.phase = "attack"
 
-            game.players.forEach(p=>{
-                while(p.cards.length < 6 && game.deck.length > 0){
-                    p.cards.push(game.deck.pop())
-                }
-            })
+            drawCards(game)
 
-            game.players.forEach((p,i)=>{
-                p.ws.send(JSON.stringify({
-                    type:"update_state",
-                    table: game.table,
-                    cards: p.cards,
-                    yourTurn: i === game.attackIndex,
-                    trump: game.trump
-                }))
-            })
+            sendState(ws.room)
         }
 
-        // 🔥 БИТО (запрещено если не всё отбито)
+        // БИТО
         if(data.type === "end_round"){
 
-            const game = rooms[ws.room].game
+            const game = rooms[ws.room]?.game
             if(!game) return
+
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+
+            // ❗ только атакующий
+            if(playerIndex !== game.attackIndex) return
 
             const hasOpen = game.table.some(p => !p.defense)
             if(hasOpen) return
@@ -291,42 +259,38 @@ game.table.push({ attack: data.card, defense: null })
 
             game.attackIndex = game.defendIndex
             game.defendIndex = (game.defendIndex + 1) % game.players.length
-
             game.phase = "attack"
 
-            game.players.forEach(p=>{
-                while(p.cards.length < 6 && game.deck.length > 0){
-                    p.cards.push(game.deck.pop())
-                }
-            })
+            drawCards(game)
 
-            game.players.forEach((p,i)=>{
-                p.ws.send(JSON.stringify({
-                    type:"update_state",
-                    table: game.table,
-                    cards: p.cards,
-                    yourTurn: i === game.attackIndex,
-                    trump: game.trump
-                }))
-            })
+            sendState(ws.room)
         }
 
-    })
-
-    ws.on("close", () => {
-        const room = ws.room
-        if(!room || !rooms[room]) return
-
-        rooms[room].clients = rooms[room].clients.filter(c => c !== ws)
-
-        if(rooms[room].game){
-            rooms[room].game.players =
-                rooms[room].game.players.filter(p => p.ws !== ws)
-        }
-
-        if(rooms[room].clients.length === 0){
-            delete rooms[room]
-        }
     })
 
 })
+
+function drawCards(game){
+    game.players.forEach(p=>{
+        while(p.cards.length < 6 && game.deck.length > 0){
+            p.cards.push(game.deck.pop())
+        }
+    })
+}
+
+function sendState(room){
+    const game = rooms[room].game
+
+    game.players.forEach((p,i)=>{
+        p.ws.send(JSON.stringify({
+            type:"update_state",
+            table: game.table,
+            cards: p.cards,
+            trump: game.trump,
+            yourTurn:
+                (game.phase === "attack" && i === game.attackIndex) ||
+                (game.phase === "defense" && i === game.defendIndex) ||
+                (game.phase === "throw" && i === game.attackIndex)
+        }))
+    })
+}
