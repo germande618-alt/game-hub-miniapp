@@ -107,6 +107,9 @@ wss.on("connection", ws => {
             const room = ws.room
             if(!room || !rooms[room]) return
 
+            console.log("🔥 СЕРВЕР ПОЛУЧИЛ start_game")
+            console.log("ROOM:", ws.room)
+
             const deck = createDeck()
 
             const trumpCard = deck[deck.length - 1]
