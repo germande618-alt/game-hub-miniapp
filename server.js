@@ -104,32 +104,40 @@ wss.on("connection", ws => {
         // СТАРТ
         if(data.type === "start_game"){
 
-            const room = ws.room
-            if(!room || !rooms[room]) return
+    if(!ws.room){
+        console.log("❌ НЕТ ROOM У ИГРОКА")
+        return
+    }
 
-            console.log("🔥 СЕРВЕР ПОЛУЧИЛ start_game")
-            console.log("ROOM:", ws.room)
+    if(!rooms[ws.room]){
+        console.log("❌ КОМНАТЫ НЕ СУЩЕСТВУЕТ")
+        return
+    }
 
-            const deck = createDeck()
+    const room = ws.room
 
-            const trumpCard = deck[deck.length - 1]
-            const trumpSuit = trumpCard.slice(-1)
+    console.log("🔥 START GAME:", room)
 
-            rooms[room].game = {
-                players: rooms[room].clients.map(c => ({
-                    ws: c,
-                    cards: deck.splice(0,6)
-                })),
-                table: [],
-                deck,
-                trump: trumpSuit,
-                attackIndex: 0,
-                defendIndex: 1,
-                phase: "attack"
-            }
+    const deck = createDeck()
 
-            sendState(room)
-        }
+    const trumpCard = deck[deck.length - 1]
+    const trumpSuit = trumpCard.slice(-1)
+
+    rooms[room].game = {
+        players: rooms[room].clients.map(c => ({
+            ws: c,
+            cards: deck.splice(0,6)
+        })),
+        table: [],
+        deck,
+        trump: trumpSuit,
+        attackIndex: 0,
+        defendIndex: 1,
+        phase: "attack"
+    }
+
+    sendState(room)
+}
 
         // ХОД
         if(data.type === "card_played"){
