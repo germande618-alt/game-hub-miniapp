@@ -159,7 +159,12 @@ wss.on("connection", ws => {
                 const value = data.card.slice(0,-1)
 
                 if(game.table.length === 0){
-                    game.table.push({ attack: data.card, defense: null })
+                    if(!data.card || typeof data.card !== "string") {
+    console.log("❌ BAD CARD:", data.card)
+    return
+}
+
+game.table.push({ attack: data.card, defense: null })
                 } else {
                     const values = game.table.map(p => p.attack.slice(0,-1))
 
