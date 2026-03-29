@@ -313,7 +313,11 @@ function endRound(){
 
 // ▶️ СТАРТ
 function startGame() {
-  socket.send(JSON.stringify({ type: "start_game" }));
+  console.log("🔥 КНОПКА СТАРТ НАЖАТА")
+
+  socket.send(JSON.stringify({
+    type: "start_game"
+  }))
 }
 
 // UI (НЕ ТРОГАЛ)
