@@ -170,7 +170,12 @@ game.table.push({ attack: data.card, defense: null })
 
                     if(!values.includes(value)) return
 
-                    game.table.push({ attack: data.card, defense: null })
+                    if(!data.card || typeof data.card !== "string") {
+    console.log("❌ BAD CARD:", data.card)
+    return
+}
+
+game.table.push({ attack: data.card, defense: null })
                 }
 
                 game.phase = "defense"
