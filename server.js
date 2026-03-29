@@ -51,7 +51,6 @@ wss.on("connection", ws => {
             return
         }
 
-        // ❗ защита от undefined карты
         if(data.card && typeof data.card !== "string") return
 
         // СОЗДАТЬ
@@ -143,7 +142,7 @@ wss.on("connection", ws => {
 
             let played = false
 
-            // 🔥 АТАКА (можно несколько карт)
+            // 🔥 АТАКА
             if(game.phase === "attack"){
 
                 if(playerIndex !== game.attackIndex) return
@@ -153,17 +152,18 @@ wss.on("connection", ws => {
                 if(game.table.length === 0){
                     game.table.push({ attack: data.card, defense: null })
                 } else {
-                    const values = game.table.map(p => p.attack.slice(0,-1))
+                    const values = game.table.flatMap(p => [
+                        p.attack,
+                        p.defense
+                    ]).filter(Boolean).map(c => c.slice(0,-1))
+
                     if(!values.includes(value)) return
 
                     game.table.push({ attack: data.card, defense: null })
                 }
 
-                // ❗ НЕ переключаем фазу сразу
-                const hasDefense = game.table.some(p => p.defense)
-                if(hasDefense){
-                    game.phase = "defense"
-                }
+                // 👉 СРАЗУ даём ход защите
+                game.phase = "defense"
 
                 played = true
             }
@@ -173,7 +173,7 @@ wss.on("connection", ws => {
 
                 if(playerIndex !== game.defendIndex) return
 
-                const last = game.table.find(p => !p.defense)
+                const last = [...game.table].reverse().find(p => !p.defense)
                 if(!last) return
 
                 if(!canBeat(last.attack, data.card, game.trump)) return
@@ -232,7 +232,7 @@ wss.on("connection", ws => {
 
             game.table = []
 
-            // ❗ атакующий остаётся тем же
+            // ❗ атакующий остаётся тот же
             game.defendIndex = (game.attackIndex + 1) % game.players.length
             game.phase = "attack"
 
@@ -249,7 +249,6 @@ wss.on("connection", ws => {
 
             const playerIndex = game.players.findIndex(p => p.ws === ws)
 
-            // ❗ только атакующий
             if(playerIndex !== game.attackIndex) return
 
             const hasOpen = game.table.some(p => !p.defense)
