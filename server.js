@@ -51,7 +51,10 @@ wss.on("connection", ws => {
             return
         }
 
-        if(data.card && typeof data.card !== "string") return
+        if(data.type === "card_played" && (!data.card || typeof data.card !== "string")) {
+    console.log("❌ BAD CARD")
+    return
+}
 
         // СОЗДАТЬ
         if(data.type === "create"){
