@@ -123,23 +123,29 @@ socket.onmessage = (event) => {
   }
 
   // 👥 СПИСОК ИГРОКОВ
-  if (data.type === "players" && !window.gameStarted) {
-    let html = `<h2>Комната ${roomID}</h2>`;
-    html += `<h3>Игроки:</h3>`;
+if (data.type === "players") {
 
-    data.players.forEach((p, i) => {
-      html += `<p>${i + 1}. ${p}</p>`;
-    });
+  const app = document.getElementById("app")
 
-    if (isHost) {
-      html += `<button onclick="startGame()">🎮 Начать игру</button>`;
-    }
-
-    html += `<button onclick="openOnline()">⬅️ Назад</button>`;
-
-    document.getElementById("app").innerHTML = html;
+  if (app.innerHTML.includes("Начать игру")) {
+    return
   }
-};
+
+  let html = `<h2>Комната ${roomID}</h2>`;
+  html += `<h3>Игроки:</h3>`;
+
+  data.players.forEach((p, i) => {
+    html += `<p>${i + 1}. ${p}</p>`;
+  });
+
+  if (isHost) {
+    html += `<button onclick="startGame()">🎮 Начать игру</button>`;
+  }
+
+  html += `<button onclick="openOnline()">⬅️ Назад</button>`;
+
+  app.innerHTML = html;
+}
 
 // 🧠 ВЫБОР
 function selectCard(card, el) {
