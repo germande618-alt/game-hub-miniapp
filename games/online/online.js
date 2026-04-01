@@ -33,55 +33,34 @@ socket.onmessage = (event) => {
 
     window.yourTurn = data.yourTurn;
 
-    if (data.cards) {
-      renderHand(data.cards);
-    }
-
+    if (data.cards) renderHand(data.cards);
     if (data.trump) {
       trump = data.trump;
       renderTrump();
     }
 
-    // статус
     const status = document.getElementById("status");
     if (status) {
       status.innerText = data.yourTurn ? "Ваш ход" : "Ход противника";
-      status.style.color = data.yourTurn ? "red" : "gray";
     }
   }
 
   // 🎴 ТВОИ КАРТЫ
-  if (data.type === "your_cards") {
-    let enemyCount = 6;
+  else if (data.type === "your_cards") {
 
     let enemyCards = "";
-    for (let i = 0; i < enemyCount; i++) {
-      enemyCards += `
-        <div class="card"
-          style="
-            left: calc(50% + ${(i - (enemyCount - 1)/2) * 20}px);
-            transform: translateX(-50%);
-          "
-        >
-          <img src="cards/back.png">
-        </div>
-      `;
+    for (let i = 0; i < 6; i++) {
+      enemyCards += `<div class="card"><img src="cards/back.png"></div>`;
     }
 
-    const cardsHTML = data.cards.map((card, i) => {
-      return `
-        <div class="card"
-          style="
-            left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);
-            transform: translateX(-50%);
-            z-index: ${i};
-          "
-          onclick="selectCard('${card}', this)"
-        >
-          <img src="${getCardImage(card)}">
-        </div>
-      `;
-    }).join("");
+    const cardsHTML = data.cards.map((card, i) => `
+      <div class="card"
+        style="left: calc(50% + ${(i - (data.cards.length - 1)/2) * 40}px);"
+        onclick="selectCard('${card}', this)"
+      >
+        <img src="${getCardImage(card)}">
+      </div>
+    `).join("");
 
     document.getElementById("app").innerHTML = `
       <div id="table">
@@ -96,7 +75,7 @@ socket.onmessage = (event) => {
       </div>
 
       <div id="hud">
-        <div id="status">Ваш ход</div>
+        <div id="status">Игра началась</div>
 
         <div id="actions">
           <button onclick="takeCards()">Беру</button>
@@ -108,66 +87,57 @@ socket.onmessage = (event) => {
     renderTrump();
   }
 
-  // 🏠 СОЗДАНИЕ
-  if (data.type === "room_created") {
+  // СОЗДАНИЕ
+  else if (data.type === "room_created") {
     roomID = data.code;
     isHost = true;
     askName();
   }
 
-  // 🔑 ВХОД
-  if (data.type === "joined") {
+  // ВХОД
+  else if (data.type === "joined") {
     roomID = data.code;
     isHost = false;
     askName();
   }
 
-  // 👥 СПИСОК ИГРОКОВ
-if (data.type === "players") {
+  // СПИСОК ИГРОКОВ
+  else if (data.type === "players") {
 
-  const app = document.getElementById("app")
+    if (window.gameStarted) return;
 
-  if (app.innerHTML.includes("Начать игру")) {
-    return
+    let html = `<h2>Комната ${roomID}</h2>`;
+    html += `<h3>Игроки:</h3>`;
+
+    data.players.forEach((p, i) => {
+      html += `<p>${i + 1}. ${p}</p>`;
+    });
+
+    if (isHost) {
+      html += `<button onclick="startGame()">🎮 Начать игру</button>`;
+    }
+
+    html += `<button onclick="openOnline()">⬅️ Назад</button>`;
+
+    document.getElementById("app").innerHTML = html;
   }
 
-  let html = `<h2>Комната ${roomID}</h2>`;
-  html += `<h3>Игроки:</h3>`;
+}; // ✅ ВОТ ОНА СКОБКА (главный фикс)
 
-  data.players.forEach((p, i) => {
-    html += `<p>${i + 1}. ${p}</p>`;
-  });
-
-  if (isHost) {
-    html += `<button onclick="startGame()">🎮 Начать игру</button>`;
-  }
-
-  html += `<button onclick="openOnline()">⬅️ Назад</button>`;
-
-  app.innerHTML = html;
-}
 
 // 🧠 ВЫБОР
 function selectCard(card, el) {
   if (!window.yourTurn) return;
 
   if (selectedCard === card) {
-    playCard(card, el);
+    playCard(card);
     selectedCard = null;
-    selectedElement = null;
     return;
   }
 
-  if (selectedElement) {
-    selectedElement.style.transform =
-      selectedElement.style.transform.replace(" translateY(-30px)", "");
-  }
-
   selectedCard = card;
-  selectedElement = el;
-
-  el.style.transform += " translateY(-30px)";
 }
+
 
 // 🎯 КАРТИНКА
 function getCardImage(card) {
@@ -190,29 +160,25 @@ function getCardImage(card) {
     "A": "ace"
   };
 
-  const suitName = suits[suit];
-  const valueName = values[value] || value;
-
-  return `cards/${valueName}_of_${suitName}.png`;
+  return `cards/${values[value] || value}_of_${suits[suit]}.png`;
 }
+
 
 // 🎮 ХОД
-function playCard(card, el) {
+function playCard(card) {
   socket.send(JSON.stringify({
     type:"card_played",
-    card:card
+    card
   }));
 }
+
 
 // 🃏 СТОЛ
 function renderTable() {
   const board = document.getElementById("board");
   if (!board) return;
 
-  board.innerHTML = `
-    <div id="deck"></div>
-    <div id="trump"></div>
-  `;
+  board.innerHTML = `<div id="deck"></div><div id="trump"></div>`;
 
   tableCards.forEach((pair, i) => {
     if (!pair || !pair.attack) return;
@@ -221,10 +187,9 @@ function renderTable() {
     attack.className = "card";
     attack.innerHTML = `<img src="${getCardImage(pair.attack)}">`;
 
-    attack.style.position = "absolute";
     attack.style.left = "50%";
     attack.style.top = "50%";
-    attack.style.transform = `translate(${i * 40}px, 0px)`;
+    attack.style.transform = `translate(${i * 40}px,0)`;
 
     board.appendChild(attack);
 
@@ -233,10 +198,9 @@ function renderTable() {
       defense.className = "card";
       defense.innerHTML = `<img src="${getCardImage(pair.defense)}">`;
 
-      defense.style.position = "absolute";
       defense.style.left = "50%";
       defense.style.top = "50%";
-      defense.style.transform = `translate(${i * 40 + 20}px, 20px)`;
+      defense.style.transform = `translate(${i * 40 + 20}px,20px)`;
 
       board.appendChild(defense);
     }
@@ -245,13 +209,15 @@ function renderTable() {
   renderTrump();
 }
 
-// 🂡 КОЗЫРЬ
+
+// КОЗЫРЬ
 function renderTrump() {
   const el = document.getElementById("trump");
   if (!el || !trump) return;
 
   el.innerHTML = `<img src="${getCardImage(trump)}">`;
 }
+
 
 // ДЕЙСТВИЯ
 function takeCards(){
@@ -262,15 +228,16 @@ function endRound(){
   socket.send(JSON.stringify({ type: "end_round" }));
 }
 
-// ▶️ СТАРТ
+
+// СТАРТ
 function startGame() {
   console.log("🔥 START CLICK");
-  window.gameStarted = true;
 
   socket.send(JSON.stringify({
     type: "start_game"
   }));
 }
+
 
 // UI
 function openOnline() {
@@ -303,7 +270,6 @@ function showJoin() {
     <h2>Введите код</h2>
     <input id="roomCode">
     <button onclick="joinRoom()">Войти</button>
-    <button onclick="openOnline()">Назад</button>
   `;
 }
 
@@ -312,7 +278,7 @@ function joinRoom() {
 
   socket.send(JSON.stringify({
     type:"join",
-    code:code
+    code
   }));
 }
 
@@ -328,11 +294,8 @@ function renderHand(cards){
   const player = document.getElementById("player");
   if(!player) return;
 
-  player.innerHTML = cards.map((card, i) => `
-    <div class="card"
-      style="left: calc(50% + ${(i - (cards.length - 1)/2) * 40}px);"
-      onclick="selectCard('${card}', this)"
-    >
+  player.innerHTML = cards.map(card => `
+    <div class="card" onclick="selectCard('${card}', this)">
       <img src="${getCardImage(card)}">
     </div>
   `).join("");
