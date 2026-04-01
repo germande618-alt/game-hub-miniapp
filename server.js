@@ -71,7 +71,7 @@ wss.on("connection", ws => {
         }
 
         // ВОЙТИ
-        if(data.type === "join"){
+        else if(data.type === "join"){
             const room = rooms[data.code]
             if(!room) return
 
@@ -85,7 +85,7 @@ wss.on("connection", ws => {
         }
 
         // ИМЯ
-        if(data.type === "set_name"){
+        else if(data.type === "set_name"){
             ws.name = data.name
 
             const room = ws.room
@@ -102,7 +102,7 @@ wss.on("connection", ws => {
         }
 
         // СТАРТ
-        if(data.type === "start_game"){
+        else if(data.type === "start_game"){
 
     if(!ws.room){
         console.log("❌ НЕТ ROOM У ИГРОКА")
@@ -140,7 +140,7 @@ wss.on("connection", ws => {
 }
 
         // ХОД
-        if(data.type === "card_played"){
+        else if(data.type === "card_played"){
 
             const game = rooms[ws.room]?.game
             if(!game) return
@@ -226,7 +226,7 @@ wss.on("connection", ws => {
         }
 
         // БЕРУ
-        if(data.type === "take_cards"){
+        else if(data.type === "take_cards"){
 
             const game = rooms[ws.room]?.game
             if(!game) return
@@ -253,7 +253,7 @@ wss.on("connection", ws => {
         }
 
         // БИТО
-        if(data.type === "end_round"){
+        else if(data.type === "end_round"){
 
             const game = rooms[ws.room]?.game
             if(!game) return
