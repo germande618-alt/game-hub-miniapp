@@ -40,17 +40,6 @@ function canBeat(attack, defense, trump){
     return false
 }
 
-function broadcastPlayers(room){
-    const players = rooms[room].clients.map(c=>c.name || "Игрок")
-
-    rooms[room].clients.forEach(c=>{
-        c.send(JSON.stringify({
-            type:"players",
-            players
-        }))
-    })
-}
-
 wss.on("connection", ws => {
 
     ws.on("message", message => {
@@ -62,6 +51,9 @@ wss.on("connection", ws => {
             return
         }
 
+        if(data.card && typeof data.card !== "string") return
+
+        // СОЗДАТЬ
         if(data.type === "create"){
             const code = Math.random().toString(36).substring(2,6).toUpperCase()
 
@@ -78,6 +70,7 @@ wss.on("connection", ws => {
             }))
         }
 
+        // ВОЙТИ
         if(data.type === "join"){
             const room = rooms[data.code]
             if(!room) return
@@ -89,75 +82,138 @@ wss.on("connection", ws => {
                 type:"joined",
                 code:data.code
             }))
-
-            broadcastPlayers(data.code)
         }
 
+        // ИМЯ
         if(data.type === "set_name"){
             ws.name = data.name
 
-            if(ws.room){
-                broadcastPlayers(ws.room)
-            }
-        }
-
-        if(data.type === "start_game"){
             const room = ws.room
             if(!room || !rooms[room]) return
 
-            const deck = createDeck()
+            const players = rooms[room].clients.map(c=>c.name || "Игрок")
 
-            const trumpCard = deck[deck.length - 1]
-            const trumpSuit = trumpCard.slice(-1)
-
-            rooms[room].game = {
-                players: rooms[room].clients.map(c => ({
-                    ws: c,
-                    cards: deck.splice(0,6)
-                })),
-                table: [],
-                deck,
-                trump: trumpSuit,
-                attackIndex: 0,
-                defendIndex: 1,
-                phase: "attack"
-            }
-
-            sendState(room)
+            rooms[room].clients.forEach(c=>{
+                c.send(JSON.stringify({
+                    type:"players",
+                    players
+                }))
+            })
         }
 
+        // СТАРТ
+        if(data.type === "start_game"){
+
+    if(!ws.room){
+        console.log("❌ НЕТ ROOM У ИГРОКА")
+        return
+    }
+
+    if(!rooms[ws.room]){
+        console.log("❌ КОМНАТЫ НЕ СУЩЕСТВУЕТ")
+        return
+    }
+
+    const room = ws.room
+
+    console.log("🔥 START GAME:", room)
+
+    const deck = createDeck()
+
+    const trumpCard = deck[deck.length - 1]
+    const trumpSuit = trumpCard.slice(-1)
+
+    rooms[room].game = {
+        players: rooms[room].clients.map(c => ({
+            ws: c,
+            cards: deck.splice(0,6)
+        })),
+        table: [],
+        deck,
+        trump: trumpSuit,
+        attackIndex: 0,
+        defendIndex: 1,
+        phase: "attack"
+    }
+
+    sendState(room)
+}
+
+        // ХОД
         if(data.type === "card_played"){
+
             const game = rooms[ws.room]?.game
             if(!game) return
 
-            const i = game.players.findIndex(p => p.ws === ws)
-            const player = game.players[i]
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+            const player = game.players[playerIndex]
 
             const index = player.cards.indexOf(data.card)
             if(index === -1) return
 
             let played = false
 
+            // 🔥 АТАКА
             if(game.phase === "attack"){
-                if(i !== game.attackIndex) return
 
-                game.table.push({ attack: data.card, defense: null })
+                if(playerIndex !== game.attackIndex) return
+
+                const value = data.card.slice(0,-1)
+
+                if(game.table.length === 0){
+                    game.table.push({ attack: data.card, defense: null })
+                } else {
+                    const values = game.table.flatMap(p => [
+                        p.attack,
+                        p.defense
+                    ]).filter(Boolean).map(c => c.slice(0,-1))
+
+                    if(!values.includes(value)) return
+
+                    game.table.push({ attack: data.card, defense: null })
+                }
+
+                // 👉 СРАЗУ даём ход защите
                 game.phase = "defense"
+
                 played = true
             }
-            else if(game.phase === "defense"){
-                if(i !== game.defendIndex) return
 
-                const last = game.table.find(p => !p.defense)
+            // 🛡 ЗАЩИТА
+            else if(game.phase === "defense"){
+
+                if(playerIndex !== game.defendIndex) return
+
+                const last = [...game.table].reverse().find(p => !p.defense)
                 if(!last) return
 
                 if(!canBeat(last.attack, data.card, game.trump)) return
 
                 last.defense = data.card
 
-                if(game.table.every(p => p.defense)){
-                    game.phase = "attack"
+                const allDefended = game.table.every(p => p.defense)
+
+                if(allDefended){
+                    game.phase = "throw"
                 }
+
+                played = true
+            }
+
+            // 🔁 ПОДКИДЫВАНИЕ
+            else if(game.phase === "throw"){
+
+                if(playerIndex !== game.attackIndex) return
+
+                const values = game.table.flatMap(p => [
+                    p.attack,
+                    p.defense
+                ]).filter(Boolean).map(c => c.slice(0,-1))
+
+                if(!values.includes(data.card.slice(0,-1))) return
+
+                game.table.push({ attack: data.card, defense: null })
+                game.phase = "defense"
 
                 played = true
             }
@@ -169,9 +225,14 @@ wss.on("connection", ws => {
             sendState(ws.room)
         }
 
+        // БЕРУ
         if(data.type === "take_cards"){
+
             const game = rooms[ws.room]?.game
             if(!game) return
+
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+            if(playerIndex !== game.defendIndex) return
 
             const defender = game.players[game.defendIndex]
 
@@ -181,12 +242,51 @@ wss.on("connection", ws => {
             })
 
             game.table = []
+
+            // ❗ атакующий остаётся тот же
+            game.defendIndex = (game.attackIndex + 1) % game.players.length
             game.phase = "attack"
+
+            drawCards(game)
 
             sendState(ws.room)
         }
+
+        // БИТО
+        if(data.type === "end_round"){
+
+            const game = rooms[ws.room]?.game
+            if(!game) return
+
+            const playerIndex = game.players.findIndex(p => p.ws === ws)
+
+            if(playerIndex !== game.attackIndex) return
+
+            const hasOpen = game.table.some(p => !p.defense)
+            if(hasOpen) return
+
+            game.table = []
+
+            game.attackIndex = game.defendIndex
+            game.defendIndex = (game.defendIndex + 1) % game.players.length
+            game.phase = "attack"
+
+            drawCards(game)
+
+            sendState(ws.room)
+        }
+
     })
+
 })
+
+function drawCards(game){
+    game.players.forEach(p=>{
+        while(p.cards.length < 6 && game.deck.length > 0){
+            p.cards.push(game.deck.pop())
+        }
+    })
+}
 
 function sendState(room){
     const game = rooms[room].game
@@ -199,7 +299,8 @@ function sendState(room){
             trump: game.trump,
             yourTurn:
                 (game.phase === "attack" && i === game.attackIndex) ||
-                (game.phase === "defense" && i === game.defendIndex)
+                (game.phase === "defense" && i === game.defendIndex) ||
+                (game.phase === "throw" && i === game.attackIndex)
         }))
     })
 }
